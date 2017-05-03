@@ -8,7 +8,6 @@ var ControllerBase = require('base.controller');
 var ConstructionCentral = require('central.construction');
 
 
-// TODO: Needs refactoring too much in one file...
 var ResourceCentral = {
     
     init: function(room) {
@@ -22,8 +21,7 @@ var ResourceCentral = {
 
     run: function(room) {
         var memory = getMemory(room);
-       if (memory.age > 40) {
-            console.log('Run: ResourceCentral');
+        if (memory.age > 50) {
             memory.age = 0;
             updateSources(room);
         }
@@ -59,7 +57,7 @@ var ResourceCentral = {
         }
         
         return null;
-    },   
+    },       
     
    requestReplacementHarvester: function(creep, assignment) {
         if (Harvester.create(creep.room, assignment)) {
@@ -73,9 +71,24 @@ var ResourceCentral = {
             memory.sources[creep.memory.assignedToSourceId].assignments--;
         }
     }, 
+
+    needPioneer: function(room) {
+        return (countTotalPioneerAssignments(room) <= (Math.max(6, countTotalPioneerCapacity(room) * 1.5 )));
+    },
+
+    needHarvester: function(room) {
+        var memory = getMemory(room);
+        for (var sourceId in memory.sources) {
+            var sourceObj = memory.sources[sourceId];
+            if (!sourceObj.isHarvesting) {
+                return true;
+            }
+        }        
+        return false;
+    },    
     
-    countAvailableAssignments: function(room) {
-        return countTotalPioneerCapacity(room) - (Finder.countRole(room, Static.ROLE_PIONEER));        
+    countAvailablePioneerAssignments: function(room) {
+        return countTotalPioneerCapacity(room) - countTotalPioneerAssignments(room);
     },
     
     countTotalPioneerCapacity: function(room) {
@@ -90,11 +103,7 @@ var ResourceCentral = {
     countSources: function(room) {
         var sources = ResourceCentral.getAllSources(room);
         return Utils.objListToArray(sources).length;
-    },
-    
-    getStats: function(room) {
-        return {};
-    }     
+    }    
 };
 
 function updateSources(room) {
@@ -134,6 +143,7 @@ function scanSources(room) {
 
 function orderRoads(room, sourcePos) {
     var hqConnectionPair = RoadsCentral.findBestRoadConnections (
+        room,
         BaseHQ.getRoadConnections(room),
         [sourcePos]
     );
@@ -141,7 +151,8 @@ function orderRoads(room, sourcePos) {
         RoadsCentral.placeOrder(room, hqConnectionPair.fromPos, hqConnectionPair.toPos);
     }
 
-    var ctrlConnectionPair = RoadsCentral.findBestRoadConnections (        
+    var ctrlConnectionPair = RoadsCentral.findBestRoadConnections (
+        room,     
         ControllerBase.getRoadConnections(room),
         [sourcePos]
     );
@@ -169,7 +180,17 @@ function countTotalPioneerCapacity(room) {
         var sourceObj = memory.sources[sourceId];
         sumCapacity += sourceObj.capacity;
     }
-    return sumCapacity;     
+    return sumCapacity;    
+}
+
+function countTotalPioneerAssignments(room) {
+    var memory = getMemory(room);
+    var sumAssignments = 0;
+    for (var sourceId in memory.sources) {
+        var sourceObj = memory.sources[sourceId];
+        sumAssignments += sourceObj.assignments;
+    }
+    return sumAssignments;    
 }
 
 // WORK ASSIGNMENT /////////////////////////////////////////////////////////////
@@ -227,6 +248,7 @@ function pickRandomSource(room) {
 
 function pickBestSource(creep, vacantSources) {
     vacantSources.sort( function(a, b) { return a.distance - b.distance } );
+    vacantSources[0].assignments++;
     return vacantSources[0].id;
 }
 

@@ -7,6 +7,7 @@ var CreepFactory = require('factory.creep');
 var ResourceCentral = require('central.resources');
 var TransferBehaviour = require('behaviour.transfer');
 var MoveBehaviour = require('behaviour.move');
+var BaseHQ = require('base.hq');
 var Utils = require('system.utils');
 
 var RoleTransporter = {
@@ -25,11 +26,16 @@ var RoleTransporter = {
         }        
     },
     
-    create: function(room) {
-        var newCreep = CreepFactory.create(room, Static.ROLE_TRANSPORTER, 'COLLECT');
+    create: function(room, transporterRole, collectContainerId) {
+        var newCreep = CreepFactory.create(room, transporterRole, 'COLLECT');
         if (newCreep !== null) {
+            newCreep.memory.collectContainerId = null;
+            if (collectContainerId !== undefined || collectContainerId !== null) {
+                newCreep.memory.collectContainerId = collectContainerId;                           
+            }            
+            MoveBehaviour.setup(newCreep);
+            TransferBehaviour.setup(newCreep);
             newCreep.memory.transferCollectId = null;
-            newCreep.memory.transferTargetId = null;
         }           
     }
 };
@@ -64,13 +70,19 @@ function applyNewState(creep, newState) {
             applyCollect(creep);
             break;   
         case 'TRANSFER':
-            TransferBehaviour.apply(creep)
+            TransferBehaviour.apply(creep);
             break;   
     }
 }
 
 function applyCollect(creep) {
-    creep.memory.transferTargetId = null;  
+    creep.memory.transferTargetId = null; 
+
+    if (creep.memory.collectContainerId !== undefined && creep.memory.collectContainerId !== null) {
+        creep.memory.transferCollectId = creep.memory.collectContainerId;
+        return;
+    }
+
     var containerId = findContainer(creep);
     if (containerId !== null) {
         creep.memory.transferCollectId = containerId;
@@ -102,7 +114,6 @@ function doCollect(creep) {
     var container = Game.getObjectById(creep.memory.transferCollectId);
     if (container !== null) {
         if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-            console.log('Move path');
             MoveBehaviour.movePath(creep, container);
         }    
     } else {

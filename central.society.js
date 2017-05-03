@@ -7,14 +7,10 @@ var ResourceCentral = require('central.resources');
 
 var Society = {
     
-    LEVEL_OUTPOST: 1,
-    LEVEL_CITY: 2,
-    
     init: function(room) {
         if (room.memory.SYS[MEMORY] === undefined || room.memory.SYS[MEMORY] === null) { 
             room.memory.SYS[MEMORY] = {
                 current: { level: 1, current: {}},
-                socStats: null,
                 age: 0
             };
         }            
@@ -22,8 +18,7 @@ var Society = {
 
     run: function(room) {
         var memory = getMemory(room);
-        if (memory.age > 500) {
-            console.log('Run: Society');
+        if (memory.age > 50) {
             memory.age = 0;
             memory.current = calculateCurrentSociety(room);
         }
@@ -47,29 +42,24 @@ var Society = {
     
     isCity: function(room) {
         var memory = getMemory(room);
-        return (memory.current.level >= 2);
+        return (memory.current.level == 2);
     },
     
     isCivilization: function(room) {
         var memory = getMemory(room);
-        return (memory.current.level >= 3);
-    },
-
-    getStats: function(room) {
-        return getMemory(room).socStats;
-    }            
+        return (memory.current.level == 3);
+    }        
 };
 
 function calculateCurrentSociety(room) {
     var currentSociety = { 
-        hqLevel: 1, // TODO:
-        storage: Finder.findAllStructures(room, STRUCTURE_STORAGE, false).length, 
+        storage: (room.storage !== null ? 1 : 0), 
         baseContainers: BaseHQ.getAllBaseContainers(room).length,
         sourceContainer: scanSourceContainer(room),
         controllerContainer: (ControllerBase.getControllerContainerId(room) !== null ? 1 : 0),
         spawnEnergy: room.energyCapacityAvailable
     };
-
+    
     for (var level in levels) {
         var reqObj = levels[level];
         if (!isPassRequirements(currentSociety, reqObj)) {
@@ -105,9 +95,9 @@ function getMemory(room) {
 }
 
 var levels = {
-    1: { hqLevel: 0, storage: 0, baseContainers: 0, sourceContainer: 0, controllerContainer: 0, spawnEnergy: 100 },
-    2: { hqLevel: 1, storage: 0, baseContainers: 1, sourceContainer: 1, controllerContainer: 0, spawnEnergy: 500 },
-    3: { hqLevel: 1, storage: 1, baseContainers: 2, sourceContainer: 1, controllerContainer: 1, spawnEnergy: 750 }
+    1: { storage: 0, baseContainers: 0, sourceContainer: 0, controllerContainer: 0, spawnEnergy: 100 },
+    2: { storage: 0, baseContainers: 1, sourceContainer: 1, controllerContainer: 0, spawnEnergy: 500 },
+    3: { storage: 1, baseContainers: 2, sourceContainer: 1, controllerContainer: 1, spawnEnergy: 750 }
 };
 
 module.exports = Society;

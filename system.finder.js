@@ -13,8 +13,8 @@ var SystemFinder = {
         }).length;    
     },
     
-    findWithdrawSpawnStructure: function(creep) {
-        var results = creep.room.find(FIND_MY_STRUCTURES, {
+    findWithdrawSpawnStructure: function(room) {
+        var results = room.find(FIND_MY_STRUCTURES, {
             filter: function(obj) {
                 return (
                     (obj.structureType == STRUCTURE_SPAWN || obj.structureType == STRUCTURE_EXTENSION) &&
@@ -31,8 +31,8 @@ var SystemFinder = {
         return room.find(FIND_MY_STRUCTURES, {
             filter: function(obj) {
                 return (
-                    (isMy && obj.structureType == structureType && obj.my && obj.isActive()) ||
-                    (!isMy && obj.structureType == structureType && obj.isActive())
+                    (isMy && obj.structureType == structureType && obj.my) ||
+                    (!isMy && obj.structureType == structureType)
                 );
             }
         });
@@ -40,7 +40,7 @@ var SystemFinder = {
 
     findContainersInRange: function(pos, range) {
         return pos.findInRange(FIND_STRUCTURES, range, {
-            filter: function(obj) { return (obj.structureType == STRUCTURE_CONTAINER && obj.isActive()) }
+            filter: function(obj) { return (obj.structureType == STRUCTURE_CONTAINER) }
         });
     },
 

@@ -1,4 +1,4 @@
-var MEMORY = 'ConstructionCentral';
+    var MEMORY = 'ConstructionCentral';
 
 var ConstructionCentral = {
     
@@ -8,18 +8,47 @@ var ConstructionCentral = {
                 constructionQueue: [],
                 rclWaitList: [],
                 currentRcl: 0,
-                currentConstruction: null
+                currentConstruction: null,
+                age: 0
             };
         }
     },
 
     run: function(room) {
+        var memory = getMemory(room);
         unflag(room);
-        var currentLevel = handleRcl(room);    
-        if (currentLevel > 1 && checkConstructioSite(room)) {
-            buildNextInQueue(room);   
+        if (memory.age > 25) { 
+            console.log('Run construction');
+            var currentLevel = handleRcl(room);    
+            if (currentLevel > 1 && checkConstructioSite(room)) {
+                buildNextInQueue(room);   
+            }
+            memory.age = 0;
         }
+        memory.age++;  
     },
+
+    hasConstructionOrders(room) {
+        var memory = getMemory(room);
+        return (memory.currentConstruction !== null);
+    },    
+
+    getCurrentOrder(room) {
+        var memory = getMemory(room);
+        if (memory.currentConstruction !== null) {            
+            if (memory.currentConstruction.id === null) {
+                var siteRoomPos = room.getPositionAt(memory.currentConstruction.pos.x, memory.currentConstruction.pos.y);
+                var sites = siteRoomPos.lookFor(LOOK_CONSTRUCTION_SITES);
+                if (sites.length > 0 ) {
+                    memory.currentConstruction.id = sites[0].id;
+                } else {
+                    return null;
+                }
+            }
+            return Game.getObjectById(memory.currentConstruction.id);
+        }
+        return null;
+    },        
     
     order: function(room, type, pos) {
         var memory = getMemory(room);
@@ -30,12 +59,7 @@ var ConstructionCentral = {
             return true;
         }
         return false;
-    },
-
-
-    getStats: function(room) {
-        return {};
-    }       
+    }
 };
 
 function createOrder(room, type, pos) {    
@@ -43,15 +67,30 @@ function createOrder(room, type, pos) {
     if (Game.flags['flagName'] !== undefined) {
         Game.flags['flagName'].remove();
     }
+
+    var color = getFlagColor(type);
     return {
-        flag: room.createFlag(pos, type + '-' + pos.x + '-' + pos.y, COLOR_RED, COLOR_RED),
+        flag: room.createFlag(pos, type + '-' + pos.x + '-' + pos.y, color, color),
         type: type,
         prio: prioList().indexOf(type),
+        id: null,
         pos: {
             x: pos.x,
             y: pos.y
         }
     };
+}
+
+function getFlagColor(type) {
+    switch(type) {
+        case STRUCTURE_ROAD:
+            return COLOR_RED;
+            break;
+        case STRUCTURE_WALL:
+            return COLOR_BLUE;            
+            break;
+    }
+    return COLOR_GREEN;
 }
 
 function checkConstructioSite(room) {
@@ -73,7 +112,6 @@ function buildNextInQueue(room) {
         var pos = memory.currentConstruction.pos;
         var res = room.createConstructionSite(room.getPositionAt(pos.x, pos.y), memory.currentConstruction.type);
         if (res == ERR_RCL_NOT_ENOUGH) {
-            console.log('Construction: ' + memory.currentConstruction.type + ' too low RCL.');
             memory.rclWaitList.push(memory.currentConstruction);
             memory.currentConstruction = null;
         } else if (res == ERR_INVALID_TARGET) {
@@ -83,7 +121,10 @@ function buildNextInQueue(room) {
 }
 
 function isConstructionSite(room, pos) {
-    return (room.lookForAt(LOOK_CONSTRUCTION_SITES, pos.x, pos.y).length > 0);
+    if (pos !== undefined && pos !== null) {
+        return (room.lookForAt(LOOK_CONSTRUCTION_SITES, pos.x, pos.y).length > 0);
+    }
+    return false;
 }
 
 function isStructure(room, pos, type) {

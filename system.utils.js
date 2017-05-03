@@ -10,10 +10,10 @@ var Utils = {
         return objArr;
     },
     
-    createIdArray: function(objList) {
+    createIdArray: function(objArr) {
         var idArr = [];
-        for(var i = 0; i < objList.length; i++) {
-            idArr.push(objList[i].id);
+        for(var i = 0; i < objArr.length; i++) {
+            idArr.push(objArr[i].id);
         }
         return idArr;
     },

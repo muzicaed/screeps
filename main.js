@@ -1,10 +1,11 @@
 var profiler = require('screeps-profiler');
 var Pioneer = require('role.pioneer');
 var Harvester = require('role.harvester');
-var Builder = require('role.builder');
 var Transporter = require('role.transporter');
 var Caretaker = require('role.caretaker');
 var SpawnKeeper = require('role.spawnkeeper');
+var Defender = require('role.defender');
+var Scout = require('role.scout');
 var SimCreep = require('role.simcreep');
 var Pump = require('role.pump');
 var TowerStandard = require('tower.standard');
@@ -14,6 +15,7 @@ var SpawnCentral = require('central.spawn');
 var BasesCentral = require('central.bases');
 var CreepFactory = require('factory.creep');
 var ConstructionCentral = require('central.construction');
+var RepairCentral = require('central.repair');
 var Society = require('central.society');
 var Bases = require('central.bases');
 var Static = require('system.static');
@@ -27,8 +29,9 @@ module.exports.loop = function () {
         
         // Disable log
         //console.log = function() {};    
+        garbageCollect();
         runRooms();
-        runCreeps();    
+        runCreeps();        
     });
 };
 
@@ -37,13 +40,13 @@ function runRooms() {
     for (var i in Game.rooms) {
         var room = Game.rooms[i];
 
-        if (room.controller.my) {
+        if (room.controller !== undefined && room.controller.my) {
             if (!room.memory.isInitialized) {  
                 console.log('Init');
-                room.memory.SYS = {}; 
                 room.memory.SYS = {};          
                 Society.init(room);
                 ConstructionCentral.init(room);
+                RepairCentral.init(room);
                 RoadsCentral.init(room);
                 Bases.init(room);                
                 ResourceCentral.init(room);                
@@ -57,9 +60,9 @@ function runRooms() {
             ResourceCentral.run(room);
             SpawnCentral.run(room);        
             ConstructionCentral.run(room);
+            RepairCentral.run(room);
             
             runTowers(room);
-            refreshStats(room);
 
             // TODO: Make this a lot better...
             if (room.controller && room.controller.safeModeAvailable > 0) {
@@ -72,6 +75,7 @@ function runRooms() {
 function runCreeps() {
     for (var i in Game.creeps) {
         var creep = Game.creeps[i];
+
         switch (creep.memory.role) {
             case Static.ROLE_PIONEER:
                 Pioneer.run(creep);
@@ -79,12 +83,12 @@ function runCreeps() {
             case Static.ROLE_HARVESTER:
                 Harvester.run(creep);
                 break;
-            case Static.ROLE_BUILDER:
-                Builder.run(creep);
-                break;
             case Static.ROLE_TRANSPORTER:
                 Transporter.run(creep);
-                break;        
+                break;    
+            case Static.ROLE_CIV_TRANSPORTER:
+                Transporter.run(creep);
+                break;                    
             case Static.ROLE_CARETAKER:                
                 Caretaker.run(creep);
                 break;         
@@ -93,7 +97,13 @@ function runCreeps() {
                 break;   
             case Static.ROLE_PUMP:
                 Pump.run(creep);
-                break;                   
+                break;   
+            case Static.ROLE_DEFENDER:
+                Defender.run(creep);
+                break;  
+            case Static.ROLE_SCOUT:
+                Scout.run(creep);
+                break;   
             case Static.ROLE_SIMCREEP:
                 SimCreep.run(creep);
                 break;                  
@@ -108,16 +118,18 @@ function runTowers(room) {
     }
 }
 
-function refreshStats(room) {
-    room.memory.stats = {
-        bases: BasesCentral.getStats(room),
-        construction: ConstructionCentral.getStats(room),
-        resources: ResourceCentral.getStats(room),
-        roads: RoadsCentral.getStats(room),
-        society: Society.getStats(room),
-        spawn: SpawnCentral.getStats(room)
-    };  
-}
+function garbageCollect() {
+    for(var i in Memory.creeps) {
+        if(!Game.creeps[i]) {
+            delete Memory.creeps[i];
+        }
+    } 
+
+    // TODO: Fix this
+    if (Memory.scoutReports === undefined) {
+        Memory.scoutReports = {};
+    }
+ }
 
 Room.prototype.firstSpawn = function() {
     var spawns = this.find(FIND_MY_SPAWNS);

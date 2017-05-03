@@ -26,6 +26,7 @@ var RoleHarvester = {
     create: function(room, assignment) {
         var newCreep = CreepFactory.create(room, Static.ROLE_HARVESTER, 'HARVEST');
         if (newCreep !== null) {
+            MoveBehaviour.setup(newCreep);
             if (assignment == {}) {
                 requestAssignment(newCreep);
             } else {

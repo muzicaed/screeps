@@ -2,6 +2,7 @@ var Static = require('system.static');
 var CreepFactory = require('factory.creep');
 var WithdrawBehaviour = require('behaviour.withdraw');
 var TransferBehaviour = require('behaviour.transfer');
+var MoveBehaviour = require('behaviour.move');
 
 var RoleSimCreep = {
 
@@ -23,8 +24,9 @@ var RoleSimCreep = {
     create: function(room) {
         var newCreep = CreepFactory.create(room, Static.ROLE_SIMCREEP, 'WITHDRAW');
         if (newCreep !== null) {
-            newCreep.memory.withdrawTargetId = null;
-            newCreep.memory.transferTargetId = null;
+            MoveBehaviour.setup(newCreep);
+            TransferBehaviour.setup(newCreep);
+            WithdrawBehaviour.setup(newCreep);
         }        
     }
 };
