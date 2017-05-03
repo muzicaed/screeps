@@ -150,7 +150,8 @@ function generateReport(room) {
         'type': checkRoomType(room),
         'sources': findSources(room),
         'enemyReport': generateEnemyReport(room),
-        'typeOfMineral': findMineral(room)
+        'typeOfMineral': findMineral(room),
+        'timeStamp': Game.time
     };
     Memory.scoutReports[room.name].exporeState = checkRoomState(room, Memory.scoutReports[room.name]);    
 }
