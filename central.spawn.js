@@ -54,8 +54,7 @@ function handleOutpost(room) {
     if (room.name == 'sim' && Finder.countRole(room, Static.ROLE_SIMCREEP) < 1) {
         SimCreep.create(room);     
         return;
-    }
-    
+    }    
     
     if (Finder.countRole(room, Static.ROLE_PIONEER) == 0) {
         Pioneer.panicCreate(room);
@@ -63,7 +62,7 @@ function handleOutpost(room) {
         Pioneer.create(room);
     } else if (Finder.countRole(room, Static.ROLE_CARETAKER) < 1) {
         Caretaker.create(room);
-    } else if (Finder.countRole(room, Static.ROLE_PUMP) < ControllerBase.pumpNeed(room)) {
+    } else if (ControllerBase.hasPumpNeed(room)) {
         Pump.create(room);
     } else if (IS_INVATION) {
         Defender.create(room);
@@ -77,7 +76,7 @@ function handleCity(room) {
         Harvester.create(room, {}); 
     } else if (Finder.countRole(room, Static.ROLE_SPAWNKEEPER) < 1) {
         SpawnKeeper.create(room);        
-    } else if (Finder.countRole(room, Static.ROLE_PUMP) < ControllerBase.pumpNeed(room)) {
+    } else if (ControllerBase.hasPumpNeed(room)) {
         Pump.create(room);
     } else if (hasCaretakerNeed(room, 1)) {
         Caretaker.create(room);
@@ -91,7 +90,7 @@ function handleCizilization(room) {
         Harvester.create(room, {}); 
     } else if (Finder.countRole(room, Static.ROLE_SPAWNKEEPER) < 1) {
         SpawnKeeper.create(room);
-    } else if (Finder.countRole(room, Static.ROLE_PUMP) < ControllerBase.pumpNeed(room)) {
+    } else if (ControllerBase.hasPumpNeed(room)) {
         Pump.create(room);
     } else if (hasCaretakerNeed(room, 2)) {
         Caretaker.create(room);
