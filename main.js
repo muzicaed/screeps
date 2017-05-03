@@ -94,11 +94,6 @@ function garbageCollect() {
             delete Memory.creeps[i];
         }
     } 
-
-    // TODO: Fix this
-    if (Memory.scoutReports === undefined) {
-        Memory.scoutReports = {};
-    }
 }
 
 Room.prototype.firstSpawn = function() {
