@@ -18,8 +18,7 @@ var ClaimOperation = {
 			'controllerId': spec.controllerId,
 			'spawnConstructionSiteId': null,
 			'claimCreep': null,
-			'buildCreep': null,
-			'transportCreeps': []
+			'builderCreeps': []
 		};
 	},
 
@@ -31,12 +30,11 @@ var ClaimOperation = {
 
 function updateOperation(operation) {
 	operation.claimCreep = checkCreep(operation.claimCreep);
-	operation.buildCreep = checkCreep(operation.buildCreep);
-	var i = operation.transportCreeps.length;
+	var i = operation.builderCreeps.length;
 	while (i--) {
-	    var transport = operation.transportCreeps.pop();
-	    if (checkCreep(transport) !== null) {
-	    	operation.transportCreeps.append(transport);
+	    var builder = operation.builderCreeps.pop();
+	    if (checkCreep(builder) !== null) {
+	    	operation.builderCreeps.append(builder);
 	    }
 	}
 
@@ -64,11 +62,8 @@ function handleSpawn(operation) {
 		if (operation.claimCreep === null) {
 			console.log('Try spawn Claimer');
 			operation.claimCreep = Claimer.create(ownerRoom, operation.targetRoom);
-		} else if (operation.buildCreep == null) {
+		} else if (operation.builderCreeps.length < 2) {
 			console.log('Try spawn builder');
-
-		} else if (operation.transportCreeps.length < 2) {
-			console.log('Try spawn transport');
 		}
 	}
 }
