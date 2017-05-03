@@ -80,7 +80,10 @@ function handleCity(room) {
         Pump.create(room);
     } else if (hasCaretakerNeed(room, 1)) {
         Caretaker.create(room);
-    }   
+    } else if (Game.time < (room.memory.lastScount + 2000)) {
+        room.memory.lastScount = Game.time;
+        Scout.create(room);
+    }
 }
 
 function handleCizilization(room) {
@@ -96,6 +99,9 @@ function handleCizilization(room) {
         Caretaker.create(room);
     } else if (IS_INVATION) {
         Defender.create(room);
+    } else if (Game.time < (room.memory.lastScount + 500)) {
+        room.memory.lastScount = Game.time;
+        Scout.create(room);
     }
 }
 
