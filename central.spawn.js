@@ -29,8 +29,6 @@ var SpawnCentral = {
         
         if (!handleEnemies(room)) {                            
             if(Game.time % 10 == 0) {
-                //Scout.create(room);
-                //SpawnKeeper.create(room);
                 switch (Society.getLevel(room)) {                
                     case Static.SOCIETY_LEVEL_OUTPOST:
                         handleOutpost(room);
@@ -70,7 +68,9 @@ function handleOutpost(room) {
 }
 
 function handleCity(room) {
-    if ((Finder.countRole(room, Static.ROLE_TRANSPORTER) < (Finder.countRole(room, Static.ROLE_HARVESTER) * 2))) {
+    if (Finder.countRole(room, Static.ROLE_HARVESTER) == 0 && Finder.countRole(room, Static.ROLE_TRANSPORTER) == 0 && Finder.countRole(room, Static.ROLE_PIONEER) < 2) {
+        Pioneer.panicCreate(room);    
+    } else if ((Finder.countRole(room, Static.ROLE_TRANSPORTER) < (Finder.countRole(room, Static.ROLE_HARVESTER) * 2))) {
         Transporter.create(room, Static.ROLE_TRANSPORTER);    
     } else if (ResourceCentral.needHarvester(room)) {
         Harvester.create(room, {}); 

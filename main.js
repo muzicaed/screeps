@@ -114,6 +114,7 @@ roleObjectMap[Static.ROLE_PIONEER] = Pioneer;
 roleObjectMap[Static.ROLE_TRANSPORTER] = Transporter;
 roleObjectMap[Static.ROLE_CIV_TRANSPORTER] = Transporter;
 roleObjectMap[Static.ROLE_CARETAKER] = Caretaker;
+roleObjectMap[Static.ROLE_HARVESTER] = Harvester;
 roleObjectMap[Static.ROLE_SPAWNKEEPER] = SpawnKeeper;
 roleObjectMap[Static.ROLE_PUMP] = Pump;
 roleObjectMap[Static.ROLE_DEFENDER] = Defender;

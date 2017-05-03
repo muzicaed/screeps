@@ -3,6 +3,7 @@ var Finder = require('system.finder');
 var BaseFactory = require('factory.base');
 var RoadsCentral = require('central.roads');
 var BaseHQ = require('base.hq');
+var Static = require('system.static');
 
 var ControllerBase = {
 
