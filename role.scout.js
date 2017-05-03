@@ -71,10 +71,8 @@ function doFindScoutTarget(creep) {
     for (var i in exits) {
         var roomName = exits[i];
         if (roomName != creep.memory.lastRoomName) {
-            console.log('ROOM NAME: ' + roomName);
             switch (OperationManager.getRoomExploreState(roomName)) {
                 case Static.EXPLORE_UNKNOWN:
-                    console.log('EXPLORE_UNKNOWN');
                     creep.memory.targetRoomName = roomName;                                        
                     if (creep.memory.targetRoomName !== null) {
                         var roomPos = new RoomPosition(25, 25, creep.memory.targetRoomName);   
@@ -83,15 +81,12 @@ function doFindScoutTarget(creep) {
                     return;
                     break;
                 case Static.EXPLORE_MY_CONTROL:
-                    console.log('EXPLORE_MY_CONTROL');
                     myRooms.push(roomName);
                     break;
                 case Static.EXPLORE_NEUTRAL:
-                    console.log('EXPLORE_NEUTRAL');
                     neutralRooms.push(roomName);
                     break;
                 case Static.EXPLORE_ENEMY: 
-                    console.log('EXPLORE_ENEMY');               
                     // Do not explore
                     break;
             }
@@ -99,7 +94,6 @@ function doFindScoutTarget(creep) {
     }
 
     pickBestTargetRoom(creep, neutralRooms, myRooms);    
-    console.log('Target room name: ' + creep.memory.targetRoomName);
     var roomPos = new RoomPosition(25, 25, creep.memory.targetRoomName);   
     MoveBehaviour.movePath(creep, roomPos); 
 }

@@ -1,6 +1,7 @@
 
+var ClaimOperationManager = require('operation.manager.claim');
+var HarvestOperationManager = require('operation.manager.harvest');
 var ClaimOperation = require('operation.claim');
-var HarvestOperation = require('operation.harvest');
 var Static = require('system.static');
 var Utils = require('system.utils');
 
@@ -53,13 +54,9 @@ var OperationManager = {
 
     getRoomExploreState: function(roomName) {    
         var report = getScoutReportsMemory()[roomName];
-        console.log('REPORT:');
-        console.log(JSON.stringify(report));
         if (report === undefined || report.exporeState === undefined) {
-            console.log('RETURN: EXPLORE_UNKNOWN');
             return Static.EXPLORE_UNKNOWN;
         }
-        console.log('RETURN:' + report.exporeState);
         return report.exporeState;
     }       
 };
@@ -72,8 +69,8 @@ function runActiveOperations() {
 
 function processOperations() {
     var reports = getScoutReportsMemory();
-    for (var i = 0; i < operationObjects.length; i++) {
-        operationObjects[i].processReports(reports);
+    for (var i = 0; i < operationManagerObjects.length; i++) {
+        operationManagerObjects[i].processReports(reports);
     }
 }
 
@@ -135,8 +132,12 @@ function getScoutReportsMemory() {
 }
 
 var operationObjects = [
-    ClaimOperation,
-    HarvestOperation
+    ClaimOperation
+];
+
+var operationManagerObjects = [
+    ClaimOperationManager,
+    HarvestOperationManager
 ];
 
 module.exports = OperationManager;

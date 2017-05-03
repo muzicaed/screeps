@@ -1,3 +1,4 @@
+var Static = require('system.static');
 
 var HarvestOperation = {
 

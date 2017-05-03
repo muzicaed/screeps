@@ -30,18 +30,17 @@ module.exports.loop = function () {
         
         // Disable log
         //console.log = function() {};    
-        garbageCollect();
-        OperationManager.run();
+        garbageCollect();        
         runRooms();
-        runCreeps();        
+        runCreeps();     
+        OperationManager.run();   
     });
 };
 
 function runRooms() {   
-        
+    Memory.myActiveRooms = {};
     for (var i in Game.rooms) {
         var room = Game.rooms[i];
-
         if (room.controller !== undefined && room.controller.my) {
             if (!room.memory.isInitialized) {  
                 console.log('Init');
@@ -65,7 +64,7 @@ function runRooms() {
             RepairCentral.run(room);
             
             runTowers(room);
-
+            Memory.myActiveRooms[room.name] = room.name;
             // TODO: Make this a lot better...
             if (room.controller && room.controller.safeModeAvailable > 0) {
                 room.controller.activateSafeMode();
