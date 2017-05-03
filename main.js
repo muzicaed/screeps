@@ -21,6 +21,7 @@ var Bases = require('central.bases');
 var Static = require('system.static');
 var Finder = require('system.finder');
 var BaseFactory = require('factory.base');
+var OperationManager = require('operation.manager');
 
 profiler.enable();
 module.exports.loop = function () {    
@@ -30,6 +31,7 @@ module.exports.loop = function () {
         // Disable log
         //console.log = function() {};    
         garbageCollect();
+        OperationManager.run();
         runRooms();
         runCreeps();        
     });
@@ -75,40 +77,8 @@ function runRooms() {
 function runCreeps() {
     for (var i in Game.creeps) {
         var creep = Game.creeps[i];
-
-        switch (creep.memory.role) {
-            case Static.ROLE_PIONEER:
-                Pioneer.run(creep);
-                break;            
-            case Static.ROLE_HARVESTER:
-                Harvester.run(creep);
-                break;
-            case Static.ROLE_TRANSPORTER:
-                Transporter.run(creep);
-                break;    
-            case Static.ROLE_CIV_TRANSPORTER:
-                Transporter.run(creep);
-                break;                    
-            case Static.ROLE_CARETAKER:                
-                Caretaker.run(creep);
-                break;         
-            case Static.ROLE_SPAWNKEEPER:
-                SpawnKeeper.run(creep);
-                break;   
-            case Static.ROLE_PUMP:
-                Pump.run(creep);
-                break;   
-            case Static.ROLE_DEFENDER:
-                Defender.run(creep);
-                break;  
-            case Static.ROLE_SCOUT:
-                Scout.run(creep);
-                break;   
-            case Static.ROLE_SIMCREEP:
-                SimCreep.run(creep);
-                break;                  
-        }
-    }      
+        roleObjectMap[creep.memory.role].run(creep);
+    }     
 }
 
 function runTowers(room) {
@@ -129,7 +99,7 @@ function garbageCollect() {
     if (Memory.scoutReports === undefined) {
         Memory.scoutReports = {};
     }
- }
+}
 
 Room.prototype.firstSpawn = function() {
     var spawns = this.find(FIND_MY_SPAWNS);
@@ -138,3 +108,14 @@ Room.prototype.firstSpawn = function() {
     }
     return null;
 };
+
+var roleObjectMap = {};
+roleObjectMap[Static.ROLE_PIONEER] = Pioneer;
+roleObjectMap[Static.ROLE_TRANSPORTER] = Transporter;
+roleObjectMap[Static.ROLE_CIV_TRANSPORTER] = Transporter;
+roleObjectMap[Static.ROLE_CARETAKER] = Caretaker;
+roleObjectMap[Static.ROLE_SPAWNKEEPER] = SpawnKeeper;
+roleObjectMap[Static.ROLE_PUMP] = Pump;
+roleObjectMap[Static.ROLE_DEFENDER] = Defender;
+roleObjectMap[Static.ROLE_SCOUT] = Scout;
+roleObjectMap[Static.ROLE_SIMCREEP] = SimCreep;

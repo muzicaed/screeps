@@ -154,7 +154,6 @@ function convertPath(path) {
 }
 
 function getMemory(room) {
-
     return room.memory.SYS[MEMORY];    
 }
 
