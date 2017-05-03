@@ -16,7 +16,6 @@ var BaseFactory = {
 		var count = 0;
 		var xOff = Math.floor(blueprint.width * 0.5);
 		var yOff = Math.floor(blueprint.height * 0.5);
-		console.log(JSON.stringify(centerPos));
 		for (var x = (centerPos.x - xOff); x <= (centerPos.x + xOff); x++) {
 			for (var y = (centerPos.y - yOff); y <= (centerPos.y + yOff); y++) {
 				var type = blueprint.map[count];
@@ -49,7 +48,7 @@ function findBaseLocation(room, blueprint, closeTo) {
 }
 
 function isPotentialLocation(room, blueprint, x, y) {
-	var results = room.lookAtArea(y, x, y + blueprint.height, x + blueprint.width, true);
+	var results = room.lookAtArea(y, x, y + (blueprint.height - 1), x + (blueprint.width - 1), true);
 	for (var i = 0; i < results.length; i++) {
 		var tile = results[i];
 

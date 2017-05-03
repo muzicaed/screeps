@@ -7,7 +7,7 @@ var UpgradeControllerBehaviour = require('behaviour.controllerupgrade');
 var ControllerBase = require('base.controller');
 var MoveBehaviour = require('behaviour.move');
 
-var RoleCaretaker = {
+var RolePump = {
 
     run: function(creep) {
         var action = think(creep);
@@ -29,6 +29,7 @@ var RoleCaretaker = {
         if (controllerContainerId !== null) {
             var newCreep = CreepFactory.create(room, Static.ROLE_PUMP, 'SUCK');
             if (newCreep !== null) {
+                MoveBehaviour.setup(newCreep);
                 newCreep.memory.controllerContainerId = controllerContainerId;
                 newCreep.memory.controllerId = room.controller.id;
                 newCreep.memory.inPosition = false;
@@ -73,15 +74,18 @@ function applyNewState(creep, newState) {
 
 function findTargetPos(creep) {
     var target = Game.getObjectById(creep.memory.controllerContainerId);
-    for (var yMod = -1; yMod <= 0; yMod++) {
-        for (var xMod = -1; xMod <= 1; xMod++) {
-            var creeps = creep.room.lookForAt(LOOK_CREEPS, (target.pos.x + xMod), (target.pos.y + yMod));
-            if (creeps.length == 0 || creeps[0].id == creep.id) {
-                return { x: (target.pos.x + xMod), y: (target.pos.y + yMod) };        
+    if (target !== null) {
+        for (var yMod = -1; yMod <= 0; yMod++) {
+            for (var xMod = -1; xMod <= 1; xMod++) {
+                var creeps = creep.room.lookForAt(LOOK_CREEPS, (target.pos.x + xMod), (target.pos.y + yMod));
+                if (creeps.length == 0 || creeps[0].id == creep.id) {
+                    return { x: (target.pos.x + xMod), y: (target.pos.y + yMod) };        
+                }
             }
         }
     }
-    
+
+    creep.memory.controllerContainerId = ControllerBase.getControllerContainerId(creep.room);
     return { x: creep.pos.x + xMod, y: creep.pos.y};
 }
 
@@ -108,4 +112,4 @@ function doPosition(creep) {
     creep.memory.state = 'IDLE';
 }
 
-module.exports = RoleCaretaker;
+module.exports = RolePump;

@@ -2,51 +2,49 @@ var MEMORY = 'CentralBases';
 var BaseHQ = require('base.hq');
 var ControllerBase = require('base.controller');
 var ExtensionBase = require('base.extension');
+var Society = require('central.society');
 
 var BasesCentral = {
 
     init: function(room) {
-        BaseHQ.init(room);
-        ControllerBase.init(room);
-
-        // TODO: Not needed to store this.    
-        if (room.memory.SYS[MEMORY] === undefined) { // TODO: REMOVE TEST TRUE
+        if (room.memory.SYS[MEMORY] === undefined || room.memory.SYS[MEMORY] === null) {
             room.memory.SYS[MEMORY] = {
                 extensionBases: [],
                 age: 0
             };
-        }
+        }        
+        BaseHQ.init(room);
+        ControllerBase.init(room);
     },
 
 	run: function(room) {
         var memory = getMemory(room);
-        var ctrlLevel = room.controller.level;
-       if (memory.age > 70) {
-           console.log('Run: BasesCentral');
+        if (memory.age > 70) {
             memory.age = 0;
             BaseHQ.run(room);
             ControllerBase.run(room);
-            for (var i = 0; i < extentionBasePerCtrlLevel[ctrlLevel]; i++) {
-                var basePos = memory.extensionBases[i];
-                if (basePos === undefined || basePos === null) {
-                    var placementPos = ExtensionBase.init(room, i);
-                    memory.extensionBases.push(placementPos);
-                } else {
-                    ExtensionBase.run(room, i);    
-                }                
-            }
+            handleExtentionBase(room);
         }
-        memory.age++;           
-	},
-
-    getStats: function(room) {
-        return {
-            hq: BaseHQ.getStats(room),
-            controllerBase: ControllerBase.getStats(room),
-            extensionBases: ExtensionBase.getStats(room)         
-        };
-    }
+        memory.age++;          
+	}
 };
+
+function handleExtentionBase(room) {
+    var memory = getMemory(room);
+    var ctrlLevel = room.controller.level;
+    if (Society.getLevel(room) >= 2) {
+        for (var i = 0; i < extentionBasePerCtrlLevel[ctrlLevel]; i++) {
+            var basePos = memory.extensionBases[i];
+            if (basePos === undefined || basePos === null) {
+                var placementPos = ExtensionBase.init(room, i);
+                memory.extensionBases.push(placementPos);
+                return;
+            } else {
+                ExtensionBase.run(room, i);    
+            }                
+        }
+    }
+}
 
 function getMemory(room) {
     return room.memory.SYS[MEMORY];

@@ -7,10 +7,13 @@ var MoveBehaviour = require('behaviour.move');
 
 var TransferBehaviour = {
     
-    apply: function(creep) {
-        creep.memory.transferCollectId = null;  
-        
-        if (creep.room.controller.ticksToDowngrade > -1) {
+    setup: function(creep) {
+        creep.memory.transferTargetId = null;
+        creep.memory.transferRoomName = creep.room.name;
+    },
+
+    apply: function(creep) {        
+        if (creep.room.controller.ticksToDowngrade > 2000) {
             var spawn = findDeliverySpawnStructure(creep);
             if (spawn !== null) {
                 creep.memory.transferTargetId = spawn.id;
@@ -25,10 +28,17 @@ var TransferBehaviour = {
         }
         
         var containerId = ControllerBase.getControllerContainerId(creep.room);
-        if (containerId !== null) {
-            creep.memory.transferTargetId = containerId;
+        var controllerContainer = Game.getObjectById(containerId);
+        if (controllerContainer !== null && _.sum(controllerContainer.store) < (controllerContainer.storeCapacity - 500)) {
+            creep.memory.transferTargetId = controllerContainer.id;
             return;
-        }         
+        }   
+
+        // TODO: Not supporting multiple rooms!
+        if (creep.room.storage !== undefined && _.sum(creep.room.storage.store) < creep.room.storage.storeCapacity) {
+            creep.memory.transferTargetId = creep.room.storage.id;
+            return;
+        }      
         creep.memory.state = 'IDLE';    
     },    
     
@@ -72,12 +82,12 @@ function doTransferToContainer(creep, target) {
 }
 
 function findDeliverySpawnStructure(creep) {
-    var results = creep.room.find(FIND_MY_STRUCTURES, {
+    var room = Game.rooms[creep.memory.transferRoomName];
+    var results = room.find(FIND_MY_STRUCTURES, {
         filter: function(obj) {
             return (
                 (obj.structureType == STRUCTURE_SPAWN || obj.structureType == STRUCTURE_EXTENSION) &&
-                (obj.energy < obj.energyCapacity) &&
-                (obj.isActive())
+                (obj.energy < obj.energyCapacity)
             );
         }
     });
@@ -86,15 +96,12 @@ function findDeliverySpawnStructure(creep) {
 }
 
 function findBestBaseContainer(creep) {
-    var containers = Utils.createGameObjArr(BaseHQ.getAllBaseContainers(creep.room));
+    var room = Game.rooms[creep.memory.transferRoomName];
+    var containers = Utils.createGameObjArr(BaseHQ.getAllBaseContainers(room));
     for (var i = 0; i < containers.length; i++) {
         var container = containers[i];
-        if (container.isActive()) {
-            if (container.structureType == STRUCTURE_STORAGE && container.store.energy < 3000) {
-                return containers[i];
-            } else if (container.structureType == STRUCTURE_CONTAINER && _.sum(container.store) < container.storeCapacity) {
-                return container;
-            }
+        if (_.sum(container.store) < container.storeCapacity) {
+            return container;
         }
     }
     return null

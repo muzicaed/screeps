@@ -19,7 +19,6 @@ var ControllerBase = {
 	},
 
 	run: function(room) {
-		console.log('Run: Controller base');
 		var memory = getMemory(room);
 		memory.controllerContainerId = Finder.findContainerId(room.controller.pos, 2);
 	},
@@ -35,23 +34,23 @@ var ControllerBase = {
     },
 
 	pumpNeed: function(room) {
-		if (room.energyCapacityAvailable >= 1200) {
+	    var memory = getMemory(room);
+	    var container = Game.getObjectById(memory.controllerContainerId);
+	    if (container === null || container.store.energy == 0) {
+	        return 0;
+		} else if (room.energyCapacityAvailable >= 2000) {
 			return 1;
-		} else if (room.energyCapacityAvailable >= 800) {
-			return 3;
+		} else if (room.energyCapacityAvailable >= 1000) {
+			return 2;
 		} 
-		return 6
-	},
-
-	getStats(room) {
-		// TODO:
-		return {};
+		return 3;
 	}
 };
 
 function orderRoads(room) {
 	var memory = getMemory(room);
 	var connectionPair = RoadsCentral.findBestRoadConnections (
+		room,
 		memory.roadConnections,
 		BaseHQ.getRoadConnections(room)
 	);

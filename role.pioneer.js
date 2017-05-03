@@ -34,11 +34,22 @@ var RolePioneer = {
     create: function(room) {
         var newCreep = CreepFactory.create(room, Static.ROLE_PIONEER, 'HARVEST');
         if (newCreep !== null) {
+            MoveBehaviour.setup(newCreep);
+            TransferBehaviour.setup(newCreep);
             newCreep.memory.idleCount = 0;
-            newCreep.memory.transferTargetId = null;
             newCreep.memory.assignedToSourceId = ResourceCentral.requestPioneerAssignment(newCreep);
         }          
-    }
+    },
+    
+    panicCreate: function(room) {
+        var newCreep = CreepFactory.create(room, Static.ROLE_PIONEER, 'HARVEST', 300);
+        if (newCreep !== null) {
+            MoveBehaviour.setup(newCreep);
+            TransferBehaviour.setup(newCreep);
+            newCreep.memory.idleCount = 0;
+            newCreep.memory.assignedToSourceId = ResourceCentral.requestPioneerAssignment(newCreep);
+        }          
+    }    
 };
 
 function think(creep) {

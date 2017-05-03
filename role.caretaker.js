@@ -6,9 +6,10 @@ var Static = require('system.static');
 var CreepFactory = require('factory.creep');
 var WithdrawBehaviour = require('behaviour.withdraw');
 var MoveBehaviour = require('behaviour.move');
-var Society = require('central.society');
+var TransferBehaviour = require('behaviour.transfer');
+var ConstructionCentral = require('central.construction');
+var RepairCentral = require('central.repair');
 
-var WALL_HP_TARGET = 10000;
 
 var RoleCaretaker = {
 
@@ -21,9 +22,15 @@ var RoleCaretaker = {
             case 'REPAIR':
                 doRepair(creep);
                 break;
+            case 'BUILD':
+                doBuild(creep);
+                break;                
             case 'RELOAD_TOWER':
                 doReloadTower(creep);
-                break;    
+                break;
+            case 'TRANSFER':
+                TransferBehaviour.do(creep);
+                break;                       
             case 'IDLE':
                 creep.move(Math.floor(Math.random() * 8) + 1);  
                 break;
@@ -33,8 +40,11 @@ var RoleCaretaker = {
     create: function(room) {
         var newCreep = CreepFactory.create(room, Static.ROLE_CARETAKER, 'WITHDRAW');
         if (newCreep !== null) {
+            MoveBehaviour.setup(newCreep);
+            WithdrawBehaviour.setup(newCreep);
+            TransferBehaviour.setup(newCreep);
+            newCreep.memory.constructionTargetId = null;
             newCreep.memory.repairTargetId = null;
-            newCreep.memory.withdrawTargetId = null;
             newCreep.memory.reloadId = null;
             return true;
         }   
@@ -57,10 +67,14 @@ function checkStateChange(creep) {
     } else if (findReloadWork(creep) !== null) {
         // NOT OPTIMAL!!
         return 'RELOAD_TOWER';
-    } else if (creep.carry.energy == creep.carryCapacity) {
+    } else if (creep.carry.energy == creep.carryCapacity && RepairCentral.hasRepairNeed(creep.room)) {
         return 'REPAIR';
-    } else if (creep.memory.state == 'IDLE') {
+    } else if (creep.carry.energy == creep.carryCapacity && ConstructionCentral.hasConstructionOrders(creep.room)) {
+        return 'BUILD';        
+    } else if (creep.memory.state == 'IDLE' && creep.carry.energy == 0) {
         return 'WITHDRAW';
+    } else if (creep.memory.state == 'IDLE' && creep.carry.energy > 0) {
+        return 'TRANSFER';
     }
     return creep.memory.state;
 }
@@ -70,28 +84,36 @@ function applyNewState(creep, newState) {
     creep.memory.state = newState;
     switch(newState) {
         case 'RELOAD_TOWER':
-            creep.memory.repairTargetId = null;
-            creep.memory.withdrawTargetId = null;
             applyReloadTower(creep);
             break;
         case 'WITHDRAW':
-            creep.memory.repairTargetId = null;
-            creep.memory.reloadId = null;
             WithdrawBehaviour.apply(creep, true);
             break;   
         case 'REPAIR':
-            creep.memory.withdrawTargetId = null;
-            creep.memory.reloadId = null;
-            assignWork(creep);
+            assignRepairWork(creep);
             break;   
+        case 'BUILD':
+            assignConstructionWork(creep);
+            break;              
+        case 'TRANSFER':
+            TransferBehaviour.apply(creep);
+            break;              
     }
 }
 
-// TODO: Move this into central
-function assignWork(creep) {
-    var repairTarget = findRepairTarget(creep);
+function assignRepairWork(creep) {
+    var repairTarget = RepairCentral.nextInQueue(creep.room);
     if (repairTarget !== null) {
         creep.memory.repairTargetId = repairTarget.id;
+        return;
+    }
+    creep.memory.state = 'IDLE';
+}
+
+function assignConstructionWork(creep) {
+    var constructionTarget = ConstructionCentral.getCurrentOrder(creep.room);
+    if (constructionTarget !== null) {
+        creep.memory.constructionTargetId = constructionTarget.id;
         return;
     }
     creep.memory.state = 'IDLE';
@@ -117,6 +139,18 @@ function doRepair(creep) {
     creep.memory.state = 'IDLE';
 }
 
+function doBuild(creep) {
+    var target = Game.getObjectById(creep.memory.constructionTargetId);
+    if (target !== null) {
+        if (creep.build(target) == ERR_NOT_IN_RANGE) {
+            MoveBehaviour.movePath(creep, target);
+        }  
+        return;
+    }
+    creep.memory.state = 'IDLE';
+}
+
+// Move tower into hq and do not use Find function.
 function findReloadWork(creep) {
     var towers = Finder.findAllStructures(creep.room, STRUCTURE_TOWER, true);
     for (var i = 0; i < towers.length; i++) {
@@ -137,31 +171,6 @@ function doReloadTower(creep) {
         return;
     }
     creep.memory.state = 'IDLE';    
-}
-
-// TODO: REFACTORING - Move to central!
-function findRepairTarget(creep) {
-    var oldTarget = Game.getObjectById(creep.memory.repairTargetId);
-    if (oldTarget !== null && oldTarget.hits < oldTarget.hitsMax && oldTarget.structureType != STRUCTURE_WALL) {
-        return oldTarget;
-    }
-    
-    var targets = creep.room.find(FIND_STRUCTURES, {
-        filter: function(obj) {
-            return (
-                (obj.my && obj.hits < obj.hitsMax && obj.structureType != STRUCTURE_RAMPART) ||
-                ((obj.structureType == STRUCTURE_WALL || obj.structureType == STRUCTURE_RAMPART) && obj.hits < (WALL_HP_TARGET * Society.getLevel(creep.room))) ||
-                (obj.structureType == STRUCTURE_ROAD && obj.hits < (obj.hitsMax * 0.45)) ||
-                (obj.hits < obj.hitsMax * 0.75 && obj.structureType != STRUCTURE_WALL && obj.structureType != STRUCTURE_RAMPART && obj.structureType != STRUCTURE_ROAD)
-            );
-        }
-    });
-    targets.sort((a,b) => a.hits - b.hits);
-    targets.sort( function(a,b) { return a.hits - b.hits } );
-    if (typeof targets[0] !== "undefined") {
-        return targets[0];
-    }
-    return null;
 }
 
 module.exports = RoleCaretaker;

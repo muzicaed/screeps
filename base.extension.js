@@ -17,19 +17,14 @@ var BaseExtension = {
                 age: 0
             };
             orderRoads(room, idx);            
-            return room.memory.SYS[MEMORY][idx].pos;
+            return pos;
         }
 	},
 
 	run: function(room, idx) {
 		// TODO:
 		console.log('Run: Extension base');
-	},		
-
-	getStats(room) {
-		// TODO:
-		return [];
-	}   
+	} 
 };
 
 function prepareRoadConnections(room, centerPos) {
@@ -44,6 +39,7 @@ function prepareRoadConnections(room, centerPos) {
 function orderRoads(room, idx) {
 	var memory = getMemory(room, idx);
 	var connectionPair = RoadsCentral.findBestRoadConnections (
+        room,
 		memory.roadConnections,
 		BaseHQ.getRoadConnections(room)
 	);

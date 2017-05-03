@@ -9,9 +9,11 @@ var BaseHQ = {
        if (room.memory.SYS[MEMORY] === undefined) {
             var spawn = room.firstSpawn();
             room.memory.SYS[MEMORY] = {
+                hqId: spawn.id,
 				baseContainers: scanBaseContainers(room),
                 roadConnections: prepareRoadConnections(room, spawn.pos),
-				pos: spawn.pos
+				pos: spawn.pos,
+				level: 1
             };
             BaseFactory.placeConstructionOrders(room, blueprint, spawn.pos);
         }
@@ -21,6 +23,10 @@ var BaseHQ = {
         console.log('Run: BaseHQ');
         var memory = getMemory(room);
         memory.baseContainers = scanBaseContainers(room);
+        if (room.controller.level >= 5 && memory.level == 1) {
+            BaseFactory.placeConstructionOrders(room, blueprint2, memory.pos);
+            memory.level = 2;
+        }
 	},
 
     getAllBaseContainers: function(room) {
@@ -37,6 +43,9 @@ var BaseHQ = {
                 totalEnergy += container.store.energy;
             }
         }
+        if (room.storage !== undefined) {
+            totalEnergy += room.storage.store.energy;
+        }
         return totalEnergy;
     },
 
@@ -45,19 +54,15 @@ var BaseHQ = {
         return memory.roadConnections;
     },
 
-	getStats(room) {
-		return {
-			baseContainers: BaseHQ.getAllBaseContainers(room).length
-		};
-	}
+    getId(room) {
+        var memory = getMemory(room);
+        return memory.hqId;        
+    }
 };
 
 function scanBaseContainers(room) {
     var spwan = room.firstSpawn();
     var containers = Finder.findContainersInRange(spwan.pos, 3);
-    if (room.storage !== undefined && room.storage.isActive()) {
-        containers.push(room.storage);  
-    }
     return Utils.createIdArray(containers);
 }
 
@@ -83,11 +88,25 @@ var blueprint = {
     map: [
         'R','W','W','R','W','W','R',
         'W','R','E','C','E','R','W',
-        'W','O','R','R','R','3','W',
+        'W','0','R','R','R','0','W',
         'W','T','R','0','R','1','W',
-        'W','E','R','R','R','4','W',
+        'W','E','R','R','R','0','W',
         'W','R','E','C','E','R','W',
         'R','W','W','R','W','W','R'
+    ]
+};
+
+var blueprint2 = {
+    width: 7,
+    height: 7,
+    map: [
+        '2','0','0','2','0','0','2',
+        '0','0','0','R','0','0','0',
+        '0','0','0','0','0','T','0',
+        '0','0','0','0','0','0','0',
+        '0','0','0','0','0','4','0',
+        '0','0','0','R','0','0','0',
+        '2','0','0','2','0','0','2'
     ]
 };
 

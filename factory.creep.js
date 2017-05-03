@@ -1,11 +1,11 @@
-var Static = require('system.static');
-var Society = require('central.society');
+    var Static = require('system.static');
 
 var CreepFactory = {
     
-    create: function(room, role, initState) {
+    create: function(room, role, initState, energy) {
+        var useEnergy = (energy !== undefined) ? energy : room.energyCapacityAvailable;
         var res = room.firstSpawn().createCreep( 
-           getParts(room, role, room.energyCapacityAvailable), 
+           getParts(room, role, useEnergy), 
            randomRoleName(role), 
            { role: role, state: initState } 
         );
@@ -41,7 +41,7 @@ function tryPadding(parts, energyBudget, protoParts) {
     for(var i = 0; i < protoParts.length; i++) {
         var proto = protoParts[i];
 
-        if ((bodyCost[proto.type] + calculateCost(parts)) <= energyBudget) {
+        if ((BODYPART_COST[proto.type] + calculateCost(parts)) <= energyBudget) {
             parts.push(proto.type);
             return;
         }
@@ -73,11 +73,11 @@ function calculateNoOfParts(parts, energyBudget, proto) {
 
 function calculateFill(parts, energyBudget, proto) {
     var budget = energyBudget - calculateCost(parts);
-    return Math.floor(budget / bodyCost[proto.type]);    
+    return Math.floor(budget / BODYPART_COST[proto.type]);    
 }
 
 function calculateFactor(energyBudget, proto) {
-    var res = (energyBudget * proto.factor) / bodyCost[proto.type];
+    var res = (energyBudget * proto.factor) / BODYPART_COST[proto.type];
     return Math.floor(res);
 }
 
@@ -105,7 +105,7 @@ function pushPart(type, arr, count) {
 function calculateCost(bodyParts) {
     var cost = 0;
     for (var i = 0; i < bodyParts.length; i++) {
-        cost += bodyCost[bodyParts[i]];
+        cost += BODYPART_COST[bodyParts[i]];
     }
     return cost;
 }
@@ -123,10 +123,17 @@ recipies[Static.ROLE_HARVESTER] = {
     ] 
 };
 recipies[Static.ROLE_TRANSPORTER] = { 
-    optimalEnergy: 700, 
+    optimalEnergy: 600, 
     protoParts: [
         { type: CARRY, use: 'fact', factor: 0.50 },
         { type: MOVE,  use: 'fact', factor: 0.50 } 
+    ] 
+};
+recipies[Static.ROLE_CIV_TRANSPORTER] = { 
+    optimalEnergy: 1000, 
+    protoParts: [
+        { type: CARRY, use: 'fact', factor: 0.62 },
+        { type: MOVE,  use: 'fact', factor: 0.38 } 
     ] 
 };
 recipies[Static.ROLE_PIONEER] = { 
@@ -135,14 +142,6 @@ recipies[Static.ROLE_PIONEER] = {
         { type: WORK,  use: 'fact', factor: 0.75 },
         { type: CARRY, use: 'fact', factor: 0.25 },
         { type: MOVE,  use: 'match' }
-    ] 
-};
-recipies[Static.ROLE_BUILDER] = { 
-    optimalEnergy: 5000, 
-    protoParts: [
-        { type: WORK,  use: 'fact', factor: 0.60 },
-        { type: CARRY, use: 'fact', factor: 0.40 },
-        { type: MOVE,  use: 'match' }    
     ] 
 };
 recipies[Static.ROLE_CARETAKER] = { 
@@ -154,7 +153,7 @@ recipies[Static.ROLE_CARETAKER] = {
     ] 
 };
 recipies[Static.ROLE_SPAWNKEEPER] = { 
-    optimalEnergy: 5000, 
+    optimalEnergy: 600, 
     protoParts: [
         { type: CARRY, use: 'fact', factor: 0.50 },
         { type: MOVE,  use: 'fact', factor: 0.50 } 
@@ -168,16 +167,27 @@ recipies[Static.ROLE_PUMP] = {
         { type: WORK,  use: 'fill' }
     ] 
 };
-
-var bodyCost = {};
-bodyCost[MOVE] = 50;
-bodyCost[WORK] = 100;
-bodyCost[CARRY] = 50;
-bodyCost[ATTACK] = 80;
-bodyCost[RANGED_ATTACK] = 150;
-bodyCost[HEAL] = 250;
-bodyCost[CLAIM] = 600;
-bodyCost[TOUGH] = 10;
+recipies[Static.ROLE_SIMCREEP] = { 
+    optimalEnergy: 300, 
+    protoParts: [
+        { type: CARRY, use: 'fact', factor: 0.50 },
+        { type: MOVE,  use: 'fact', factor: 0.50 } 
+    ] 
+};
+recipies[Static.ROLE_DEFENDER] = { 
+    optimalEnergy: 5000, 
+    protoParts: [        
+        { type: TOUGH,  use: 'fact', factor: 0.20 },
+        { type: ATTACK, use: 'fact', factor: 0.80 },
+        { type: MOVE,  use: 'match' }  
+    ] 
+};
+recipies[Static.ROLE_SCOUT] = { 
+    optimalEnergy: 50, 
+    protoParts: [        
+        { type: MOVE,  use: 'static', no: 1 }
+    ] 
+};
 
 
 module.exports = CreepFactory;

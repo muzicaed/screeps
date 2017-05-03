@@ -7,15 +7,26 @@ var MoveBehaviour = require('behaviour.move');
 
 var WithdrawBehaviour = {
     
+    setup: function(creep) {
+        creep.memory.withdrawTargetId = null;
+        creep.memory.withdrawRoomName = creep.room.name;        
+    },
+
     apply: function(creep, isSpawnWithdraw) {
-        var container = findBestBaseContainer(creep);
+        var room = Game.rooms[creep.memory.withdrawRoomName];
+        if (room.storage !== undefined) {
+            creep.memory.withdrawTargetId = room.storage.id;
+            return;
+        }
+
+        var container = findBestBaseContainer(room);
         if (container !== null) {
             creep.memory.withdrawTargetId = container.id;
             return;
-        }       
-        
-        if (isSettlementWithdrawAllowed(creep.room) && isSpawnWithdraw) {
-            var spawn = Finder.findWithdrawSpawnStructure(creep);
+        } 
+
+        if (isSettlementWithdrawAllowed(room) && isSpawnWithdraw) {
+            var spawn = Finder.findWithdrawSpawnStructure(room);
             if (spawn !== null) {
                 creep.memory.withdrawTargetId = spawn.id;
                 return;
@@ -27,7 +38,7 @@ var WithdrawBehaviour = {
     
     do: function(creep) {
         var source = Game.getObjectById(creep.memory.withdrawTargetId);
-        if (source !== null) {
+        if (source !== null) {        
             if (creep.withdraw(source, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 MoveBehaviour.movePath(creep, source);
             }   
@@ -40,15 +51,15 @@ var WithdrawBehaviour = {
 function isSettlementWithdrawAllowed(room) {
     return (
         Society.isSettlement(room) &&
-        ResourceCentral.countAvailableAssignments(room) <= 0 &&
+        ResourceCentral.countAvailablePioneerAssignments(room) <= 0 &&
         room.energyAvailable > (room.energyCapacityAvailable * 0.7)
     );
 }
 
-function findBestBaseContainer(creep) {
+function findBestBaseContainer(room) {
     var best = null;
     var bestEnergy = 0;
-    var containers = Utils.createGameObjArr(BaseHQ.getAllBaseContainers(creep.room));
+    var containers = Utils.createGameObjArr(BaseHQ.getAllBaseContainers(room));
     for (var i = 0; i < containers.length; i++) {
         if (containers[i].store.energy > bestEnergy) {
             bestEnergy = containers[i].store.energy;
