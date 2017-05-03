@@ -1,7 +1,6 @@
 
 var ClaimOperationManager = require('operation.manager.claim');
 var HarvestOperationManager = require('operation.manager.harvest');
-var ClaimOperation = require('operation.claim');
 var Static = require('system.static');
 var Utils = require('system.utils');
 
@@ -45,6 +44,7 @@ var OperationManager = {
         reports[room.name] = {
             'type': checkRoomType(room),
             'sources': findSources(room),
+            'controllerId': findControllerId(room),
             'enemyReport': generateEnemyReport(room),
             'typeOfMineral': findMineral(room),
             'timeStamp': Game.time
@@ -62,8 +62,8 @@ var OperationManager = {
 };
 
 function runActiveOperations() {
-    for (var i = 0; i < operationObjects.length; i++) {
-        operationObjects[i].run();
+    for (var i = 0; i < operationManagerObjects.length; i++) {
+        operationManagerObjects[i].run();
     }
 }
 
@@ -84,6 +84,13 @@ function checkRoomType(room) {
 function findSources(room) {
     var sources = room.find(FIND_SOURCES);
     return Utils.createIdArray(sources);
+}
+
+function findControllerId(room) {
+    if (room.controller !== undefined) {
+        return room.controller.id;
+    }
+    return null;
 }
 
 function generateEnemyReport(room) {
@@ -130,10 +137,6 @@ function getOperationsMemory() {
 function getScoutReportsMemory() {
     return Memory.scoutReports;    
 }
-
-var operationObjects = [
-    ClaimOperation
-];
 
 var operationManagerObjects = [
     ClaimOperationManager,

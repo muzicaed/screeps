@@ -8,6 +8,7 @@ var Defender = require('role.defender');
 var Scout = require('role.scout');
 var SimCreep = require('role.simcreep');
 var Pump = require('role.pump');
+var Claimer = require('role.claimer');
 var TowerStandard = require('tower.standard');
 var ResourceCentral = require('central.resources');
 var RoadsCentral = require('central.roads');
@@ -41,7 +42,7 @@ function runRooms() {
     Memory.myActiveRooms = {};
     for (var i in Game.rooms) {
         var room = Game.rooms[i];
-        if (room.controller !== undefined && room.controller.my) {
+        if (room.controller !== undefined && room.controller.my && room.firstSpawn() !== null) {
             if (!room.memory.isInitialized) {  
                 console.log('Init');
                 room.memory.SYS = {};          
@@ -114,3 +115,4 @@ roleObjectMap[Static.ROLE_PUMP] = Pump;
 roleObjectMap[Static.ROLE_DEFENDER] = Defender;
 roleObjectMap[Static.ROLE_SCOUT] = Scout;
 roleObjectMap[Static.ROLE_SIMCREEP] = SimCreep;
+roleObjectMap[Static.ROLE_CLAIMER] = Claimer;

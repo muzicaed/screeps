@@ -29,6 +29,7 @@ var SpawnCentral = {
         
         if (!handleEnemies(room)) {                            
             if(Game.time % 10 == 0) {
+                //Scout.create(room);
                 switch (Society.getLevel(room)) {                
                     case Static.SOCIETY_LEVEL_OUTPOST:
                         handleOutpost(room);

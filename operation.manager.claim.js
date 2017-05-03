@@ -1,5 +1,6 @@
 var Static = require('system.static');
 var Society = require('central.society');
+var ClaimOperation = require('operation.claim');
 
 var ClaimOperationManager = {
 
@@ -7,8 +8,15 @@ var ClaimOperationManager = {
 		for (var id in reports) {
 			processReport(id, reports[id]);
 		}
-		activateOperations();	
-	}
+		activateOperation();	
+	},
+
+	run: function() {
+		var activeOperations = getActiveOperationsMemory();
+		for (var roomName in activeOperations) {
+			ClaimOperation.run(activeOperations[roomName]);
+		}
+	}	
 };
 
 function processReport(roomName, report) {
@@ -21,23 +29,45 @@ function processReport(roomName, report) {
 			possibleOperationsMemory[roomName] = {
 				ownerRoom: closestRoomName,
 				targetRoom: roomName,
+				controllerId: report.controllerId,
 				distance: distance
 			};		
     	}
     }    
 }
 
-function activateOperations() {
-	var possibleOperationsMemory = getPossibleOperationsMemory();
+function activateOperation() {
+	var possibleOperations = getPossibleOperationsMemory();
+	var activeOperations = getActiveOperationsMemory();
+	for (var roomName in possibleOperations) {
+		var noOfActive = Object.keys(activeOperations).length;
+		if (noOfActive < Game.gcl.level) {
+			var spec = possibleOperations[roomName];
+			if (!hasActiveOperation(spec.ownerRoom)) {
+				activeOperations[roomName] = ClaimOperation.create(possibleOperations[roomName]);
+				delete possibleOperations[roomName];		
+			}
+		}
+	}
+}
+
+function hasActiveOperation(ownerRoomName) {
+	var activeOperations = getActiveOperationsMemory();	
+	for (var roomName in activeOperations) {
+		if (activeOperations[roomName].ownerRoom == ownerRoomName) {
+			return true;
+		}
+	}
+	return false;
 }
 
 function isNewClaimTarget(roomName, report) {
 	var possibleOperationsMemory = getPossibleOperationsMemory();
-	var activeOperations = getActiveOperationsMemory();
+	var activeOperations = getActiveOperationsMemory();	
 	return (
 		possibleOperationsMemory[roomName] === undefined &&
 		activeOperations[roomName] === undefined &&
-		Memory.myActiveRooms[roomName] === undefined &&
+		Memory.myActiveRooms[roomName] === undefined &&		
 		report.type == Static.EXPLORE_TYPE_CONTROLLER_SOURCE &&
 		report.sources.length >= 2		
 	);

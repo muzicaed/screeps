@@ -188,6 +188,13 @@ recipies[Static.ROLE_SCOUT] = {
         { type: MOVE,  use: 'static', no: 1 }
     ] 
 };
+recipies[Static.ROLE_CLAIMER] = { 
+    optimalEnergy: 800, 
+    protoParts: [        
+        { type: CLAIM,  use: 'static', no: 1 },
+        { type: MOVE,  use: 'fill' }
+    ] 
+};
 
 
 module.exports = CreepFactory;
