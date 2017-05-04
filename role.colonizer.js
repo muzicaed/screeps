@@ -2,6 +2,7 @@ var Static = require('system.static');
 var CreepFactory = require('factory.creep');
 var MoveBehaviour = require('behaviour.move');
 var WithdrawBehaviour = require('behaviour.withdraw');
+var UpgradeControllerBehaviour = require('behaviour.controllerupgrade');
 
 var RoleColonizer = {
     run: function(creep) {
@@ -15,7 +16,10 @@ var RoleColonizer = {
                 break;                 
             case 'WITHDRAW':
                 WithdrawBehaviour.do(creep);
-                break;                 
+                break;    
+           case 'UPGRADE_CONTROLLER':
+                UpgradeControllerBehaviour.do(creep);
+                break;                              
         }  
     },
     
@@ -41,8 +45,10 @@ function think(creep) {
     return creep.memory.state;
 }
 
-function checkStateChange(creep) {    
-    if (creep.carry.energy == 0) {
+function checkStateChange(creep) {   
+   if (shouldUpgradeController(creep)) {
+        return 'UPGRADE_CONTROLLER';
+    } else if (creep.carry.energy == 0) {
         return 'WITHDRAW';
     } else if (creep.carry.energy == creep.carryCapacity && creep.room.name != creep.memory.targetRoomName) {
         return 'MOVE_TO_TARGET'; 
@@ -50,6 +56,16 @@ function checkStateChange(creep) {
         return 'BUILD';
     }
     return creep.memory.state;
+}
+
+function shouldUpgradeController(creep) {
+    if (creep.room.name == creep.memory.targetRoomName) {
+        var controller = creep.room.controller;
+        if (controller.level == 1 && controller.ticksToDowngrade < 800) {
+            return true;
+        }
+    }
+    return false;
 }
 
 function applyNewState(creep, newState) {
@@ -62,7 +78,9 @@ function applyNewState(creep, newState) {
             break;                          
         case 'WITHDRAW':
             WithdrawBehaviour.apply(creep, true);
-            break;                 
+            break;   
+        case 'UPGRADE_CONTROLLER':
+            break;                          
     }
 }
 
