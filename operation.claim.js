@@ -64,14 +64,12 @@ function handleCreepSpawn(operation) {
 	var ownerRoom = Game.rooms[operation.ownerRoom];
 	var targetRoom = Game.rooms[operation.targetRoom];
 	if (ownerRoom !== undefined && BaseHQ.currentBaseEnergy(ownerRoom) > 3000) {
-		if (operation.colonizerCreeps.length < 3 && targetRoom !== undefined && targetRoom.controller.my) {
-			console.log('Try spawn colonizer');			
+		if (operation.colonizerCreeps.length < 2 && targetRoom !== undefined && targetRoom.controller.my) {
 			var name = Colonizer.create(ownerRoom, operation.targetRoom)
 			if (name !== null) {
 				operation.colonizerCreeps.push(name);	
 			}	
 		} else if (operation.claimCreep === null && (targetRoom === undefined || !targetRoom.controller.my)) {
-			console.log('Try spawn Claimer');
 			operation.claimCreep = Claimer.create(ownerRoom, operation.targetRoom);
 		}
 	}
