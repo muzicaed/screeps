@@ -42,7 +42,7 @@ function updateOperation(operation) {
 	while (i--) {
 	    var colonizer = operation.colonizerCreeps.pop();
 	    if (checkCreep(colonizer) !== null) {
-	    	operation.colonizerCreeps.append(colonizer);
+	    	operation.colonizerCreeps.push(colonizer);
 	    }
 	}
 
@@ -65,15 +65,15 @@ function handleCreepSpawn(operation) {
 	var targetRoom = Game.rooms[operation.targetRoom];
 
 	if (ownerRoom !== undefined && BaseHQ.currentBaseEnergy(ownerRoom) > 3000) {
-		if (operation.claimCreep === null && targetRoom !== undefined && !targetRoom.controller.my) {
-			console.log('Try spawn Claimer');
-			operation.claimCreep = Claimer.create(ownerRoom, operation.targetRoom);
-		} else if (operation.colonizerCreeps.length < 1) {
+		if (operation.colonizerCreeps.length < 1 && targetRoom !== undefined && targetRoom.controller.my) {
 			console.log('Try spawn colonizer');			
 			var name = Colonizer.create(ownerRoom, operation.targetRoom)
 			if (name !== null) {
 				operation.colonizerCreeps.push(name);	
-			}
+			}	
+		} else if (operation.claimCreep === null) {
+			console.log('Try spawn Claimer');
+			operation.claimCreep = Claimer.create(ownerRoom, operation.targetRoom);
 		}
 	}
 }

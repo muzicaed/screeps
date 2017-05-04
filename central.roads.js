@@ -27,7 +27,6 @@ var RoadsCentral = {
     },
     
     placeOrder: function(room, fromPos, toPos) {
-        console.log('Place order.');
         var memory = getMemory(room);
         if (!isRoadExists(room, fromPos, toPos)) {
             var id = createRoadId(room, fromPos, toPos);     

@@ -20,7 +20,6 @@ var BaseHQ = {
 	},
 
 	run: function(room) {
-        console.log('Run: BaseHQ');
         var memory = getMemory(room);
         memory.baseContainers = scanBaseContainers(room);
         if (room.controller.level >= 5 && memory.level == 1) {

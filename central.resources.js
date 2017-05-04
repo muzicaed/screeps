@@ -115,7 +115,6 @@ function updateSources(room) {
         sourceObj.isHarvesting = isHarvesting(room, sourceId);
         sourceObj.containerId = Finder.findContainerId(source.pos, 1);
        if (sourceObj.containerId === null && !sourceObj.isContainerConstructed) {
-            console.log('Order container');
             orderContainer(room, source.pos, 1);
             sourceObj.isContainerConstructed = true;
         }        
