@@ -40,8 +40,9 @@ function activateOperation() {
 	var possibleOperations = getPossibleOperationsMemory();
 	var activeOperations = getActiveOperationsMemory();
 	for (var roomName in possibleOperations) {
-		var noOfActive = Object.keys(activeOperations).length;
-		if (noOfActive < Game.gcl.level) {
+		var noOfActiveOps = Object.keys(activeOperations).length;
+		var noOfActiveRooms = Object.keys(Memory.myActiveRooms).length
+		if ((noOfActiveOps + noOfActiveRooms) < Game.gcl.level) {
 			var spec = possibleOperations[roomName];
 			if (!hasActiveOperation(spec.ownerRoom)) {
 				activeOperations[roomName] = ClaimOperation.create(possibleOperations[roomName]);
