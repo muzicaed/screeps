@@ -77,7 +77,7 @@ function handleCreepSpawn(operation) {
 
 function buildSpawn(operation) {
 	var targetRoom = Game.rooms[operation.targetRoom];
-	if (operation.spawnConstructionSiteId == null && targetRoom !== undefined && targetRoom.controller.my) {
+	if (operation.spawnConstructionSiteId == null && targetRoom !== undefined && targetRoom.controller.my && room.firstSpawn() == null) {
 		var pos = BaseHQ.getOpimalBaseLocation(targetRoom);
 		targetRoom.createConstructionSite(pos, STRUCTURE_SPAWN);	
 	}	
