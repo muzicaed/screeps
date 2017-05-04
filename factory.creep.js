@@ -153,7 +153,7 @@ recipies[Static.ROLE_CARETAKER] = {
     ] 
 };
 recipies[Static.ROLE_SPAWNKEEPER] = { 
-    optimalEnergy: 600, 
+    optimalEnergy: 800, 
     protoParts: [
         { type: CARRY, use: 'fact', factor: 0.50 },
         { type: MOVE,  use: 'fact', factor: 0.50 } 
@@ -193,6 +193,14 @@ recipies[Static.ROLE_CLAIMER] = {
     protoParts: [        
         { type: CLAIM,  use: 'static', no: 1 },
         { type: MOVE,  use: 'fill' }
+    ] 
+};
+recipies[Static.ROLE_COLONIZER] = { 
+    optimalEnergy: 2500, 
+    protoParts: [        
+        { type: WORK,  use: 'fact', factor: 0.20 },
+        { type: CARRY, use: 'fact', factor: 0.80 },
+        { type: MOVE,  use: 'match' }  
     ] 
 };
 

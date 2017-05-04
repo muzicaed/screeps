@@ -1,11 +1,15 @@
-
+var Static = require('system.static');
 var Claimer = require('role.claimer');
+var Colonizer = require('role.colonizer');
+var Society = require('central.society');
+var BaseHQ = require('base.hq');
 
 var ClaimOperation = {
 
 	run: function(operation) {
-		updateOperation(operation);
-		handleSpawn(operation);
+		updateOperation(operation);		
+		handleCreepSpawn(operation);
+		buildSpawn(operation);
 	},
 
 	create: function (spec) {
@@ -18,34 +22,34 @@ var ClaimOperation = {
 			'controllerId': spec.controllerId,
 			'spawnConstructionSiteId': null,
 			'claimCreep': null,
-			'builderCreeps': []
+			'colonizerCreeps': []
 		};
 	},
 
 	isCompleted(operation) {
 		var room = Game.rooms[operation.targetRoom];
-		return (room !== undefined && room.firstSpawn() !== null);
+		return (
+			room !== undefined && 
+			room.firstSpawn() !== null &&
+			Society.getLevel(room) > Static.SOCIETY_LEVEL_OUTPOST
+		);
 	}
 };
 
 function updateOperation(operation) {
 	operation.claimCreep = checkCreep(operation.claimCreep);
-	var i = operation.builderCreeps.length;
+	var i = operation.colonizerCreeps.length;
 	while (i--) {
-	    var builder = operation.builderCreeps.pop();
-	    if (checkCreep(builder) !== null) {
-	    	operation.builderCreeps.append(builder);
+	    var colonizer = operation.colonizerCreeps.pop();
+	    if (checkCreep(colonizer) !== null) {
+	    	operation.colonizerCreeps.append(colonizer);
 	    }
 	}
 
 	var room = Game.rooms[operation.targetRoom];
 	if (room !== undefined) {
 		var sites = room.find(FIND_MY_CONSTRUCTION_SITES);
-		if (sites.length == 0) {
-			operation.spawnConstructionSiteId = null;
-		} else {
-			operation.spawnConstructionSiteId = sites[0].id;
-		}
+		operation.spawnConstructionSiteId = (sites > 0) ? sites[0].id : null;	
 	}	
 }
 
@@ -56,16 +60,30 @@ function checkCreep(creepName) {
 	return creepName;
 }
 
-function handleSpawn(operation) {
+function handleCreepSpawn(operation) {
 	var ownerRoom = Game.rooms[operation.ownerRoom];
-	if (ownerRoom !== undefined) {
-		if (operation.claimCreep === null) {
+	var targetRoom = Game.rooms[operation.targetRoom];
+
+	if (ownerRoom !== undefined && BaseHQ.currentBaseEnergy(ownerRoom) > 3000) {
+		if (operation.claimCreep === null && targetRoom !== undefined && !targetRoom.controller.my) {
 			console.log('Try spawn Claimer');
 			operation.claimCreep = Claimer.create(ownerRoom, operation.targetRoom);
-		} else if (operation.builderCreeps.length < 2) {
-			console.log('Try spawn builder');
+		} else if (operation.colonizerCreeps.length < 1) {
+			console.log('Try spawn colonizer');			
+			var name = Colonizer.create(ownerRoom, operation.targetRoom)
+			if (name !== null) {
+				operation.colonizerCreeps.push(name);	
+			}
 		}
 	}
+}
+
+function buildSpawn(operation) {
+	var targetRoom = Game.rooms[operation.targetRoom];
+	if (operation.spawnConstructionSiteId == null && targetRoom !== undefined && targetRoom.controller.my) {
+		var pos = BaseHQ.getOpimalBaseLocation(targetRoom);
+		targetRoom.createConstructionSite(pos, STRUCTURE_SPAWN);	
+	}	
 }
 
 module.exports = ClaimOperation;

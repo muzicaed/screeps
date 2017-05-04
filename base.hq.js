@@ -57,6 +57,10 @@ var BaseHQ = {
     getId(room) {
         var memory = getMemory(room);
         return memory.hqId;        
+    },
+
+    getOpimalBaseLocation(room) {
+        return BaseFactory.findBaseLocation(room, blueprint, room.getPositionAt(25, 25));
     }
 };
 

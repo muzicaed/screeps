@@ -97,7 +97,7 @@ function getMemory(room) {
 var levels = {
     1: { storage: 0, baseContainers: 0, sourceContainer: 0, controllerContainer: 0, spawnEnergy: 100 },
     2: { storage: 0, baseContainers: 1, sourceContainer: 1, controllerContainer: 0, spawnEnergy: 500 },
-    3: { storage: 1, baseContainers: 2, sourceContainer: 1, controllerContainer: 1, spawnEnergy: 750 }
+    3: { storage: 1, baseContainers: 2, sourceContainer: 1, controllerContainer: 1, spawnEnergy: 1250 }
 };
 
 module.exports = Society;
