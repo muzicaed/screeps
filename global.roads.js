@@ -4,7 +4,7 @@ var ConstructionCentral = require('central.construction');
 var Finder = require('system.finder');
 var Utils = require('system.utils');
 
-var RoadsCentral = {
+var Roads = {
     
     init: function(room) {
         if (room.memory.SYS[MEMORY] === undefined || room.memory.SYS[MEMORY] === null) {
@@ -16,7 +16,7 @@ var RoadsCentral = {
     },
 
     run: function(room) {
-        RoadsCentral.init(room);
+        Roads.init(room);
         var memory = getMemory(room);        
         if (memory.count > 25) {
             memory.count = 0;
@@ -157,4 +157,4 @@ function getMemory(room) {
     return room.memory.SYS[MEMORY];    
 }
 
-module.exports = RoadsCentral;
+module.exports = Roads;

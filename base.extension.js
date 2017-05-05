@@ -1,6 +1,6 @@
 var MEMORY = 'ExtensionHQ';
 var BaseFactory = require('factory.base');
-var RoadsCentral = require('central.roads');
+var Roads = require('global.roads');
 var BaseHQ = require('base.hq');
 
 var BaseExtension = {
@@ -37,13 +37,13 @@ function prepareRoadConnections(room, centerPos) {
 
 function orderRoads(room, idx) {
 	var memory = getMemory(room, idx);
-	var connectionPair = RoadsCentral.findBestRoadConnections (
+	var connectionPair = Roads.findBestRoadConnections (
         room,
 		memory.roadConnections,
 		BaseHQ.getRoadConnections(room)
 	);
 	if (connectionPair !== null) {
-		RoadsCentral.placeOrder(room, connectionPair.fromPos, connectionPair.toPos);	
+		Roads.placeOrder(room, connectionPair.fromPos, connectionPair.toPos);	
 	}
 }
 
