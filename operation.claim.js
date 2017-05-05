@@ -1,7 +1,6 @@
 var Static = require('system.static');
 var Claimer = require('role.claimer');
 var Colonizer = require('role.colonizer');
-var Society = require('central.society');
 var BaseHQ = require('base.hq');
 
 var ClaimOperation = {
@@ -31,7 +30,7 @@ var ClaimOperation = {
 		return (
 			room !== undefined && 
 			room.firstSpawn() !== null &&
-			Society.getLevel(room) > Static.SOCIETY_LEVEL_OUTPOST
+			room.controller.level > 3
 		);
 	}
 };
