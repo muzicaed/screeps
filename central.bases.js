@@ -11,10 +11,10 @@ var BasesCentral = {
             room.memory.SYS[MEMORY] = {
                 extensionBases: [],
                 age: 0
-            };
-            BaseHQ.init(room);
-            ControllerBase.init(room);            
-        }        
+            };        
+        }     
+        BaseHQ.init(room);
+        ControllerBase.init(room);    
     },
 
 	run: function(room) {

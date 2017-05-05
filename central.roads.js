@@ -46,9 +46,9 @@ var RoadsCentral = {
         var bestConnectionPair = null;
         var bestDistance = 50000;       
         for (var i = 0; i < fromConnections.length; i++) {
-            var fromConn = room.getPositionAt(fromConnections[i].x, fromConnections[i].y);
+            var fromConn = new RoomPosition(fromConnections[i].x, fromConnections[i].y, fromConnections[i].roomName);
             for (var j = 0; j < toConnections.length; j++) {
-                var toConn = room.getPositionAt(toConnections[j].x, toConnections[j].y);
+                var toConn = new RoomPosition(toConnections[j].x, toConnections[j].y, toConnections[j].roomName);
                 var distance = fromConn.getRangeTo(toConn);
                 if (distance < bestDistance) {
                     bestDistance = distance;
@@ -66,8 +66,9 @@ function refreshRoadsStatus(room) {
     var road = findCurrentRoad(room);
     if (road !== null && !road.isDone) {
         if (road.path.length == 0) {
-            var fromPos = room.getPositionAt(road.fromPos.x, road.fromPos.y);
-            var path = fromPos.findPathTo(road.toPos.x, road.toPos.y, { ignoreCreeps: true, ignoreDestructibleStructures: false, ignoreRoads: false });       
+            var fromPos = new RoomPosition(road.fromPos.x, road.fromPos.y, road.fromPos.roomName);
+            var toPos = new RoomPosition(road.toPos.x, road.toPos.y, road.toPos.roomName);
+            var path = fromPos.findPathTo(toPos, { ignoreCreeps: true, ignoreDestructibleStructures: false, ignoreRoads: false });       
             road.path = convertPath(path);
         }        
         road.isDone = true;
@@ -127,7 +128,7 @@ function findCurrentRoad(room) {
 }
 
 function createRoadId(room, fromPos, toPos) {
-    return room.name + '-' + fromPos.x + '-' + fromPos.y + '-' + toPos.x + '-' + toPos.y;
+    return fromPos.roomName + '-' + fromPos.x + '-' + fromPos.y + '-' + fromPos.roomName + '-' + toPos.x + '-' + toPos.y;
 }
 
 function isRoadExists(room, fromPos, toPos) {

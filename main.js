@@ -40,13 +40,10 @@ module.exports.loop = function () {
 };
 
 function runRooms() {   
-    Memory.myActiveRooms = {};
     for (var i in Game.rooms) {
         var room = Game.rooms[i];
         if (room.controller !== undefined) {
-            console.log('Run rooms: ' + room.name);
            if (!room.memory.isInitialized) {  
-                console.log(' - Init');
                 room.memory.SYS = {}; 
                 room.memory.isInitialized = true;
                 room.memory.lastScount = 0;
@@ -55,7 +52,6 @@ function runRooms() {
             ConstructionCentral.run(room);
 
             if (room.controller.my && room.firstSpawn() !== null) {  
-                console.log(' - Run my centrals');   
                 Bases.run(room);
                 Society.run(room);
                 RoadsCentral.run(room);
