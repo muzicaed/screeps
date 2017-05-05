@@ -56,7 +56,7 @@ function runRooms() {
                 SpawnCentral.init(room);                
                 room.memory.isInitialized = true;
             }       
-          
+
             Bases.run(room);
             Society.run(room);
             RoadsCentral.run(room);

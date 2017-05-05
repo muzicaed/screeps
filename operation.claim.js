@@ -49,7 +49,7 @@ function updateOperation(operation) {
 	var room = Game.rooms[operation.targetRoom];
 	if (room !== undefined) {
 		var sites = room.find(FIND_MY_CONSTRUCTION_SITES);
-		operation.spawnConstructionSiteId = (sites > 0) ? sites[0].id : null;	
+		operation.spawnConstructionSiteId = (sites.length > 0) ? sites[0].id : null;	
 	}	
 }
 
