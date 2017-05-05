@@ -17,6 +17,7 @@ var Society = {
     },
 
     run: function(room) {
+        Society.init(room);
         var memory = getMemory(room);
         if (memory.age > 50) {
             memory.age = 0;

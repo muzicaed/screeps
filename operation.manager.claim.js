@@ -24,15 +24,17 @@ function processReport(roomName, report) {
 	var possibleOperationsMemory = getPossibleOperationsMemory();
     if (isNewClaimTarget(roomName, report)) {    	
     	var closestRoomName = closestCizilizationRoom(roomName);
-    	var distance = Game.map.getRoomLinearDistance(roomName, closestRoomName);
-    	if (distance <= 3) {
-			console.log('New claim operation added: ' + closestRoomName + ' -> ' + roomName);
-			possibleOperationsMemory[roomName] = {
-				ownerRoom: closestRoomName,
-				targetRoom: roomName,
-				controllerId: report.controllerId,
-				distance: distance
-			};		
+    	if (closestRoomName !== null) {
+	    	var distance = Game.map.getRoomLinearDistance(roomName, closestRoomName);
+	    	if (distance <= 3) {
+				console.log('New claim operation added: ' + closestRoomName + ' -> ' + roomName);
+				possibleOperationsMemory[roomName] = {
+					ownerRoom: closestRoomName,
+					targetRoom: roomName,
+					controllerId: report.controllerId,
+					distance: distance
+				};		
+	    	}
     	}
     }    
 }

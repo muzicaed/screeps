@@ -46,14 +46,7 @@ function runRooms() {
         if (room.controller !== undefined && room.controller.my && room.firstSpawn() !== null) {
             if (!room.memory.isInitialized) {  
                 console.log('Init');
-                room.memory.SYS = {};          
-                Society.init(room);
-                ConstructionCentral.init(room);
-                RepairCentral.init(room);
-                RoadsCentral.init(room);
-                Bases.init(room);                
-                ResourceCentral.init(room);                
-                SpawnCentral.init(room);                
+                room.memory.SYS = {}; 
                 room.memory.isInitialized = true;
                 room.memory.lastScount = 0;
             }       

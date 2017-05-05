@@ -16,6 +16,7 @@ var RoadsCentral = {
     },
 
     run: function(room) {
+        RoadsCentral.init(room);
         var memory = getMemory(room);        
         if (memory.count > 25) {
             memory.count = 0;

@@ -15,6 +15,7 @@ var ConstructionCentral = {
     },
 
     run: function(room) {
+        ConstructionCentral.init(room);
         var memory = getMemory(room);
         unflag(room);
         if (memory.age > 25) { 

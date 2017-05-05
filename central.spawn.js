@@ -17,14 +17,8 @@ var Finder = require('system.finder');
 
 var IS_INVATION = false;
 
-
-// Refactorig and rebuild this...
 var SpawnCentral = {
     
-    init: function(room) {
-        
-    },
-
     run: function(room) {
         
         if (!handleEnemies(room)) {                            
