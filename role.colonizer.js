@@ -46,7 +46,9 @@ function think(creep) {
 }
 
 function checkStateChange(creep) {   
-   if (shouldUpgradeController(creep)) {
+    if (creep.memory.state == 'IDLE') {
+        return 'UPGRADE_CONTROLLER';
+    } else if (shouldUpgradeController(creep)) {
         return 'UPGRADE_CONTROLLER';
     } else if (creep.carry.energy == 0) {
         return 'WITHDRAW';

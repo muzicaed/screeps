@@ -8,7 +8,8 @@ var ClaimOperationManager = {
 		for (var id in reports) {
 			processReport(id, reports[id]);
 		}
-		activateOperation();	
+		activateOperation();
+		removeCompleetedOperations();	
 	},
 
 	run: function() {
@@ -48,6 +49,15 @@ function activateOperation() {
 				activeOperations[roomName] = ClaimOperation.create(possibleOperations[roomName]);
 				delete possibleOperations[roomName];		
 			}
+		}
+	}
+}
+
+function removeCompleetedOperations() {
+	var activeOperations = getActiveOperationsMemory();
+	for (var roomName in activeOperations) {
+		if (ClaimOperation.isCompleted(activeOperations[roomName])) {
+			delete activeOperations[roomName];	
 		}
 	}
 }
