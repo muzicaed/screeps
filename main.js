@@ -60,6 +60,10 @@ function runRooms() {
                 RepairCentral.run(room);
                 
                 runTowers(room);
+                
+                if (Memory.myActiveRooms === undefined) {
+                    Memory.myActiveRooms = {};
+                }
                 Memory.myActiveRooms[room.name] = room.name;
                 // TODO: Make this a lot better...
                 if (room.controller && room.controller.safeModeAvailable > 0) {
