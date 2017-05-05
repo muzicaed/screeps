@@ -35,7 +35,7 @@ module.exports.loop = function () {
         garbageCollect();        
         runRooms();
         runCreeps();     
-        OperationManager.run();   
+        OperationManager.run();
     });
 };
 
@@ -55,6 +55,7 @@ function runRooms() {
                 ResourceCentral.init(room);                
                 SpawnCentral.init(room);                
                 room.memory.isInitialized = true;
+                room.memory.lastScount = 0;
             }       
 
             Bases.run(room);

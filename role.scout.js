@@ -119,9 +119,11 @@ function doReport(creep) {
 
 function pickBestTargetRoom(creep, neutralRooms, myRooms) {
     if (neutralRooms.length > 0) {
+        neutralRooms.sort( function(a, b) { return a.timeStamp - b.timeStamp } );
         creep.memory.targetRoomName = neutralRooms[0];
         return;
     } else if (myRooms.length > 0) {
+        myRooms.sort( function(a, b) { return a.timeStamp - b.timeStamp } );
         creep.memory.targetRoomName = myRooms[0];
     }
     creep.memory.targetRoomName = creep.memory.lastRoomName;
