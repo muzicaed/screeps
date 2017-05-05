@@ -19,8 +19,8 @@ var ConstructionCentral = {
         var memory = getMemory(room);
         unflag(room);
         if (memory.age > 25) { 
-            var currentLevel = handleRcl(room);    
-            if (currentLevel > 1 && checkConstructioSite(room)) {
+            handleRcl(room);    
+            if (checkConstructioSite(room)) {
                 buildNextInQueue(room);   
             }
             memory.age = 0;

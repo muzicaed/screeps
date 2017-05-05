@@ -116,7 +116,6 @@ function checkAssignment(creep) {
     if (creep.memory.assignedToSourceId === undefined || creep.memory.assignedToSourceId === null ||
         creep.memory.assignedToContainerId === undefined || creep.memory.assignedToContainerId === null
     )  {
-        console.log(creep.name + ' Re-req assignment!');
         requestAssignment(creep);
     }
 }

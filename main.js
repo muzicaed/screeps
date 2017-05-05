@@ -43,29 +43,34 @@ function runRooms() {
     Memory.myActiveRooms = {};
     for (var i in Game.rooms) {
         var room = Game.rooms[i];
-        if (room.controller !== undefined && room.controller.my && room.firstSpawn() !== null) {
-            if (!room.memory.isInitialized) {  
-                console.log('Init');
+        if (room.controller !== undefined) {
+            console.log('Run rooms: ' + room.name);
+           if (!room.memory.isInitialized) {  
+                console.log(' - Init');
                 room.memory.SYS = {}; 
                 room.memory.isInitialized = true;
                 room.memory.lastScount = 0;
-            }       
+            }               
 
-            Bases.run(room);
-            Society.run(room);
-            RoadsCentral.run(room);
-            ResourceCentral.run(room);
-            SpawnCentral.run(room);        
             ConstructionCentral.run(room);
-            RepairCentral.run(room);
-            
-            runTowers(room);
-            Memory.myActiveRooms[room.name] = room.name;
-            // TODO: Make this a lot better...
-            if (room.controller && room.controller.safeModeAvailable > 0) {
-                room.controller.activateSafeMode();
-            }         
-        }      
+
+            if (room.controller.my && room.firstSpawn() !== null) {  
+                console.log(' - Run my centrals');   
+                Bases.run(room);
+                Society.run(room);
+                RoadsCentral.run(room);
+                ResourceCentral.run(room);
+                SpawnCentral.run(room);                    
+                RepairCentral.run(room);
+                
+                runTowers(room);
+                Memory.myActiveRooms[room.name] = room.name;
+                // TODO: Make this a lot better...
+                if (room.controller && room.controller.safeModeAvailable > 0) {
+                    room.controller.activateSafeMode();
+                }         
+            } 
+        }     
     }
 }
 
