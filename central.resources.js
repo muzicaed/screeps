@@ -11,7 +11,7 @@ var ConstructionCentral = require('central.construction');
 var ResourceCentral = {
     
     init: function(room) {
-        if (room.memory.SYS[MEMORY] === undefined || room.memory.SYS[MEMORY].age > 25) {            
+        if (room.memory.SYS[MEMORY] === undefined) {            
             room.memory.SYS[MEMORY] = {
                 sources: scanSources(room),                
                 age: 0
