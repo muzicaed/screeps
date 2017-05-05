@@ -3,6 +3,7 @@
 
 var Finder = require('system.finder');
 var ResourceCentral = require('central.resources');
+var RoadsCentral = require('central.roads');
 var Static = require('system.static');
 var CreepFactory = require('factory.creep');
 var TransferBehaviour = require('behaviour.transfer');

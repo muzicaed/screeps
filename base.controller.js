@@ -1,7 +1,7 @@
 var MEMORY = 'BaseController';
 var Finder = require('system.finder');
 var BaseFactory = require('factory.base');
-var Roads = require('global.roads');
+var RoadsCentral = require('central.roads');
 var BaseHQ = require('base.hq');
 var Static = require('system.static');
 
@@ -51,13 +51,13 @@ var ControllerBase = {
 
 function orderRoads(room) {
 	var memory = getMemory(room);
-	var connectionPair = Roads.findBestRoadConnections (
+	var connectionPair = RoadsCentral.findBestRoadConnections (
 		room,
 		memory.roadConnections,
 		BaseHQ.getRoadConnections(room)
 	);
 	if (connectionPair !== null) {
-		Roads.placeOrder(room, connectionPair.fromPos, connectionPair.toPos);	
+		RoadsCentral.placeOrder(room, connectionPair.fromPos, connectionPair.toPos);	
 	}
 }
 

@@ -12,7 +12,7 @@ var Claimer = require('role.claimer');
 var Colonizer = require('role.colonizer');
 var TowerStandard = require('tower.standard');
 var ResourceCentral = require('central.resources');
-var Roads = require('global.roads');
+var RoadsCentral = require('central.roads');
 var SpawnCentral = require('central.spawn');
 var BasesCentral = require('central.bases');
 var CreepFactory = require('factory.creep');
@@ -58,7 +58,7 @@ function runRooms() {
                 console.log(' - Run my centrals');   
                 Bases.run(room);
                 Society.run(room);
-                Roads.run(room);
+                RoadsCentral.run(room);
                 ResourceCentral.run(room);
                 SpawnCentral.run(room);                    
                 RepairCentral.run(room);

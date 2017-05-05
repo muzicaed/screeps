@@ -2,7 +2,7 @@ var MEMORY = 'CentralResoruces';
 var Static = require('system.static');
 var Utils = require('system.utils');
 var Finder = require('system.finder');
-var Roads = require('global.roads');
+var RoadsCentral = require('central.roads');
 var BaseHQ = require('base.hq');
 var ControllerBase = require('base.controller');
 var ConstructionCentral = require('central.construction');
@@ -11,7 +11,7 @@ var ConstructionCentral = require('central.construction');
 var ResourceCentral = {
     
     init: function(room) {
-        if (room.memory.SYS[MEMORY] === undefined) {            
+        if (room.memory.SYS[MEMORY] === undefined || room.memory.SYS[MEMORY].age > 25) {            
             room.memory.SYS[MEMORY] = {
                 sources: scanSources(room),                
                 age: 0
@@ -142,22 +142,22 @@ function scanSources(room) {
 }
 
 function orderRoads(room, sourcePos) {
-    var hqConnectionPair = Roads.findBestRoadConnections (
+    var hqConnectionPair = RoadsCentral.findBestRoadConnections (
         room,
         BaseHQ.getRoadConnections(room),
         [sourcePos]
     );
     if (hqConnectionPair !== null) {
-        Roads.placeOrder(room, hqConnectionPair.fromPos, hqConnectionPair.toPos);
+        RoadsCentral.placeOrder(room, hqConnectionPair.fromPos, hqConnectionPair.toPos);
     }
 
-    var ctrlConnectionPair = Roads.findBestRoadConnections (
+    var ctrlConnectionPair = RoadsCentral.findBestRoadConnections (
         room,     
         ControllerBase.getRoadConnections(room),
         [sourcePos]
     );
     if (ctrlConnectionPair !== null) {
-        Roads.placeOrder(room, ctrlConnectionPair.fromPos, ctrlConnectionPair.toPos);      
+        RoadsCentral.placeOrder(room, ctrlConnectionPair.fromPos, ctrlConnectionPair.toPos);      
     }
 }
 
