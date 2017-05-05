@@ -23,7 +23,6 @@ var BaseExtension = {
 
 	run: function(room, idx) {
 		// TODO:
-		console.log('Run: Extension base');
 	} 
 };
 

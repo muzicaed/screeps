@@ -14,7 +14,7 @@ var WithdrawBehaviour = {
 
     apply: function(creep, isSpawnWithdraw) {
         var room = Game.rooms[creep.memory.withdrawRoomName];
-        if (room.storage !== undefined) {
+        if (room.storage !== undefined && room.storage.store.energy > 0) {
             creep.memory.withdrawTargetId = room.storage.id;
             return;
         }

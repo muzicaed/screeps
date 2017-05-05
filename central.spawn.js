@@ -17,20 +17,13 @@ var Finder = require('system.finder');
 
 var IS_INVATION = false;
 
-
-// Refactorig and rebuild this...
 var SpawnCentral = {
     
-    init: function(room) {
-        
-    },
-
     run: function(room) {
         
         if (!handleEnemies(room)) {                            
             if(Game.time % 10 == 0) {
                 //Scout.create(room);
-                //SpawnKeeper.create(room);
                 switch (Society.getLevel(room)) {                
                     case Static.SOCIETY_LEVEL_OUTPOST:
                         handleOutpost(room);
@@ -54,16 +47,15 @@ function handleOutpost(room) {
     if (room.name == 'sim' && Finder.countRole(room, Static.ROLE_SIMCREEP) < 1) {
         SimCreep.create(room);     
         return;
-    }
-    
+    }    
     
     if (Finder.countRole(room, Static.ROLE_PIONEER) == 0) {
         Pioneer.panicCreate(room);
     } else if (ResourceCentral.needPioneer(room)) {
         Pioneer.create(room);
-    } else if (Finder.countRole(room, Static.ROLE_CARETAKER) < 1) {
+    } else if (hasCaretakerNeed(room)) {
         Caretaker.create(room);
-    } else if (Finder.countRole(room, Static.ROLE_PUMP) < ControllerBase.pumpNeed(room)) {
+    } else if (ControllerBase.hasPumpNeed(room)) {
         Pump.create(room);
     } else if (IS_INVATION) {
         Defender.create(room);
@@ -71,32 +63,40 @@ function handleOutpost(room) {
 }
 
 function handleCity(room) {
-    if ((Finder.countRole(room, Static.ROLE_TRANSPORTER) < (Finder.countRole(room, Static.ROLE_HARVESTER) * 2))) {
+    if (Finder.countRole(room, Static.ROLE_HARVESTER) == 0 && Finder.countRole(room, Static.ROLE_TRANSPORTER) == 0 && Finder.countRole(room, Static.ROLE_PIONEER) < 2) {
+        Pioneer.panicCreate(room);    
+    } else if ((Finder.countRole(room, Static.ROLE_TRANSPORTER) < (Finder.countRole(room, Static.ROLE_HARVESTER) * 2))) {
         Transporter.create(room, Static.ROLE_TRANSPORTER);    
     } else if (ResourceCentral.needHarvester(room)) {
         Harvester.create(room, {}); 
     } else if (Finder.countRole(room, Static.ROLE_SPAWNKEEPER) < 1) {
         SpawnKeeper.create(room);        
-    } else if (Finder.countRole(room, Static.ROLE_PUMP) < ControllerBase.pumpNeed(room)) {
+    } else if (ControllerBase.hasPumpNeed(room)) {
         Pump.create(room);
-    } else if (hasCaretakerNeed(room, 1)) {
+    } else if (hasCaretakerNeed(room)) {
         Caretaker.create(room);
-    }   
+    } else if (Game.time > (room.memory.lastScount + 2000)) {
+        room.memory.lastScount = Game.time;
+        Scout.create(room);
+    }
 }
 
 function handleCizilization(room) {
-    if ((Finder.countRole(room, Static.ROLE_CIV_TRANSPORTER) < (Finder.countRole(room, Static.ROLE_HARVESTER) * 1.5))) {
+    if (Finder.countRole(room, Static.ROLE_CIV_TRANSPORTER) < 3) {
         Transporter.create(room, Static.ROLE_CIV_TRANSPORTER);     
     } else if (ResourceCentral.needHarvester(room)) {
         Harvester.create(room, {}); 
     } else if (Finder.countRole(room, Static.ROLE_SPAWNKEEPER) < 1) {
         SpawnKeeper.create(room);
-    } else if (Finder.countRole(room, Static.ROLE_PUMP) < ControllerBase.pumpNeed(room)) {
+    } else if (ControllerBase.hasPumpNeed(room)) {
         Pump.create(room);
-    } else if (hasCaretakerNeed(room, 2)) {
+    } else if (hasCaretakerNeed(room)) {
         Caretaker.create(room);
     } else if (IS_INVATION) {
         Defender.create(room);
+    } else if (Game.time > (room.memory.lastScount + 500)) {
+        room.memory.lastScount = Game.time;
+        Scout.create(room);
     }
 }
 
@@ -111,10 +111,10 @@ function handleEnemies(room) {
 
 }
 
-function hasCaretakerNeed(room, max) {
+function hasCaretakerNeed(room) {
     return (
         (ConstructionCentral.getCurrentOrder(room) !== null || RepairCentral.hasRepairNeed(room)) &&
-        Finder.countRole(room, Static.ROLE_CARETAKER) < max
+        Finder.countRole(room, Static.ROLE_CARETAKER) < 1
     );
 }
 

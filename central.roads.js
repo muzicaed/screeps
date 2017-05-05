@@ -16,6 +16,7 @@ var RoadsCentral = {
     },
 
     run: function(room) {
+        RoadsCentral.init(room);
         var memory = getMemory(room);        
         if (memory.count > 25) {
             memory.count = 0;
@@ -27,10 +28,9 @@ var RoadsCentral = {
     },
     
     placeOrder: function(room, fromPos, toPos) {
-        console.log('Place order.');
         var memory = getMemory(room);
         if (!isRoadExists(room, fromPos, toPos)) {
-            var id = createRoadId(fromPos, toPos);     
+            var id = createRoadId(room, fromPos, toPos);     
             memory.roadQueue[id] = {
                 fromPos: fromPos,
                 toPos: toPos,
@@ -46,9 +46,9 @@ var RoadsCentral = {
         var bestConnectionPair = null;
         var bestDistance = 50000;       
         for (var i = 0; i < fromConnections.length; i++) {
-            var fromConn = room.getPositionAt(fromConnections[i].x, fromConnections[i].y);
+            var fromConn = new RoomPosition(fromConnections[i].x, fromConnections[i].y, fromConnections[i].roomName);
             for (var j = 0; j < toConnections.length; j++) {
-                var toConn = room.getPositionAt(toConnections[j].x, toConnections[j].y);
+                var toConn = new RoomPosition(toConnections[j].x, toConnections[j].y, toConnections[j].roomName);
                 var distance = fromConn.getRangeTo(toConn);
                 if (distance < bestDistance) {
                     bestDistance = distance;
@@ -66,8 +66,9 @@ function refreshRoadsStatus(room) {
     var road = findCurrentRoad(room);
     if (road !== null && !road.isDone) {
         if (road.path.length == 0) {
-            var fromPos = room.getPositionAt(road.fromPos.x, road.fromPos.y);
-            var path = fromPos.findPathTo(road.toPos.x, road.toPos.y, { ignoreCreeps: true, ignoreDestructibleStructures: false, ignoreRoads: false });       
+            var fromPos = new RoomPosition(road.fromPos.x, road.fromPos.y, road.fromPos.roomName);
+            var toPos = new RoomPosition(road.toPos.x, road.toPos.y, road.toPos.roomName);
+            var path = fromPos.findPathTo(toPos, { ignoreCreeps: true, ignoreDestructibleStructures: false, ignoreRoads: false });       
             road.path = convertPath(path);
         }        
         road.isDone = true;
@@ -126,13 +127,13 @@ function findCurrentRoad(room) {
     return null;
 }
 
-function createRoadId(fromPos, toPos) {
-    return fromPos.roomName + '-' + fromPos.x + '-' + fromPos.y + '-' + toPos.roomName + '-' + toPos.x + '-' + toPos.y;
+function createRoadId(room, fromPos, toPos) {
+    return fromPos.roomName + '-' + fromPos.x + '-' + fromPos.y + '-' + fromPos.roomName + '-' + toPos.x + '-' + toPos.y;
 }
 
 function isRoadExists(room, fromPos, toPos) {
     var memory = getMemory(room);
-    var id = createRoadId(fromPos, toPos);
+    var id = createRoadId(room, fromPos, toPos);
     if (memory.roadQueue[id] === undefined || memory.roadQueue[id] === null) {
         return false;
     }

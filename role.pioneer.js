@@ -109,7 +109,6 @@ function doHarvest(creep) {
 
 function checkAssignment(creep) {
     if (creep.memory.assignedToSourceId === null || creep.memory.assignedToSourceId === undefined)  {
-        console.log(creep.name + ' Re-req assignment!');
         creep.memory.assignedToSourceId = ResourceCentral.requestPioneerAssignment(creep);
     }
 }

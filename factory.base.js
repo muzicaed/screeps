@@ -4,7 +4,7 @@ var ConstructionCentral = require('central.construction');
 var BaseFactory = {
 
 	orderConstruction: function(room, blueprint, closeTo) {		
-		var centerPos = findBaseLocation(room, blueprint, closeTo);
+		var centerPos = BaseFactory.findBaseLocation(room, blueprint, closeTo);
 		if (centerPos !== null) {
 			BaseFactory.placeConstructionOrders(room, blueprint, centerPos);
 			return centerPos;
@@ -25,27 +25,26 @@ var BaseFactory = {
 				count++;
 			}
 		}	
-	}
+	},
 
-};
-
-function findBaseLocation(room, blueprint, closeTo) {
-	var potentinalLocations = []
-	for (var x = 0; x < (50 - blueprint.width); x++) {
-		for (var y = 0; y < (50 - blueprint.height); y++) {
-			if (isPotentialLocation(room, blueprint, x, y)) {
-				var location = createPotentinalLocation(room, blueprint, x, y, closeTo);
-				potentinalLocations.push(location);
+	findBaseLocation: function(room, blueprint, closeTo) {
+		var potentinalLocations = []
+		for (var x = 0; x < (50 - blueprint.width); x++) {
+			for (var y = 0; y < (50 - blueprint.height); y++) {
+				if (isPotentialLocation(room, blueprint, x, y)) {
+					var location = createPotentinalLocation(room, blueprint, x, y, closeTo);
+					potentinalLocations.push(location);
+				}
 			}
-		}
-	}	
+		}	
 
-	if (potentinalLocations.length > 0) {
-		potentinalLocations.sort( function(a, b) { return a.distance - b.distance } );		
-		return potentinalLocations[0].pos;
+		if (potentinalLocations.length > 0) {
+			potentinalLocations.sort( function(a, b) { return a.distance - b.distance } );		
+			return potentinalLocations[0].pos;
+		}
+		return null;		
 	}
-	return null;
-}
+};
 
 function isPotentialLocation(room, blueprint, x, y) {
 	var results = room.lookAtArea(y, x, y + (blueprint.height - 1), x + (blueprint.width - 1), true);

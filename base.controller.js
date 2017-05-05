@@ -3,6 +3,7 @@ var Finder = require('system.finder');
 var BaseFactory = require('factory.base');
 var RoadsCentral = require('central.roads');
 var BaseHQ = require('base.hq');
+var Static = require('system.static');
 
 var ControllerBase = {
 
@@ -33,17 +34,18 @@ var ControllerBase = {
         return memory.roadConnections;
     },
 
-	pumpNeed: function(room) {
+	hasPumpNeed: function(room) {
 	    var memory = getMemory(room);
+	    var count = Finder.countRole(room, Static.ROLE_PUMP)
 	    var container = Game.getObjectById(memory.controllerContainerId);
 	    if (container === null || container.store.energy == 0) {
-	        return 0;
+	        return false;
 		} else if (room.energyCapacityAvailable >= 2000) {
-			return 1;
+			return count < 1;
 		} else if (room.energyCapacityAvailable >= 1000) {
-			return 2;
+			return count < 2;
 		} 
-		return 3;
+		return count < 3;
 	}
 };
 

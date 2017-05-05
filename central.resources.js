@@ -11,7 +11,7 @@ var ConstructionCentral = require('central.construction');
 var ResourceCentral = {
     
     init: function(room) {
-        if (room.memory.SYS[MEMORY] === undefined || room.memory.SYS[MEMORY].age > 25) {            
+        if (room.memory.SYS[MEMORY] === undefined) {            
             room.memory.SYS[MEMORY] = {
                 sources: scanSources(room),                
                 age: 0
@@ -20,6 +20,7 @@ var ResourceCentral = {
     },
 
     run: function(room) {
+        ResourceCentral.init(room);
         var memory = getMemory(room);
         if (memory.age > 50) {
             memory.age = 0;
@@ -115,7 +116,6 @@ function updateSources(room) {
         sourceObj.isHarvesting = isHarvesting(room, sourceId);
         sourceObj.containerId = Finder.findContainerId(source.pos, 1);
        if (sourceObj.containerId === null && !sourceObj.isContainerConstructed) {
-            console.log('Order container');
             orderContainer(room, source.pos, 1);
             sourceObj.isContainerConstructed = true;
         }        
@@ -247,7 +247,9 @@ function pickRandomSource(room) {
 }
 
 function pickBestSource(creep, vacantSources) {
+    console.log(JSON.stringify(vacantSources));
     vacantSources.sort( function(a, b) { return a.distance - b.distance } );
+    console.log(JSON.stringify(vacantSources));
     vacantSources[0].assignments++;
     return vacantSources[0].id;
 }

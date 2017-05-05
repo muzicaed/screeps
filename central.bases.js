@@ -11,13 +11,14 @@ var BasesCentral = {
             room.memory.SYS[MEMORY] = {
                 extensionBases: [],
                 age: 0
-            };
-        }        
+            };        
+        }     
         BaseHQ.init(room);
-        ControllerBase.init(room);
+        ControllerBase.init(room);    
     },
 
 	run: function(room) {
+        BasesCentral.init(room);
         var memory = getMemory(room);
         if (memory.age > 70) {
             memory.age = 0;
