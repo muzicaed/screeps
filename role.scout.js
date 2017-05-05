@@ -13,7 +13,6 @@ var RoleScout = {
         switch(action) {
             case 'FIND_SCOUT_TARGET':
                 doFindScoutTarget(creep);
-                creep.memory.state = 'SCOUT';
                 break;            
             case 'SCOUT':
                 doScout(creep);
@@ -96,6 +95,7 @@ function doFindScoutTarget(creep) {
     pickBestTargetRoom(creep, neutralRooms, myRooms);    
     var roomPos = new RoomPosition(25, 25, creep.memory.targetRoomName);   
     MoveBehaviour.movePath(creep, roomPos); 
+    creep.memory.state = 'SCOUT';
 }
 
 function doScout(creep) {
@@ -125,6 +125,7 @@ function pickBestTargetRoom(creep, neutralRooms, myRooms) {
     } else if (myRooms.length > 0) {
         myRooms.sort( function(a, b) { return a.timeStamp - b.timeStamp } );
         creep.memory.targetRoomName = myRooms[0];
+        return;
     }
     creep.memory.targetRoomName = creep.memory.lastRoomName;
 }

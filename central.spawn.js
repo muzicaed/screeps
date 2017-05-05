@@ -63,10 +63,11 @@ function handleOutpost(room) {
 }
 
 function handleCity(room) {
+ 
     if (Finder.countRole(room, Static.ROLE_HARVESTER) == 0 && Finder.countRole(room, Static.ROLE_TRANSPORTER) == 0 && Finder.countRole(room, Static.ROLE_PIONEER) < 2) {
         Pioneer.panicCreate(room);    
     } else if ((Finder.countRole(room, Static.ROLE_TRANSPORTER) < (Finder.countRole(room, Static.ROLE_HARVESTER) * 2))) {
-        Transporter.create(room, Static.ROLE_TRANSPORTER);    
+        Transporter.create(room, Static.ROLE_TRANSPORTER);
     } else if (ResourceCentral.needHarvester(room)) {
         Harvester.create(room, {}); 
     } else if (Finder.countRole(room, Static.ROLE_SPAWNKEEPER) < 1) {
