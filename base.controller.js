@@ -40,9 +40,9 @@ var ControllerBase = {
 	    var container = Game.getObjectById(memory.controllerContainerId);
 	    if (container === null || container.store.energy == 0) {
 	        return false;
-		} else if (room.energyCapacityAvailable >= 2000) {
+		} else if (room.energyCapacityAvailable >= 1500) {
 			return count < 1;
-		} else if (room.energyCapacityAvailable >= 1000) {
+		} else if (room.energyCapacityAvailable >= 800) {
 			return count < 2;
 		} 
 		return count < 3;
