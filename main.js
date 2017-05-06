@@ -51,7 +51,7 @@ function runRooms() {
 
             ConstructionCentral.run(room);
 
-            if (room.controller.my && room.firstSpawn() !== null) {  
+            if (room.controller.level > 0 && room.controller.my && room.firstSpawn() !== null) {  
                 Bases.run(room);
                 Society.run(room);
                 RoadsCentral.run(room);

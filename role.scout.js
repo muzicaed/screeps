@@ -13,6 +13,8 @@ var RoleScout = {
         switch(action) {
             case 'FIND_SCOUT_TARGET':
                 doFindScoutTarget(creep);
+                var roomPos = new RoomPosition(25, 25, creep.memory.targetRoomName);   
+                MoveBehaviour.movePath(creep, roomPos);                    
                 break;            
             case 'SCOUT':
                 doScout(creep);
@@ -73,10 +75,6 @@ function doFindScoutTarget(creep) {
             switch (OperationManager.getRoomExploreState(roomName)) {
                 case Static.EXPLORE_UNKNOWN:
                     creep.memory.targetRoomName = roomName;                                        
-                    if (creep.memory.targetRoomName !== null) {
-                        var roomPos = new RoomPosition(25, 25, creep.memory.targetRoomName);   
-                         MoveBehaviour.movePath(creep, roomPos);    
-                    }                     
                     return;
                     break;
                 case Static.EXPLORE_MY_CONTROL:
@@ -86,15 +84,13 @@ function doFindScoutTarget(creep) {
                     neutralRooms.push(roomName);
                     break;
                 case Static.EXPLORE_ENEMY: 
-                    // Do not explore
+                    neutralRooms.push(roomName);
                     break;
             }
         }
     }
 
     pickBestTargetRoom(creep, neutralRooms, myRooms);    
-    var roomPos = new RoomPosition(25, 25, creep.memory.targetRoomName);   
-    MoveBehaviour.movePath(creep, roomPos); 
     creep.memory.state = 'SCOUT';
 }
 
@@ -120,11 +116,12 @@ function doReport(creep) {
 function pickBestTargetRoom(creep, neutralRooms, myRooms) {
     if (neutralRooms.length > 0) {
         neutralRooms.sort( function(a, b) { return a.timeStamp - b.timeStamp } );
-        creep.memory.targetRoomName = neutralRooms[0];
+        var roomName = neutralRooms[Math.floor(Math.random() * neutralRooms.length)];
+        creep.memory.targetRoomName = roomName;
         return;
     } else if (myRooms.length > 0) {
-        myRooms.sort( function(a, b) { return a.timeStamp - b.timeStamp } );
-        creep.memory.targetRoomName = myRooms[0];
+        var roomName = myRooms[Math.floor(Math.random() * myRooms.length)];
+        creep.memory.targetRoomName = roomName
         return;
     }
     creep.memory.targetRoomName = creep.memory.lastRoomName;
