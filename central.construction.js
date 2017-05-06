@@ -164,6 +164,8 @@ function handleRcl(room) {
     if (memory.currentRcl < room.controller.level) {
         memory.currentRcl = room.controller.level;
         memory.constructionQueue = memory.constructionQueue.concat(memory.rclWaitList);
+        memory.constructionQueue.sort( function(a, b) { return a.prio - b.prio } );
+        memory.rclWaitList = [];
         console.log('New RCL. Merge RCL Wait list.')
     }
     return memory.currentRcl;
