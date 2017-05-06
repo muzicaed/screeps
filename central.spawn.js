@@ -74,7 +74,7 @@ function handleCity(room) {
         SpawnKeeper.create(room);        
     } else if (ControllerBase.hasPumpNeed(room)) {
         Pump.create(room);
-    } else if (hasCaretakerNeed(room)) {
+    } else if (hasCaretakerNeed(room, 2)) {
         Caretaker.create(room);
     } else if (Game.time > (room.memory.lastScount + 5000)) {
         room.memory.lastScount = Game.time;
@@ -91,7 +91,7 @@ function handleCizilization(room) {
         SpawnKeeper.create(room);
     } else if (ControllerBase.hasPumpNeed(room)) {
         Pump.create(room);
-    } else if (hasCaretakerNeed(room)) {
+    } else if (hasCaretakerNeed(room, 1)) {
         Caretaker.create(room);
     } else if (IS_INVATION) {
         Defender.create(room);
@@ -112,10 +112,10 @@ function handleEnemies(room) {
 
 }
 
-function hasCaretakerNeed(room) {
+function hasCaretakerNeed(room, max) {
     return (
         (ConstructionCentral.getCurrentOrder(room) !== null || RepairCentral.hasRepairNeed(room)) &&
-        Finder.countRole(room, Static.ROLE_CARETAKER) < 1
+        Finder.countRole(room, Static.ROLE_CARETAKER) < max
     );
 }
 
