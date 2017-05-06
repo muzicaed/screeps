@@ -20,7 +20,7 @@ var ConstructionCentral = {
         unflag(room);
         if (memory.age > 25) { 
             handleRcl(room);    
-            if (checkConstructioSite(room)) {
+            if (room.controller.level > 1 && checkConstructioSite(room)) {
                 buildNextInQueue(room);   
             }
             memory.age = 0;
@@ -168,7 +168,6 @@ function handleRcl(room) {
         memory.rclWaitList = [];
         console.log('New RCL. Merge RCL Wait list.')
     }
-    return memory.currentRcl;
 }
 
 function getMemory(room) {
