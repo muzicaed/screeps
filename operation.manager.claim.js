@@ -32,7 +32,7 @@ function processReport(roomName, report) {
 					ownerRoom: closestRoomName,
 					targetRoom: roomName,
 					controllerId: report.controllerId,
-					distance: distance
+					distance: path.length
 				};		
 	    	}
     	}
