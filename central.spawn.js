@@ -53,7 +53,7 @@ function handleOutpost(room) {
         Pioneer.panicCreate(room);
     } else if (ResourceCentral.needPioneer(room)) {
         Pioneer.create(room);
-    } else if (hasCaretakerNeed(room)) {
+    } else if (hasCaretakerNeed(room, 1)) {
         Caretaker.create(room);
     } else if (ControllerBase.hasPumpNeed(room)) {
         Pump.create(room);
