@@ -25,8 +25,8 @@ function processReport(roomName, report) {
     if (isNewClaimTarget(roomName, report)) {    	
     	var closestRoomName = closestCizilizationRoom(roomName);
     	if (closestRoomName !== null) {
-	    	var distance = Game.map.getRoomLinearDistance(roomName, closestRoomName);
-	    	if (distance <= 3) {
+	    	var path = Game.map.findRoute(roomName, closestRoomName);
+	    	if (path.length <= 3) {
 				console.log('New claim operation added: ' + closestRoomName + ' -> ' + roomName);
 				possibleOperationsMemory[roomName] = {
 					ownerRoom: closestRoomName,
