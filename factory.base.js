@@ -28,16 +28,16 @@ var BaseFactory = {
 	},
 
 	findBaseLocation: function(room, blueprint, closeTo) {
-		var potentinalLocations = []
+	    var map = room.lookAtArea(0, 0, 49, 49);	    
+		var potentinalLocations = [];
 		for (var x = 0; x < (50 - blueprint.width); x++) {
-			for (var y = 0; y < (50 - blueprint.height); y++) {
-				if (isPotentialLocation(room, blueprint, x, y)) {
+			for (var y = 0; y < (50 - blueprint.height); y++) {		
+				if (isPotentialLocation(map, blueprint, x, y)) {
 					var location = createPotentinalLocation(room, blueprint, x, y, closeTo);
 					potentinalLocations.push(location);
 				}
 			}
 		}	
-
 		if (potentinalLocations.length > 0) {
 			potentinalLocations.sort( function(a, b) { return a.distance - b.distance } );		
 			return potentinalLocations[0].pos;
@@ -46,26 +46,30 @@ var BaseFactory = {
 	}
 };
 
-function isPotentialLocation(room, blueprint, x, y) {
-	var results = room.lookAtArea(y, x, y + (blueprint.height - 1), x + (blueprint.width - 1), true);
-	for (var i = 0; i < results.length; i++) {
-		var tile = results[i];
-
-		if (tile.type == 'structure' || (tile.type == 'terrain' && tile.terrain == 'wall') || tile.type == 'flag') {
-			return false;
-		}
-	}
- 	return true;
+function isPotentialLocation(map, blueprint, x, y) {    
+    for(var i = x; i < x + blueprint.width; i++) {
+        for(var j = y; j < y + blueprint.height; j++) {
+            var tiles = map[j][i];
+            for (var k = 0; k < tiles.length; k++) {
+            	var tile = tiles[k];
+	    		if (tile.type == 'structure' || (tile.type == 'terrain' && tile.terrain == 'wall') || tile.type == 'flag') {
+	    			return false;
+	    		}               	
+            }         
+        }
+    }
+    return true;
 }
 
 function createPotentinalLocation(room, blueprint, x, y, closeTo) {
-	var centerPos = room.getPositionAt(
-		(x + Math.floor(blueprint.width * 0.5)), 
-		(y + Math.floor(blueprint.height * 0.5))
+	var centerPos = new RoomPosition(
+		(x + Math.floor(blueprint.width * 0.5)),
+		(y + Math.floor(blueprint.height * 0.5)),
+		room.name
 	);
 	return { 
 		pos: centerPos, 
-		distance: centerPos.findPathTo(closeTo, { ignoreCreeps: true, ignoreRoads: true }).length
+		distance: centerPos.getRangeTo(closeTo)
 	};
 }
 
