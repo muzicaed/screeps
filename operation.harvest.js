@@ -54,17 +54,17 @@ function updateOperation(operation) {
 		var source = Game.getObjectById(operation.sourceId);
 		var containers = Finder.findContainersInRange(source.pos, 1);
 		operation.containerId = (containers.length > 0) ? containers[0].id : null;	
+	}	
 
-		operation.claimCreep = checkCreep(operation.claimCreep);
-		operation.harvesterCreep = checkCreep(operation.harvesterCreep);
-		operation.colonizerCreep = checkCreep(operation.colonizerCreep);
-		var i = operation.transporterCreeps.length;
-		while (i--) {
-	    	var transporter = operation.transporterCreeps.pop();
-	    	if (checkCreep(transporter) !== null) {
-	    		operation.transporterCreeps.push(transporter);
-	    	}
-		}
+	operation.claimCreep = checkCreep(operation.claimCreep);
+	operation.harvesterCreep = checkCreep(operation.harvesterCreep);
+	operation.colonizerCreep = checkCreep(operation.colonizerCreep);
+	var i = operation.transporterCreeps.length;
+	while (i--) {
+    	var transporter = operation.transporterCreeps.pop();
+    	if (checkCreep(transporter) !== null) {
+    		operation.transporterCreeps.push(transporter);
+    	}
 	}	
 }
 
