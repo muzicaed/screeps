@@ -53,6 +53,14 @@ var OperationManager = {
         reports[room.name].exporeState = checkRoomState(room, reports[room.name]);    
     },
 
+    needReport: function(room) {
+        var reports = getScoutReportsMemory();
+        if (reports[room.name] !== undefined) {
+            return (Game.time > reports[room.name].timeStamp + 3000);
+        }
+        return true;
+    },
+
     getRoomExploreState: function(roomName) {    
         var report = getScoutReportsMemory()[roomName];
         if (report === undefined || report.exporeState === undefined) {

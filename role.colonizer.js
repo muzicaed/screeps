@@ -116,6 +116,7 @@ function doRepair(creep) {
 }
 
 function assignConstructionWork(creep) {
+    // TODO: Should use construction central
     var sites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
     if (sites.length > 0) {
         var site = sites[0];

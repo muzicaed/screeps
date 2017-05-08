@@ -36,20 +36,22 @@ var ClaimOperation = {
 };
 
 function updateOperation(operation) {
-	operation.claimCreep = checkCreep(operation.claimCreep);
-	var i = operation.colonizerCreeps.length;
-	while (i--) {
-	    var colonizer = operation.colonizerCreeps.pop();
-	    if (checkCreep(colonizer) !== null) {
-	    	operation.colonizerCreeps.push(colonizer);
-	    }
-	}
+	if(Game.time % 20 == 0) {
+		operation.claimCreep = checkCreep(operation.claimCreep);
+		var i = operation.colonizerCreeps.length;
+		while (i--) {
+		    var colonizer = operation.colonizerCreeps.pop();
+		    if (checkCreep(colonizer) !== null) {
+		    	operation.colonizerCreeps.push(colonizer);
+		    }
+		}
 
-	var room = Game.rooms[operation.targetRoom];
-	if (room !== undefined) {
-		var sites = room.find(FIND_MY_CONSTRUCTION_SITES);
-		operation.spawnConstructionSiteId = (sites.length > 0) ? sites[0].id : null;	
-	}	
+		var room = Game.rooms[operation.targetRoom];
+		if (room !== undefined) {
+			var sites = room.find(FIND_MY_CONSTRUCTION_SITES);
+			operation.spawnConstructionSiteId = (sites.length > 0) ? sites[0].id : null;	
+		}	
+	}
 }
 
 function checkCreep(creepName) {

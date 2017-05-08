@@ -150,11 +150,10 @@ function doBuild(creep) {
     creep.memory.state = 'IDLE';
 }
 
-// Move tower into hq and do not use Find function.
 function findReloadWork(creep) {
-    var towers = Finder.findAllStructures(creep.room, STRUCTURE_TOWER, true);
-    for (var i = 0; i < towers.length; i++) {
-        var tower = towers[i];
+    var memory = Memory.towerManager[creep.room.name];
+    for (i = 0; i < memory.towers.length; i++) {
+        var tower = Game.getObjectById(memory.towers[i]);
         if (tower.energy < tower.energyCapacity) {
             return tower;
         }

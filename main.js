@@ -24,6 +24,7 @@ var Static = require('system.static');
 var Finder = require('system.finder');
 var BaseFactory = require('factory.base');
 var OperationManager = require('operation.manager');
+var Utils = require('system.utils');
 
 //profiler.enable();
 module.exports.loop = function () {    
@@ -80,11 +81,31 @@ function runCreeps() {
     }     
 }
 
+// TODO: Refactoring - Tower manager
 function runTowers(room) {
-    var towers = Finder.findAllStructures(room, STRUCTURE_TOWER, true);
-    for (i = 0; i < towers.length; i++) {
-        TowerStandard.run(towers[i]);
+    if (Memory.towerManager === undefined) {
+        Memory.towerManager = {};
     }
+
+   if (Memory.towerManager[room.name] === undefined) {
+        Memory.towerManager[room.name] = {
+            count: 0,
+            towers: []
+        };
+    }
+
+    var memory = Memory.towerManager[room.name];
+    if (memory.count > 10) {
+        memory.count = 0;
+        var towers = Finder.findAllStructures(room, STRUCTURE_TOWER, true);
+        memory.towers = Utils.createIdArray(towers);
+    }
+
+    for (i = 0; i < memory.towers.length; i++) {
+        var tower = Game.getObjectById(memory.towers[i]);
+        TowerStandard.run(tower);
+    }
+    memory.count++;
 }
 
 function handleActiveRoom(room) {

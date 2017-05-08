@@ -67,7 +67,6 @@ function checkStateChange(creep) {
 }
 
 function applyNewState(creep, newState) {
-    //sourceContainer.log(creep.name + ' new state: ' + newState);
     creep.memory.state = newState;
     switch(newState) {
         case 'HARVEST':
@@ -88,21 +87,6 @@ function doHarvest(creep) {
         }   
         MoveBehaviour.movePath(creep, container.pos);
     }
-}
-
-// TODO: REPLACE WITH RESOURCE CENTRAL
-function findContainer(creep) {
-    var containers = creep.pos.findInRange(FIND_STRUCTURES, 10, {
-        filter: function(obj) {
-            return (
-                obj.structureType == STRUCTURE_CONTAINER &&
-                obj.store.energy < obj.storeCapacity
-            );
-        }        
-    });
-    
-    containers.sort( function(a, b) { return a.energy - b.energy });      
-    return (containers.length > 0 ? containers[0] : null);
 }
 
 function requestAssignment(creep) {

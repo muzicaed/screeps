@@ -46,25 +46,27 @@ var HarvestOperation = {
 };
 
 function updateOperation(operation) {
-	var room = Game.rooms[operation.targetRoom];
-	if (room !== undefined) {
-		var sites = room.find(FIND_MY_CONSTRUCTION_SITES);
-		operation.constructionSiteId = (sites.length > 0) ? sites[0].id : null;	
+	if(Game.time % 15 == 0) {
+		var room = Game.rooms[operation.targetRoom];
+		if (room !== undefined) {
+			var sites = room.find(FIND_MY_CONSTRUCTION_SITES);
+			operation.constructionSiteId = (sites.length > 0) ? sites[0].id : null;	
 
-		var source = Game.getObjectById(operation.sourceId);
-		var containers = Finder.findContainersInRange(source.pos, 1);
-		operation.containerId = (containers.length > 0) ? containers[0].id : null;	
-	}	
+			var source = Game.getObjectById(operation.sourceId);
+			var containers = Finder.findContainersInRange(source.pos, 1);
+			operation.containerId = (containers.length > 0) ? containers[0].id : null;	
+		}	
 
-	operation.claimCreep = checkCreep(operation.claimCreep);
-	operation.harvesterCreep = checkCreep(operation.harvesterCreep);
-	operation.colonizerCreep = checkCreep(operation.colonizerCreep);
-	var i = operation.transporterCreeps.length;
-	while (i--) {
-    	var transporter = operation.transporterCreeps.pop();
-    	if (checkCreep(transporter) !== null) {
-    		operation.transporterCreeps.push(transporter);
-    	}
+		operation.claimCreep = checkCreep(operation.claimCreep);
+		operation.harvesterCreep = checkCreep(operation.harvesterCreep);
+		operation.colonizerCreep = checkCreep(operation.colonizerCreep);
+		var i = operation.transporterCreeps.length;
+		while (i--) {
+	    	var transporter = operation.transporterCreeps.pop();
+	    	if (checkCreep(transporter) !== null) {
+	    		operation.transporterCreeps.push(transporter);
+	    	}
+		}
 	}	
 }
 

@@ -95,6 +95,7 @@ function applyCollect(creep) {
 }
 
 function findContainer(creep) {
+    console.log('Transporter .findContainer()');
     var bestContainerId = null;
     var maxEnergy = 0;
     var sources = ResourceCentral.getAllSources(creep.room);
@@ -112,7 +113,7 @@ function findContainer(creep) {
    return bestContainerId;
 }
 
-function doCollect(creep) {
+function doCollect(creep) {    
     var container = Game.getObjectById(creep.memory.transferCollectId);
     if (container !== null) {
         if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {

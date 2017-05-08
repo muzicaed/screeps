@@ -69,6 +69,7 @@ function applyNewState(creep, newState) {
 }
 
 function doFindScoutTarget(creep) {
+    console.log('Scout .doFindScoutTarget()');
     var neutralRooms = [];
     var myRooms = [];
 
@@ -98,7 +99,8 @@ function doFindScoutTarget(creep) {
     creep.memory.state = 'SCOUT';
 }
 
-function doScout(creep) {
+function doScout(creep) {    
+    console.log('Scout .doScout()');
     var roomPos = new RoomPosition(25, 25, creep.memory.targetRoomName);    
     if (roomPos !== undefined && roomPos !== null) {
         MoveBehaviour.movePath(creep, roomPos);  
@@ -109,12 +111,15 @@ function doScout(creep) {
 
 function doReport(creep) {
     var room = creep.room;
-    OperationManager.processScoutReport(room);
+    if (OperationManager.needReport(room)) {
+        console.log('Scout .doReport()');        
+        OperationManager.processScoutReport(room);
+    }
     if (creep.memory.targetRoomName !== null) {
         var roomPos = new RoomPosition(25, 25, creep.memory.targetRoomName);        
         MoveBehaviour.movePath(creep, roomPos);    
     }  
-    creep.memory.lastRoomName = creep.room.name;
+    creep.memory.lastRoomName = room.name;
 }
 
 function pickBestTargetRoom(creep, neutralRooms, myRooms) {
