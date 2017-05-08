@@ -25,18 +25,21 @@ var Finder = require('system.finder');
 var BaseFactory = require('factory.base');
 var OperationManager = require('operation.manager');
 
-profiler.enable();
+//profiler.enable();
 module.exports.loop = function () {    
-    profiler.wrap(function() {
+  //  profiler.wrap(function() {
         // Main.js logic should go here.
         
         // Disable log
-        //console.log = function() {};    
+        //console.log = function() {}; 
+        console.log('------- NEW TICK ---------');   
         garbageCollect();        
         runRooms();
         runCreeps();     
         OperationManager.run();
-    });
+        //console.log(JSON.stringify(Game.cpu));
+        console.log(Game.cpu.getUsed());
+   // });
 };
 
 function runRooms() {   

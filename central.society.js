@@ -33,7 +33,10 @@ var Society = {
 
     getLevel: function(room) {
         var memory = getMemory(room);
-        return memory.current.level;
+        if (memory !== undefined) {
+            return memory.current.level;
+        }
+        return 0;
     },
     
     isSettlement: function(room) {

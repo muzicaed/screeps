@@ -19,6 +19,7 @@ var ConstructionCentral = {
         var memory = getMemory(room);
         unflag(room);
         if (memory.age > 15) { 
+            console.log('ConstructionCentral.run()');
             handleRcl(room);    
             if (isConstructionAllowed(room) && checkConstructioSite(room)) {
                 buildNextInQueue(room);   
