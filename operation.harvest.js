@@ -109,7 +109,7 @@ function handleClaimSpawn(ownerRoom, targetRoom, operation) {
 		if (targetRoom.controller !== undefined && targetRoom.controller.reservation !== undefined && targetRoom.controller.reservation.ticksToEnd < 1000) {
 			operation.claimCreep = Claimer.create(ownerRoom, operation.targetRoom, Static.ROLE_RESERVER);
 			return true;
-		} else if (targetRoom.controller === undefined) {
+		} else if (targetRoom.controller === undefined || targetRoom.controller.reservation === undefined) {
 			operation.claimCreep = Claimer.create(ownerRoom, operation.targetRoom, Static.ROLE_RESERVER);
 			return true;			
 		}

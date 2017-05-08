@@ -38,7 +38,7 @@ var TransferBehaviour = {
 
         // TODO: Not supporting multiple rooms!
         if (room.storage !== undefined && _.sum(room.storage.store) < room.storage.storeCapacity) {
-            creep.memory.transferTargetId = creep.room.storage.id;
+            creep.memory.transferTargetId = room.storage.id;
             return;
         }      
         creep.memory.state = 'IDLE';    
