@@ -18,7 +18,7 @@ var RepairCentral = {
     run: function(room) {
         RepairCentral.init(room)
         var memory = getMemory(room);
-        if (memory.age > 5) {
+        if (memory.age > 10) {
             memory.age = 0;
             scanRepairNeed(room);
         }

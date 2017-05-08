@@ -22,7 +22,7 @@ var ResourceCentral = {
     run: function(room) {
         ResourceCentral.init(room);
         var memory = getMemory(room);
-        if (memory.age > 50) {
+        if (memory.age > 40) {
             memory.age = 0;
             updateSources(room);
         }

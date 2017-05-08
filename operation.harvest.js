@@ -79,10 +79,10 @@ function buildContainer(operation) {
 	        var tileObj = tiles[j];
 	        if (tileObj.type == 'terrain' && (tileObj.terrain == 'plain' || tileObj.terrain == 'swamp')) {
 	        	var pos = targetRoom.getPositionAt(tileObj.x, tileObj.y);
-		    	ConstructionCentral.order(targetRoom, STRUCTURE_CONTAINER, pos);  
-		    	RoadsCentral.placeOrder(targetRoom, pos, ownerRoom.firstSpawn().pos);
-		    	RoadsCentral.placeOrder(ownerRoom, ownerRoom.firstSpawn().pos, pos);
-		    	console.log('HARVEST ORDER CONTAINER');	            
+		    	if (ConstructionCentral.order(targetRoom, STRUCTURE_CONTAINER, pos)) {  
+		    		RoadsCentral.placeOrder(targetRoom, pos, ownerRoom.firstSpawn().pos);
+		    		RoadsCentral.placeOrder(ownerRoom, ownerRoom.firstSpawn().pos, pos);
+		    	}            
 		    	return
 	        }
 	    } 
@@ -106,10 +106,10 @@ function handleCreepSpawn(operation) {
 
 function handleClaimSpawn(ownerRoom, targetRoom, operation) {
 	if (operation.claimCreep === null) { 
-		if (targetRoom.controller !== undefined && targetRoom.controller.reservation !== undefined && targetRoom.controller.reservation.ticksToEnd < 1000) {
+		if (targetRoom !== undefined && targetRoom.controller !== undefined && targetRoom.controller.reservation !== undefined && targetRoom.controller.reservation.ticksToEnd < 1000) {
 			operation.claimCreep = Claimer.create(ownerRoom, operation.targetRoom, Static.ROLE_RESERVER);
 			return true;
-		} else if (targetRoom.controller === undefined || targetRoom.controller.reservation === undefined) {
+		} else if (targetRoom !== undefined && (targetRoom.controller === undefined || targetRoom.controller.reservation === undefined)) {
 			operation.claimCreep = Claimer.create(ownerRoom, operation.targetRoom, Static.ROLE_RESERVER);
 			return true;			
 		}

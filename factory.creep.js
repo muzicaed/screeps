@@ -123,14 +123,14 @@ recipies[Static.ROLE_HARVESTER] = {
     ] 
 };
 recipies[Static.ROLE_TRANSPORTER] = { 
-    optimalEnergy: 600, 
+    optimalEnergy: 800, 
     protoParts: [
         { type: CARRY, use: 'fact', factor: 0.50 },
         { type: MOVE,  use: 'fact', factor: 0.50 } 
     ] 
 };
 recipies[Static.ROLE_CIV_TRANSPORTER] = { 
-    optimalEnergy: 1000, 
+    optimalEnergy: 2000, 
     protoParts: [
         { type: CARRY, use: 'fact', factor: 0.62 },
         { type: MOVE,  use: 'fact', factor: 0.38 } 
@@ -153,7 +153,7 @@ recipies[Static.ROLE_CARETAKER] = {
     ] 
 };
 recipies[Static.ROLE_SPAWNKEEPER] = { 
-    optimalEnergy: 800, 
+    optimalEnergy: 1000, 
     protoParts: [
         { type: CARRY, use: 'fact', factor: 0.50 },
         { type: MOVE,  use: 'fact', factor: 0.50 } 

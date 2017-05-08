@@ -39,7 +39,7 @@ function handlePath(creep, destination) {
 	var lastPos = creep.memory.moveData.lastPos;
 	if (creep.memory.moveData.lastDestinationId !== generateDestinationId(destination)) {
 		creep.memory.moveData.movePath = creep.pos.findPathTo(destination, { ignoreCreeps: true });	
-	} else if (creep.pos.x == lastPos.x && creep.pos.y == lastPos.y) {	
+	} else if (creep.pos.x == lastPos.x && creep.pos.y == lastPos.y && creep.memory.moveData.lastFatigue == 0) {	
 		creep.memory.moveData.movePath = creep.pos.findPathTo(destination, { ignoreCreeps: false });	
 	}
 }
