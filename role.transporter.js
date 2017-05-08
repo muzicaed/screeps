@@ -36,7 +36,9 @@ var RoleTransporter = {
             MoveBehaviour.setup(newCreep);
             TransferBehaviour.setup(newCreep);
             newCreep.memory.transferCollectId = null;
-        }           
+            return newCreep.name;
+        }  
+        return null;         
     }
 };
 

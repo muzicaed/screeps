@@ -1,6 +1,6 @@
 var Static = require('system.static');
-var Society = require('central.society');
 var ClaimOperation = require('operation.claim');
+var OperationHelper = require('operation.helper');
 
 var ClaimOperationManager = {
 
@@ -23,7 +23,7 @@ var ClaimOperationManager = {
 function processReport(roomName, report) {
 	var possibleOperationsMemory = getPossibleOperationsMemory();
     if (isNewClaimTarget(roomName, report)) {    	
-    	var closestRoomName = closestCizilizationRoom(roomName);
+    	var closestRoomName = OperationHelper.closestRoom(roomName, Static.SOCIETY_LEVEL_CIVILIZATION);
     	if (closestRoomName !== null) {
 	    	var path = Game.map.findRoute(roomName, closestRoomName);
 	    	if (path.length <= 3) {
@@ -86,20 +86,6 @@ function isNewClaimTarget(roomName, report) {
 		report.exporeState != Static.EXPLORE_ENEMY_CONTROL &&
 		report.exporeState != Static.EXPLORE_ENEMY_OPERATION
 	);
-}
-
-function closestCizilizationRoom(targetRoomName) {
-	var closestDistance = 100000;
-	var closestRoomName = null;
-	for (var roomName in Memory.myActiveRooms) {
-		var room = Game.rooms[roomName];
-		var distance = Game.map.getRoomLinearDistance(roomName, targetRoomName);
-		if (distance < closestDistance && Society.getLevel(room) >= Static.SOCIETY_LEVEL_CIVILIZATION) {
-			closestDistance = distance;
-			closestRoomName = roomName;
-		}
-	}
-	return closestRoomName;
 }
 
 function getPossibleOperationsMemory() {

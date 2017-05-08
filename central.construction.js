@@ -18,9 +18,9 @@ var ConstructionCentral = {
         ConstructionCentral.init(room);
         var memory = getMemory(room);
         unflag(room);
-        if (memory.age > 25) { 
+        if (memory.age > 15) { 
             handleRcl(room);    
-            if (room.controller.level > 1 && checkConstructioSite(room)) {
+            if (isConstructionAllowed(room) && checkConstructioSite(room)) {
                 buildNextInQueue(room);   
             }
             memory.age = 0;
@@ -69,8 +69,10 @@ function createOrder(room, type, pos) {
     }
 
     var color = getFlagColor(type);
+    var flagId = type + '-' + pos.x + '-' + pos.y + '-' + room.name;
+    delete Game.flags[flagId];
     return {
-        flag: room.createFlag(pos, type + '-' + pos.x + '-' + pos.y, color, color),
+        flag: room.createFlag(pos, flagId, color, color),
         type: type,
         prio: prioList().indexOf(type),
         id: null,
@@ -96,12 +98,11 @@ function getFlagColor(type) {
 function checkConstructioSite(room) {
     var memory = getMemory(room);
     if (memory.currentConstruction !== null) {
-        if (isConstructionSite(room, memory.currentConstruction.pos)) {
+        if (isConstructionSite(room, memory.currentConstruction.pos)) {            
             return false;
-        }
-        memory.currentConstruction == null;
-    }
-    
+        }        
+        memory.currentConstruction = null;
+    }    
     return true;
 }
 
@@ -114,9 +115,10 @@ function buildNextInQueue(room) {
         if (res == ERR_RCL_NOT_ENOUGH) {
             memory.rclWaitList.push(memory.currentConstruction);
             memory.currentConstruction = null;
-        } else if (res == ERR_INVALID_TARGET) {
+        } else if (res == ERR_INVALID_TARGET) {            
             memory.currentConstruction = null;
         }
+        console.log('ConstructionCentral RES: ' + res)
     }
 }
 
@@ -168,6 +170,16 @@ function handleRcl(room) {
         memory.rclWaitList = [];
         console.log('New RCL. Merge RCL Wait list.')
     }
+}
+
+function isConstructionAllowed(room) {
+    if (room.controller !== undefined && room.controller.my) {
+        if (room.controller.level > 1) {
+            return true;
+        }
+        return false;
+    }
+    return true;
 }
 
 function getMemory(room) {

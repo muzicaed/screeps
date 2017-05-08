@@ -37,9 +37,9 @@ var RoleHarvester = {
             newCreep.memory.initialTicksToLive = newCreep.ticksToLive;
             newCreep.memory.distanceInTicks = null;
             newCreep.memory.replacementAck = false;
-            return true;
+            return newCreep.name;
         }
-        return false;
+        return null;
     }
 };
 
@@ -128,10 +128,11 @@ function atDestination(creep) {
 
 function checkReplacement(creep) {
     if (creep.ticksToLive <= creep.memory.distanceInTicks && !creep.memory.replacementAck) {
-        creep.memory.replacementAck = RoleHarvester.create(creep.room, {
+        var name = RoleHarvester.create(creep.room, {
             sourceId: creep.memory.assignedToSourceId,
             containerId: creep.memory.assignedToContainerId 
         });
+        creep.memory.replacementAck = (name !== null);
     }
 }
 

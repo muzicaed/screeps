@@ -247,9 +247,7 @@ function pickRandomSource(room) {
 }
 
 function pickBestSource(creep, vacantSources) {
-    console.log(JSON.stringify(vacantSources));
     vacantSources.sort( function(a, b) { return a.distance - b.distance } );
-    console.log(JSON.stringify(vacantSources));
     vacantSources[0].assignments++;
     return vacantSources[0].id;
 }

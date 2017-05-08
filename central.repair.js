@@ -27,7 +27,10 @@ var RepairCentral = {
 
     hasRepairNeed(room) {
     	var memory = getMemory(room);
-    	return (memory.repairQueue.length > 0);
+        if (memory !== undefined) {
+    	   return (memory.repairQueue.length > 0);
+        }
+        return false;
     },
 
     nextInQueue(room) {

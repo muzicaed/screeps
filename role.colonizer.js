@@ -3,6 +3,7 @@ var CreepFactory = require('factory.creep');
 var MoveBehaviour = require('behaviour.move');
 var WithdrawBehaviour = require('behaviour.withdraw');
 var UpgradeControllerBehaviour = require('behaviour.controllerupgrade');
+var RepairCentral = require('central.repair');
 
 var RoleColonizer = {
     run: function(creep) {
@@ -19,7 +20,10 @@ var RoleColonizer = {
                 break;    
            case 'UPGRADE_CONTROLLER':
                 UpgradeControllerBehaviour.do(creep);
-                break;                              
+                break;     
+            case 'REPAIR':
+                doRepair(creep);
+                break;                                         
         }  
     },
     
@@ -54,6 +58,8 @@ function checkStateChange(creep) {
         return 'WITHDRAW';
     } else if (creep.carry.energy == creep.carryCapacity && creep.room.name != creep.memory.targetRoomName) {
         return 'MOVE_TO_TARGET'; 
+    } else if (creep.room.name == creep.memory.targetRoomName && RepairCentral.hasRepairNeed(creep.room)) {
+        return 'REPAIR';        
     } else if (creep.room.name == creep.memory.targetRoomName) {
         return 'BUILD';
     }
@@ -82,8 +88,31 @@ function applyNewState(creep, newState) {
             WithdrawBehaviour.apply(creep, true);
             break;   
         case 'UPGRADE_CONTROLLER':
-            break;                          
+            break;   
+        case 'REPAIR':
+            assignRepairWork(creep);
+            break;                                     
     }
+}
+
+function assignRepairWork(creep) {
+    var repairTarget = RepairCentral.nextInQueue(creep.room);
+    if (repairTarget !== null) {
+        creep.memory.repairTargetId = repairTarget.id;
+        return;
+    }
+    creep.memory.state = 'IDLE';
+}
+
+function doRepair(creep) {
+   var target = Game.getObjectById(creep.memory.repairTargetId);
+    if (target !== null && target.hits < target.hitsMax) {
+        if (creep.repair(target) == ERR_NOT_IN_RANGE) {
+            MoveBehaviour.movePath(creep, target);
+        }  
+        return;
+    }
+    creep.memory.state = 'IDLE';
 }
 
 function assignConstructionWork(creep) {

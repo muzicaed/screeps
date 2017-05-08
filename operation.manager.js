@@ -31,7 +31,7 @@ var OperationManager = {
     run: function() {
         OperationManager.init();
         var memory = getOperationsMemory();        
-        if (memory.count > 1) {
+        if (memory.count > 1) { // TODO: Change here!!
             memory.count = 0;
             processOperations();
         }

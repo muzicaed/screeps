@@ -50,26 +50,22 @@ function runRooms() {
             }               
 
             ConstructionCentral.run(room);
+            RoadsCentral.run(room);
+            RepairCentral.run(room);
 
             if (room.controller.level > 0 && room.controller.my && room.firstSpawn() !== null) {  
                 Bases.run(room);
-                Society.run(room);
-                RoadsCentral.run(room);
+                Society.run(room);                
                 ResourceCentral.run(room);
-                SpawnCentral.run(room);                    
-                RepairCentral.run(room);
+                SpawnCentral.run(room);                                    
                 
                 runTowers(room);
-                
-                if (Memory.myActiveRooms === undefined) {
-                    Memory.myActiveRooms = {};
-                }
-                Memory.myActiveRooms[room.name] = room.name;
+                handleActiveRoom(room);
                 // TODO: Make this a lot better...
                 if (room.controller && room.controller.safeModeAvailable > 0) {
                     room.controller.activateSafeMode();
                 }         
-            } 
+            }
         }     
     }
 }
@@ -86,6 +82,13 @@ function runTowers(room) {
     for (i = 0; i < towers.length; i++) {
         TowerStandard.run(towers[i]);
     }
+}
+
+function handleActiveRoom(room) {
+    if (Memory.myActiveRooms === undefined) {
+        Memory.myActiveRooms = {};
+    }
+    Memory.myActiveRooms[room.name] = room.name;    
 }
 
 function garbageCollect() {
@@ -116,4 +119,5 @@ roleObjectMap[Static.ROLE_DEFENDER] = Defender;
 roleObjectMap[Static.ROLE_SCOUT] = Scout;
 roleObjectMap[Static.ROLE_SIMCREEP] = SimCreep;
 roleObjectMap[Static.ROLE_CLAIMER] = Claimer;
+roleObjectMap[Static.ROLE_RESERVER] = Claimer;
 roleObjectMap[Static.ROLE_COLONIZER] = Colonizer;

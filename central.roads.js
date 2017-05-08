@@ -29,13 +29,15 @@ var RoadsCentral = {
     
     placeOrder: function(room, fromPos, toPos) {
         var memory = getMemory(room);
+        RoadsCentral.init(room);
         if (!isRoadExists(room, fromPos, toPos)) {
             var id = createRoadId(room, fromPos, toPos);     
             memory.roadQueue[id] = {
                 fromPos: fromPos,
                 toPos: toPos,
                 path: [],
-                isDone: false
+                isDone: false,
+                age: 0
            };
 
         }
@@ -110,9 +112,11 @@ function buildRoads(room) {
     if (road !== null && road.path.length > 0) {
         for(var i = 0; i < road.path.length; i++) {
             var segment = road.path[i];
-            if (!segment.isDone && !segment.isPlaced) {
+            if ((!segment.isDone && !segment.isPlaced) || segment.age > 20) {
                 ConstructionCentral.order(room, STRUCTURE_ROAD, room.getPositionAt(segment.x, segment.y));
+                segment.age = 0;
             }
+            segment.age++;
         }
     }
 }
