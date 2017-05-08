@@ -32,6 +32,7 @@ var OperationManager = {
         OperationManager.init();
         var memory = getOperationsMemory();        
         if (memory.count > 100) {
+            console.log('OperationManager.run()');
             memory.count = 0;
             processOperations();
         }

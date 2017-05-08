@@ -20,6 +20,7 @@ var Society = {
         Society.init(room);
         var memory = getMemory(room);
         if (memory.age > 50) {
+            console.log('Society.run()');
             memory.age = 0;
             memory.current = calculateCurrentSociety(room);
         }
