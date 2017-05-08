@@ -93,7 +93,7 @@ function handleCreepSpawn(operation) {
 	var ownerRoom = Game.rooms[operation.ownerRoom];
 	var targetRoom = Game.rooms[operation.targetRoom];
 	if (ownerRoom !== undefined && BaseHQ.currentBaseEnergy(ownerRoom) > 2000) {
-		if (!handleClaimSpawn(ownerRoom, operation)) {
+		if (!handleClaimSpawn(ownerRoom, targetRoom, operation)) {
 			if (operation.containerId !== null) {
 				if (!handleHarvesterSpawn(ownerRoom, operation)) {
 					handleTransporterSpawn(ownerRoom, operation);
@@ -104,10 +104,15 @@ function handleCreepSpawn(operation) {
 	}
 }
 
-function handleClaimSpawn(ownerRoom, operation) {
-	if (operation.claimCreep === null) {
-		operation.claimCreep = Claimer.create(ownerRoom, operation.targetRoom, Static.ROLE_RESERVER);
-		return true;
+function handleClaimSpawn(ownerRoom, targetRoom, operation) {
+	if (operation.claimCreep === null) { 
+		if (targetRoom.controller !== undefined && targetRoom.controller.reservation !== undefined && targetRoom.controller.reservation.ticksToEnd < 1000) {
+			operation.claimCreep = Claimer.create(ownerRoom, operation.targetRoom, Static.ROLE_RESERVER);
+			return true;
+		} else if (targetRoom.controller === undefined) {
+			operation.claimCreep = Claimer.create(ownerRoom, operation.targetRoom, Static.ROLE_RESERVER);
+			return true;			
+		}
 	} 
 	return false;
 }
@@ -121,8 +126,8 @@ function handleHarvesterSpawn(ownerRoom, operation) {
 }
 
 function handleTransporterSpawn(ownerRoom, operation) {
-	if (operation.transporterCreeps.length < 2) {
-		var name = Transporter.create(ownerRoom, operation.containerId)
+	if (operation.transporterCreeps.length < 3) {
+		var name = Transporter.create(ownerRoom, Static.ROLE_CIV_TRANSPORTER, operation.containerId);     
 		if (name !== null) {
 			operation.transporterCreeps.push(name);	
 		}
@@ -131,7 +136,7 @@ function handleTransporterSpawn(ownerRoom, operation) {
 
 function handleColonizerSpawn(ownerRoom, operation) {
 	var targetRoom = Game.rooms[operation.targetRoom];
-	if (operation.colonizerCreep === null && (operation.containerId === null || RepairCentral.hasRepairNeed(targetRoom))) {
+	if (operation.colonizerCreep === null && (operation.containerId === null || operation.transporterCreeps.length == 3)) {
 		operation.colonizerCreep = Colonizer.create(ownerRoom, operation.targetRoom)
 	} 	
 }

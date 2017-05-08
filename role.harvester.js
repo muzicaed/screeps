@@ -37,6 +37,7 @@ var RoleHarvester = {
             newCreep.memory.initialTicksToLive = newCreep.ticksToLive;
             newCreep.memory.distanceInTicks = null;
             newCreep.memory.replacementAck = false;
+            newCreep.memory.bornInRoom = room.name;
             return newCreep.name;
         }
         return null;
@@ -128,7 +129,8 @@ function atDestination(creep) {
 
 function checkReplacement(creep) {
     if (creep.ticksToLive <= creep.memory.distanceInTicks && !creep.memory.replacementAck) {
-        var name = RoleHarvester.create(creep.room, {
+        var room = Game.rooms[creep.memory.bornInRoom];
+        var name = RoleHarvester.create(room, {
             sourceId: creep.memory.assignedToSourceId,
             containerId: creep.memory.assignedToContainerId 
         });

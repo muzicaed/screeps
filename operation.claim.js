@@ -30,7 +30,7 @@ var ClaimOperation = {
 		return (
 			room !== undefined && 
 			room.firstSpawn() !== null &&
-			room.controller.level > 3
+			room.controller.level >= 3
 		);
 	}
 };
@@ -62,7 +62,7 @@ function checkCreep(creepName) {
 function handleCreepSpawn(operation) {
 	var ownerRoom = Game.rooms[operation.ownerRoom];
 	var targetRoom = Game.rooms[operation.targetRoom];
-	if (ownerRoom !== undefined && BaseHQ.currentBaseEnergy(ownerRoom) > 3000) {
+	if (ownerRoom !== undefined && BaseHQ.currentBaseEnergy(ownerRoom) > 2000) {
 		if (operation.colonizerCreeps.length < 2 && targetRoom !== undefined && targetRoom.controller.my) {
 			var name = Colonizer.create(ownerRoom, operation.targetRoom)
 			if (name !== null) {

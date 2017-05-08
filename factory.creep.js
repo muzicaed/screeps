@@ -203,7 +203,7 @@ recipies[Static.ROLE_RESERVER] = {
     ] 
 };
 recipies[Static.ROLE_COLONIZER] = { 
-    optimalEnergy: 1300, 
+    optimalEnergy: 800, 
     protoParts: [        
         { type: WORK,  use: 'fact', factor: 0.20 },
         { type: CARRY, use: 'fact', factor: 0.80 },

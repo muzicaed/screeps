@@ -12,8 +12,9 @@ var TransferBehaviour = {
         creep.memory.transferRoomName = creep.room.name;
     },
 
-    apply: function(creep) {        
-        if (creep.room.controller.ticksToDowngrade > 2000) {
+    apply: function(creep) { 
+    var room = Game.rooms[creep.memory.transferRoomName];       
+        if (room.controller.ticksToDowngrade > 2000) {
             var spawn = findDeliverySpawnStructure(creep);
             if (spawn !== null) {
                 creep.memory.transferTargetId = spawn.id;
@@ -27,7 +28,8 @@ var TransferBehaviour = {
             } 
         }
         
-        var containerId = ControllerBase.getControllerContainerId(creep.room);
+        
+        var containerId = ControllerBase.getControllerContainerId(room);
         var controllerContainer = Game.getObjectById(containerId);
         if (controllerContainer !== null && _.sum(controllerContainer.store) < (controllerContainer.storeCapacity - 500)) {
             creep.memory.transferTargetId = controllerContainer.id;
@@ -35,7 +37,7 @@ var TransferBehaviour = {
         }   
 
         // TODO: Not supporting multiple rooms!
-        if (creep.room.storage !== undefined && _.sum(creep.room.storage.store) < creep.room.storage.storeCapacity) {
+        if (room.storage !== undefined && _.sum(room.storage.store) < room.storage.storeCapacity) {
             creep.memory.transferTargetId = creep.room.storage.id;
             return;
         }      

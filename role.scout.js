@@ -20,6 +20,10 @@ var RoleScout = {
                 doScout(creep);
                 break;              
             case 'REPORT':
+                if (creep.memory.targetRoomName !== null) {
+                    var roomPos = new RoomPosition(25, 25, creep.memory.targetRoomName);                   
+                    MoveBehaviour.movePath(creep, roomPos);                                
+                }
                 doReport(creep);
                 break;                 
         }  
