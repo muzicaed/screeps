@@ -13,7 +13,7 @@ var HarvestOperation = {
 
 	run: function(operation) {
 		updateOperation(operation);	
-		if (operation.constructionSiteId === null) {
+		if (operation.constructionSiteId === null && operation.containerId === null) {
 			buildContainer(operation);
 		}
 		handleCreepSpawn(operation);
