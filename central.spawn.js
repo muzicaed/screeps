@@ -80,7 +80,7 @@ function handleCity(room) {
 }
 
 function handleCivilization(room) {
-    if (Finder.countRole(room, Static.ROLE_CIV_TRANSPORTER) < (Finder.countRole(room, Static.ROLE_HARVESTER * 1.5))) {
+    if (Finder.countRole(room, Static.ROLE_CIV_TRANSPORTER) < (Finder.countRole(room, Static.ROLE_HARVESTER * 1))) {
         Transporter.create(room, Static.ROLE_CIV_TRANSPORTER);     
     } else if (ResourceCentral.needHarvester(room)) {
         Harvester.create(room, {}); 

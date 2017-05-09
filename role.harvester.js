@@ -114,6 +114,7 @@ function atDestination(creep) {
 
 function checkReplacement(creep) {
     if (creep.ticksToLive <= (creep.memory.distanceInTicks - 20) && !creep.memory.replacementAck) {
+        console.log(creep.name + ' requested replacement.');
         var room = Game.rooms[creep.memory.bornInRoom];
         var name = RoleHarvester.create(room, {
             sourceId: creep.memory.assignedToSourceId,

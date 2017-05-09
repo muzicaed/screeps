@@ -144,7 +144,7 @@ function handleBlocking(room, structure, buildType) {
         console.log('Construction: Structure blocking, build road = OK.');
         return false;
     }
-    console.log('Construction: Bocking structure ' + structure.structureType);
+    console.log('Construction of ' + buildType + ': Bocking structure ' + structure.structureType);
     return true;
 } 
 
