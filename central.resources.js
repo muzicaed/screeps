@@ -71,20 +71,7 @@ var ResourceCentral = {
             }
         }        
         return null;
-    },     
-    
-    requestReplacementHarvester: function(creep, assignment) {
-        if (Harvester.create(creep.room, assignment)) {
-            creep.memory;
-        } 
-    },   
-    
-    requestResign: function(creep) {
-        var memory = getMemory(creep.room);
-        if (creep.memory.assignedToSourceId != undefined) {
-            memory.sources[creep.memory.assignedToSourceId].assignments--;
-        }
-    }, 
+    },        
 
     needPioneer: function(room) {
         return (countTotalPioneerAssignments(room) <= (Math.max(6, countTotalPioneerCapacity(room) * 1.5 )));
@@ -119,12 +106,7 @@ var ResourceCentral = {
     getAllSources: function(room) {
         var memory = getMemory(room);
         return memory.sources;
-    },  
-    
-    countSources: function(room) {
-        var sources = ResourceCentral.getAllSources(room);
-        return Utils.objListToArray(sources).length;
-    }    
+    }
 };
 
 function updateSources(room) {
@@ -217,7 +199,6 @@ function countTotalPioneerAssignments(room) {
 // TODO: Move to a central?
 
 function countPioneerAssignments(room, sourceId) {
-    var assignments = [];
     var pioneers = room.find(FIND_MY_CREEPS, {
         filter: function(obj) {
             return (obj.memory.role == Static.ROLE_PIONEER);
@@ -236,7 +217,6 @@ function countPioneerAssignments(room, sourceId) {
 }
 
 function isHarvesting(room, sourceId) {
-    var assignments = [];
     var harvesters = room.find(FIND_MY_CREEPS, {
         filter: function(obj) {
             return (obj.memory.role == Static.ROLE_HARVESTER);

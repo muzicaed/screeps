@@ -70,8 +70,8 @@ function runRooms() {
 }
 
 function runCreeps() {
-    for (var i in Game.creeps) {
-        var creep = Game.creeps[i];
+    for (var name in Game.creeps) {
+        var creep = Game.creeps[name];
         roleObjectMap[creep.memory.role].run(creep);
     }     
 }

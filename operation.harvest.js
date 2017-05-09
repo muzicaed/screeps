@@ -58,7 +58,7 @@ function updateOperation(operation) {
 		}	
 
 		operation.claimCreep = checkCreep(operation.claimCreep);
-		operation.harvesterCreep = checkCreep(operation.harvesterCreep);
+		operation.harvesterCreep = checkHarvesterCreep(operation.harvesterCreep);
 		operation.colonizerCreep = checkCreep(operation.colonizerCreep);
 		var i = operation.transporterCreeps.length;
 		while (i--) {
@@ -67,6 +67,8 @@ function updateOperation(operation) {
 	    		operation.transporterCreeps.push(transporter);
 	    	}
 		}
+
+
 	}	
 }
 
@@ -138,6 +140,19 @@ function handleColonizerSpawn(ownerRoom, operation) {
 	if (operation.colonizerCreep === null && (operation.containerId === null || operation.transporterCreeps.length == 3)) {
 		operation.colonizerCreep = Colonizer.create(ownerRoom, operation.targetRoom)
 	} 	
+}
+
+function checkHarvesterCreep(creepName, operation) {
+	var check = checkCreep(creepName);
+	if (check === null) {
+	    for (var name in Game.creeps) {
+	        var creep = Game.creeps[name];
+	        if (creep.role == Static.ROLE_HARVESTER && creep.memory.assignedToSourceId == operation.sourceId) {
+	            return creep.name;
+	        }
+	    }		
+	}
+	return check;
 }
 
 function checkCreep(creepName) {
