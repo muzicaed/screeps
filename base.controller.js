@@ -41,7 +41,6 @@ var ControllerBase = {
 
 	hasPumpNeed: function(room) {
 	    var memory = getMemory(room);
-	    var count = Finder.countRole(room, Static.ROLE_PUMP)
 	    var container = Game.getObjectById(memory.controllerContainerId);
 	    if (container === null) {
 	        return false;

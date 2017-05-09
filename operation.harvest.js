@@ -145,9 +145,11 @@ function handleColonizerSpawn(ownerRoom, operation) {
 function checkHarvesterCreep(operation) {
 	var check = checkCreep(operation.harvesterCreep);
 	if (check === null) {
+		console.log('harvesterCheck was null... searching replacement...');
 	    for (var name in Game.creeps) {
 	        var creep = Game.creeps[name];
-	        if (creep.role == Static.ROLE_HARVESTER && creep.memory.assignedToSourceId == operation.sourceId) {
+	        if (creep.memory.role == Static.ROLE_HARVESTER && creep.memory.assignedToSourceId == operation.sourceId) {
+	        	console.log('Found replacement');
 	            return creep.name;
 	        }
 	    }		
