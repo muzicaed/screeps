@@ -37,6 +37,7 @@ var RoleHarvester = {
             newCreep.memory.initialTicksToLive = newCreep.ticksToLive;
             newCreep.memory.distanceInTicks = null;            
             newCreep.memory.bornInRoom = room.name;
+            newCreep.memory.replacementAck = false;
             return newCreep.name;
         }
         return null;
