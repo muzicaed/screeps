@@ -58,13 +58,26 @@ var ResourceCentral = {
         }
         
         return null;
-    },       
+    }, 
     
-   requestReplacementHarvester: function(creep, assignment) {
+    requestTransportAssignment: function(room) {
+        var memory = getMemory(room);
+        for (var sourceId in memory.sources) {
+            var sourceObj = memory.sources[sourceId];
+            var container = Game.getObjectById(sourceObj.containerId);
+            if (container.store.energy > 1900) {
+                console.log('Need transporter!');
+                return container.id;
+            }
+        }        
+        return null;
+    },     
+    
+    requestReplacementHarvester: function(creep, assignment) {
         if (Harvester.create(creep.room, assignment)) {
             creep.memory;
         } 
-    },    
+    },   
     
     requestResign: function(creep) {
         var memory = getMemory(creep.room);
@@ -86,7 +99,14 @@ var ResourceCentral = {
             }
         }        
         return false;
-    },    
+    },
+    
+    needTransporter: function(room) {
+        if (ResourceCentral.requestTransportAssignment(room) === null) {
+            return false;
+        }
+        return true;
+    },     
     
     countAvailablePioneerAssignments: function(room) {
         return countTotalPioneerCapacity(room) - countTotalPioneerAssignments(room);

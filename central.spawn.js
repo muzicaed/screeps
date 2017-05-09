@@ -63,7 +63,7 @@ function handleOutpost(room) {
 function handleCity(room) {
     if (Finder.countRole(room, Static.ROLE_HARVESTER) == 0 && Finder.countRole(room, Static.ROLE_TRANSPORTER) == 0 && Finder.countRole(room, Static.ROLE_PIONEER) < 2) {
         Pioneer.panicCreate(room);    
-    } else if ((Finder.countRole(room, Static.ROLE_TRANSPORTER) < (Finder.countRole(room, Static.ROLE_HARVESTER) * 2))) {
+    } else if (ResourceCentral.needTransporter(room)) {
         Transporter.create(room, Static.ROLE_TRANSPORTER);
     } else if (ResourceCentral.needHarvester(room)) {
         Harvester.create(room, {}); 
@@ -80,7 +80,7 @@ function handleCity(room) {
 }
 
 function handleCivilization(room) {
-    if (Finder.countRole(room, Static.ROLE_CIV_TRANSPORTER) < (Finder.countRole(room, Static.ROLE_HARVESTER * 1))) {
+    if (ResourceCentral.needTransporter(room)) {
         Transporter.create(room, Static.ROLE_CIV_TRANSPORTER);     
     } else if (ResourceCentral.needHarvester(room)) {
         Harvester.create(room, {}); 

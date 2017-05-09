@@ -125,7 +125,7 @@ function handleHarvesterSpawn(ownerRoom, operation) {
 }
 
 function handleTransporterSpawn(ownerRoom, operation) {
-	if (operation.transporterCreeps.length < 3) {
+	if (operation.transporterCreeps.length < 2) {
 		var name = Transporter.create(ownerRoom, Static.ROLE_CIV_TRANSPORTER, operation.containerId);     
 		if (name !== null) {
 			operation.transporterCreeps.push(name);	
