@@ -80,11 +80,12 @@ function doHarvest(creep) {
     var source = Game.getObjectById(creep.memory.assignedToSourceId);
     var container = Game.getObjectById(creep.memory.assignedToContainerId);
     if (container !== null && source !== null) {
-        if (creep.pos.x == container.pos.x && creep.pos.y == container.pos.y) {
-            atDestination(creep);
+        if (creep.pos.x == container.pos.x && creep.pos.y == container.pos.y) {            
             creep.harvest(source);
             return;
-        }   
+        }  else if (creep.pos.getRangeTo(container) <= 1) {
+            atDestination(creep);
+        }
         MoveBehaviour.movePath(creep, container.pos);
     }
 }
@@ -112,7 +113,7 @@ function atDestination(creep) {
 }
 
 function checkReplacement(creep) {
-    if (creep.ticksToLive <= creep.memory.distanceInTicks && !creep.memory.replacementAck) {
+    if (creep.ticksToLive <= (creep.memory.distanceInTicks - 20) && !creep.memory.replacementAck) {
         var room = Game.rooms[creep.memory.bornInRoom];
         var name = RoleHarvester.create(room, {
             sourceId: creep.memory.assignedToSourceId,

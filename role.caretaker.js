@@ -65,7 +65,6 @@ function checkStateChange(creep) {
     if (creep.carry.energy == 0) {
         return 'WITHDRAW';    
     } else if (findReloadWork(creep) !== null) {
-        // NOT OPTIMAL!!
         return 'RELOAD_TOWER';
     } else if (creep.carry.energy == creep.carryCapacity && RepairCentral.hasRepairNeed(creep.room)) {
         return 'REPAIR';
