@@ -1,4 +1,4 @@
-var profiler = require('screeps-profiler');
+//var profiler = require('screeps-profiler');
 var Pioneer = require('role.pioneer');
 var Harvester = require('role.harvester');
 var Transporter = require('role.transporter');
@@ -28,18 +28,13 @@ var Utils = require('system.utils');
 
 //profiler.enable();
 module.exports.loop = function () {    
-  //  profiler.wrap(function() {
-        // Main.js logic should go here.
-        
+  //  profiler.wrap(function() {        
         // Disable log
         //console.log = function() {}; 
-        console.log('------- NEW TICK ---------');   
         garbageCollect();        
         runRooms();
         runCreeps();     
         OperationManager.run();
-        //console.log(JSON.stringify(Game.cpu));
-        console.log(Game.cpu.getUsed());
    // });
 };
 

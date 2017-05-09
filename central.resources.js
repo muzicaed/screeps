@@ -23,7 +23,6 @@ var ResourceCentral = {
         ResourceCentral.init(room);
         var memory = getMemory(room);
         if (memory.age > 40) {
-            console.log('ResourceCentral.run()');
             memory.age = 0;
             updateSources(room);
         }

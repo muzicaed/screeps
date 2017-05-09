@@ -86,7 +86,6 @@ function checkStateChange(creep) {
 }
 
 function applyNewState(creep, newState) {
-    //console.log(creep.name + ' new state: ' + newState);
     creep.memory.state = newState;
     switch(newState) {
         case 'UPGRADE_CONTROLLER':

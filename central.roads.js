@@ -19,7 +19,6 @@ var RoadsCentral = {
         RoadsCentral.init(room);
         var memory = getMemory(room);        
         if (memory.count > 25) {
-            console.log('RoadsCentral.run()');
             memory.count = 0;
             if (refreshRoadsStatus(room)) {                
                 buildRoads(room);    

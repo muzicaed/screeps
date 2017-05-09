@@ -60,7 +60,6 @@ function checkStateChange(creep) {
 }
 
 function applyNewState(creep, newState) {
-    //console.log(creep.name + ' new state: ' + newState);
     creep.memory.state = newState;
     switch(newState) {
         case 'POSITION':
@@ -73,7 +72,6 @@ function applyNewState(creep, newState) {
 }
 
 function findTargetPos(creep) {
-    console.log('Pump .findTargetPos()');
     var target = Game.getObjectById(creep.memory.controllerContainerId);
     if (target !== null) {
         for (var yMod = -1; yMod <= 0; yMod++) {

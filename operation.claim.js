@@ -14,7 +14,6 @@ var ClaimOperation = {
 	create: function (spec) {
 		// Create operation object here.
 		var targetRoom = Game.rooms[spec.targetRoom];
-		console.log(spec.targetRoom);
 		return {
 			'ownerRoom': spec.ownerRoom,
 			'targetRoom': spec.targetRoom,

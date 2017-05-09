@@ -21,7 +21,6 @@ var BasesCentral = {
         BasesCentral.init(room);
         var memory = getMemory(room);
         if (memory.age > 70) {
-            console.log('BasesCentral.run()');
             memory.age = 0;
             BaseHQ.run(room);
             ControllerBase.run(room);

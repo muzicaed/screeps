@@ -65,7 +65,6 @@ function checkStateChange(creep) {
 }
 
 function applyNewState(creep, newState) {
-    //console.log(creep.name + ' new state: ' + newState);
     creep.memory.state = newState;
     switch(newState) {
         case 'COLLECT':
@@ -95,7 +94,6 @@ function applyCollect(creep) {
 }
 
 function findContainer(creep) {
-    console.log('Transporter .findContainer()');
     var bestContainerId = null;
     var maxEnergy = 0;
     var sources = ResourceCentral.getAllSources(creep.room);

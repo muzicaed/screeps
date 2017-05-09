@@ -1,4 +1,4 @@
-    var Static = require('system.static');
+var Static = require('system.static');
 
 var CreepFactory = {
     

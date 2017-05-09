@@ -69,7 +69,6 @@ function applyNewState(creep, newState) {
 }
 
 function doFindScoutTarget(creep) {
-    console.log('Scout .doFindScoutTarget()');
     var neutralRooms = [];
     var myRooms = [];
 
@@ -111,8 +110,7 @@ function doScout(creep) {
 
 function doReport(creep) {
     var room = creep.room;
-    if (OperationManager.needReport(room)) {
-        console.log('Scout .doReport()');        
+    if (OperationManager.needReport(room)) {   
         OperationManager.processScoutReport(room);
     }
     if (creep.memory.targetRoomName !== null) {
