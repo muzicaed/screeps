@@ -61,18 +61,20 @@ function checkCreep(creepName) {
 }
 
 function handleCreepSpawn(operation) {
-	var ownerRoom = Game.rooms[operation.ownerRoom];
-	var targetRoom = Game.rooms[operation.targetRoom];
-	if (ownerRoom !== undefined && BaseHQ.currentBaseEnergy(ownerRoom) > 2000) {
-		if (operation.colonizerCreeps.length < 2 && targetRoom !== undefined && targetRoom.controller.my) {
-			var name = Colonizer.create(ownerRoom, operation.targetRoom)
-			if (name !== null) {
-				operation.colonizerCreeps.push(name);	
-			}	
-		} else if (operation.claimCreep === null && (targetRoom === undefined || !targetRoom.controller.my)) {
-			operation.claimCreep = Claimer.create(ownerRoom, operation.targetRoom, STATIC.ROLE_CLAIMER);
-		}
-	}
+    if (Game.time % 10 == 0) {
+    	var ownerRoom = Game.rooms[operation.ownerRoom];
+    	var targetRoom = Game.rooms[operation.targetRoom];
+    	if (ownerRoom !== undefined && BaseHQ.currentBaseEnergy(ownerRoom) > 2000) {
+    		if (operation.colonizerCreeps.length < 2 && targetRoom !== undefined && targetRoom.controller.my) {
+    			var name = Colonizer.create(ownerRoom, operation.targetRoom)
+    			if (name !== null) {
+    				operation.colonizerCreeps.push(name);	
+    			}	
+    		} else if (operation.claimCreep === null && (targetRoom === undefined || !targetRoom.controller.my)) {
+    			operation.claimCreep = Claimer.create(ownerRoom, operation.targetRoom, STATIC.ROLE_CLAIMER);
+    		}
+    	}
+    }
 }
 
 function buildSpawn(operation) {

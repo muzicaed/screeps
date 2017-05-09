@@ -21,7 +21,7 @@ var SpawnCentral = {
     
     run: function(room) {
         if (!handleEnemies(room)) {                            
-            if(Game.time % 10 == 0) {
+            if (Game.time % 10 == 0) {
                 switch (Society.getLevel(room)) {                
                     case Static.SOCIETY_LEVEL_OUTPOST:
                         handleOutpost(room);

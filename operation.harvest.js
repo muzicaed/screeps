@@ -92,18 +92,20 @@ function buildContainer(operation) {
 }
 
 function handleCreepSpawn(operation) {
-	var ownerRoom = Game.rooms[operation.ownerRoom];
-	var targetRoom = Game.rooms[operation.targetRoom];
-	if (ownerRoom !== undefined && BaseHQ.currentBaseEnergy(ownerRoom) > 2000) {
-		if (!handleClaimSpawn(ownerRoom, targetRoom, operation)) {
-			if (operation.containerId !== null) {
-				if (!handleHarvesterSpawn(ownerRoom, operation)) {
-					handleTransporterSpawn(ownerRoom, operation);
-				}				
-			}
-			handleColonizerSpawn(ownerRoom, operation);
-		}
-	}
+    if (Game.time % 10 == 0) {
+    	var ownerRoom = Game.rooms[operation.ownerRoom];
+    	var targetRoom = Game.rooms[operation.targetRoom];
+    	if (ownerRoom !== undefined && BaseHQ.currentBaseEnergy(ownerRoom) > 2000) {
+    		if (!handleClaimSpawn(ownerRoom, targetRoom, operation)) {
+    			if (operation.containerId !== null) {
+    				if (!handleHarvesterSpawn(ownerRoom, operation)) {
+    					handleTransporterSpawn(ownerRoom, operation);
+    				}				
+    			}
+    			handleColonizerSpawn(ownerRoom, operation);
+    		}
+    	}
+    }
 }
 
 function handleClaimSpawn(ownerRoom, targetRoom, operation) {	
