@@ -43,14 +43,10 @@ var ControllerBase = {
 	    var memory = getMemory(room);
 	    var count = Finder.countRole(room, Static.ROLE_PUMP)
 	    var container = Game.getObjectById(memory.controllerContainerId);
-	    if (container === null || container.store.energy == 0) {
+	    if (container === null) {
 	        return false;
-		} else if (room.energyCapacityAvailable >= 1500) {
-			return count < 1;
-		} else if (room.energyCapacityAvailable >= 800) {
-			return count < 2;
-		} 
-		return count < 3;
+		}
+		return (container.store.energy >= 1700);
 	}
 };
 
