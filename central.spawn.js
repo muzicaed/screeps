@@ -118,9 +118,10 @@ function handleCivilization(room) {
     } else if (IS_INVATION) {
         Defender.create(room);
         return true;
-    } else if (Game.time > (room.memory.lastScount + 2000)) {
-        room.memory.lastScount = Game.time;
-        Scout.create(room);
+    } else if (Game.time > (room.memory.lastScount + 2000)) {        
+        if (Scout.create(room)) {
+            room.memory.lastScount = Game.time;        
+        }
         return true;
     }
 

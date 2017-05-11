@@ -35,7 +35,9 @@ var RoleScout = {
             MoveBehaviour.setup(newCreep);
             newCreep.memory.lastRoomName = null;
             newCreep.memory.targetRoomName = null;
-        }           
+            return true;
+        }
+        return false;
     }
 };
 

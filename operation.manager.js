@@ -126,13 +126,19 @@ function findEnemyTowers(room) {
 }
 
 function checkRoomState(room, report) {
+    var myCreeps = room.find(FIND_MY_CREEPS{
+        filter: function(obj) {
+            obj.memory.role != Static.ROLE_SCOUT
+        }
+    });
+
     if (room.controller !== undefined && room.controller.my) {
         return Static.EXPLORE_MY_CONTROL;
     } else if (room.controller !== undefined && report.enemyReport.enemySpawns > 0) {
         return Static.EXPLORE_ENEMY_CONTROL;
     } else if (room.find(FIND_HOSTILE_CREEPS).length > 0) {
         return Static.EXPLORE_ENEMY_OPERATION;
-    } else if (room.find(FIND_MY_CREEPS).length > 2) {
+    } else if (myCreeps > 1) {
         return Static.EXPLORE_MY_OPERATION;
     }
     return Static.EXPLORE_NEUTRAL;
