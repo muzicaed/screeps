@@ -145,8 +145,10 @@ function handleColonizerSpawn(ownerRoom, operation) {
 function shouldSpawnClaimer(ownerRoom, operation) {
 	if (ownerRoom !== undefined && ownerRoom.controller.reservation !== undefined) {
 		return (
-			ownerRoom.controller.reservation.username !== 'muzicaed' || 
-			ownerRoom.controller.reservation.ticksToEnd < 1500
+			operation.claimCreep === null && (
+				ownerRoom.controller.reservation.username !== 'muzicaed' || 
+				ownerRoom.controller.reservation.ticksToEnd < 1500 				
+			)
 		);
 	}
 	return true;
