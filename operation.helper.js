@@ -6,10 +6,13 @@ var OperationHelper = {
         var closestRoomName = null;
         for (var roomName in Memory.myActiveRooms) {
             var room = Game.rooms[roomName];
-            var distance = Game.map.getRoomLinearDistance(roomName, targetRoomName);
-            if (distance < closestDistance && Society.getLevel(room) >= socLevel) {
-                closestDistance = distance;
-                closestRoomName = roomName;
+            var linDist = Game.map.getRoomLinearDistance(roomName, targetRoomName);
+            if (linDist <= 3) {
+                var distance = Game.map.findRoute(roomName, targetRoomName).length;
+                if (distance < closestDistance && Society.getLevel(room) >= socLevel) {
+                    closestDistance = distance;
+                    closestRoomName = roomName;
+                }
             }
         }
         return closestRoomName;

@@ -12,7 +12,7 @@ var RoleScout = {
         var action = think(creep);
         switch(action) {
             case 'FIND_SCOUT_TARGET':
-                if (creep.memory.roomCount < 10) { 
+                if (creep.memory.roomCount < 10 && creep.memory.targetRoomName !== null) { 
                     MoveBehaviour.movePath(creep, new RoomPosition(25, 25, creep.memory.targetRoomName));                 
                     creep.memory.roomCount++;
                     return;
@@ -23,12 +23,9 @@ var RoleScout = {
                 doScout(creep);
                 creep.memory.roomCount = 0;
                 break;              
-            case 'REPORT':
-                if (creep.memory.roomCount < 10) { 
-                    MoveBehaviour.movePath(creep, new RoomPosition(25, 25, creep.memory.targetRoomName));                 
-                    creep.memory.roomCount++;
-                }    
+            case 'REPORT': 
                 doReport(creep);
+                creep.memory.roomCount = 0;
                 break;                 
         }  
     },
@@ -76,7 +73,7 @@ function applyNewState(creep, newState) {
 }
 
 function doFindScoutTarget(creep) {
-    var neutralRooms = [];
+    var otherRooms = [];
     var myRooms = [];
 
     var exits = Game.map.describeExits(creep.room.name);
@@ -89,24 +86,30 @@ function doFindScoutTarget(creep) {
                     return;
                     break;
                 case Static.EXPLORE_MY_CONTROL:
+                case Static.EXPLORE_MY_OPERATION:
                     myRooms.push(roomName);
-                    break;
-                case Static.EXPLORE_NEUTRAL:
-                    neutralRooms.push(roomName);
+                    myRooms.push({
+                        name: roomName,
+                        timeStamp: OperationManager.getRoomExploreTimeStamp(roomName)
+                    });
                     break;
                 case Static.EXPLORE_ENEMY: 
-                    neutralRooms.push(roomName);
+                case Static.EXPLORE_ENEMY_OPERATION:                    
+                case Static.EXPLORE_NEUTRAL:
+                    otherRooms.push({
+                        name: roomName,
+                        timeStamp: OperationManager.getRoomExploreTimeStamp(roomName)
+                    });                    
                     break;
             }
         }
     }
 
-    pickBestTargetRoom(creep, neutralRooms, myRooms);    
+    pickBestTargetRoom(creep, otherRooms, myRooms);    
     creep.memory.state = 'SCOUT';
 }
 
 function doScout(creep) {    
-    console.log('Scout .doScout()');
     var roomPos = new RoomPosition(25, 25, creep.memory.targetRoomName);    
     if (roomPos !== undefined && roomPos !== null) {
         MoveBehaviour.movePath(creep, roomPos);          
@@ -129,14 +132,17 @@ function doReport(creep) {
 
 function pickBestTargetRoom(creep, neutralRooms, myRooms) {
     if (neutralRooms.length > 0) {
+        console.log(creep.name + ' found neutral: ' + neutralRooms.length);
         neutralRooms.sort( function(a, b) { return a.timeStamp - b.timeStamp } );
-        creep.memory.targetRoomName = neutralRooms[0];
+        creep.memory.targetRoomName = neutralRooms[0].name;
         return;
     } else if (myRooms.length > 0) {
+        console.log(creep.name + ' found my rooms: ' + myRooms.length);
         myRooms.sort( function(a, b) { return a.timeStamp - b.timeStamp } );
-        creep.memory.targetRoomName = myRooms[0];        
+        creep.memory.targetRoomName = myRooms[0].name;        
         return;
     }
+    console.log(creep.name +  ' last room...');
     creep.memory.targetRoomName = creep.memory.lastRoomName;
 }
 

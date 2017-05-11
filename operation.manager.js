@@ -50,6 +50,9 @@ var OperationManager = {
             'timeStamp': Game.time
         };
         reports[room.name].exporeState = checkRoomState(room, reports[room.name]);    
+
+        // Sort
+        reports = Object.keys(reports).sort().reduce((r, k) => (r[k] = reports[k], r), {});
     },
 
     needReport: function(room) {
@@ -66,7 +69,14 @@ var OperationManager = {
             return Static.EXPLORE_UNKNOWN;
         }
         return report.exporeState;
-    }       
+    },  
+    getRoomExploreTimeStamp: function(roomName) {    
+        var report = getScoutReportsMemory()[roomName];
+        if (report === undefined || report.timeStamp === undefined) {
+            return 0;
+        }
+        return report.timeStamp;
+    },    
 };
 
 function runActiveOperations() {
