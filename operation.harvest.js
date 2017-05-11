@@ -98,20 +98,16 @@ function handleCreepSpawn(operation) {
     if (Game.time % 10 == 0 && !ownerRoom.memory.SYS.didSpawn) {    	
     	var targetRoom = Game.rooms[operation.targetRoom];
     	if (ownerRoom !== undefined && BaseHQ.currentBaseEnergy(ownerRoom) > 2000) {
-    		if (!handleClaimSpawn(ownerRoom, targetRoom, operation)) {
-    			if (operation.containerId !== null) {
-    				if (!handleHarvesterSpawn(ownerRoom, operation)) {
-    					handleTransporterSpawn(ownerRoom, operation);
-    				}				
-    			}
-    			handleColonizerSpawn(ownerRoom, operation);
-    		}
+    		if (handleClaimSpawn(ownerRoom, targetRoom, operation)) { return; }
+    		if (handleHarvesterSpawn(ownerRoom, operation)) { return; }
+    		if (handleTransporterSpawn(ownerRoom, operation)) { return; } 
+    		if (handleColonizerSpawn(ownerRoom, operation)) { return; } 
     	}
     }
 }
 
 function handleClaimSpawn(ownerRoom, targetRoom, operation) {	
-	if (operation.claimCreep === null) { 
+	if (shouldSpawnClaimer(ownerRoom, operation)) { 
 		operation.claimCreep = Claimer.create(ownerRoom, operation.targetRoom, Static.ROLE_RESERVER);
 		return true;
 	} 
@@ -144,6 +140,16 @@ function handleColonizerSpawn(ownerRoom, operation) {
 		return true;
 	} 	
 	return false;
+}
+
+function shouldSpawnClaimer(ownerRoom, operation) {
+	if (ownerRoom !== undefined && ownerRoom.controller.reservation !== undefined && operation.claimCreep !== null) {
+		return (
+			ownerRoom.controller.reservation.username !== 'muzicaed' || 
+			ownerRoom.controller.reservation.ticksToEnd < 1500
+		);
+	}
+	return true;
 }
 
 function shouldSpawnColonizer(ownerRoom, operation) {

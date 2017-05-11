@@ -28,7 +28,6 @@ var TransferBehaviour = {
                 return;
             } 
             
-            console.log('Store: ' + _.sum(room.storage.store))
             if (room.storage !== undefined && _.sum(room.storage.store) < 10000) {
                 creep.memory.transferTargetId = room.storage.id;
                 return;

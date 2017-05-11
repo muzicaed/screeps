@@ -46,7 +46,7 @@ function runRooms() {
                 room.memory.SYS = {}; 
                 room.memory.isInitialized = true;
                 room.memory.lastScount = 0;
-            }               
+            }           
 
             ConstructionCentral.run(room);
             RoadsCentral.run(room);
