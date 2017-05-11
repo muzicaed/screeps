@@ -20,6 +20,7 @@ var RoadsCentral = {
         var memory = getMemory(room);        
         if (memory.count > 25) {
             memory.count = 0;
+            garbageCollect(room);
             if (refreshRoadsStatus(room)) {                
                 buildRoads(room);    
             }
@@ -39,7 +40,6 @@ var RoadsCentral = {
                 isDone: false,
                 age: 0
            };
-
         }
         return null;
     },
@@ -99,7 +99,7 @@ function checkRoadConstruction(room, segment) {
 
 function checkRoadDone(room, segment) {
     var structures = room.lookForAt(LOOK_STRUCTURES, segment.x, segment.y);
-    for(var i = 0; i < structures.length; i++) {
+    for (var i = 0; i < structures.length; i++) {
         if (structures[i].structureType != STRUCTURE_CONTAINER) {
             return true;
         }
@@ -146,7 +146,7 @@ function isRoadExists(room, fromPos, toPos) {
 
 function convertPath(path) {
     var newPath = [];
-    for(i = 0; i < path.length - 1; i++) {
+    for (i = 0; i < path.length - 1; i++) {
         var segment = {
             x: path[i].x,
             y: path[i].y,
@@ -156,6 +156,15 @@ function convertPath(path) {
         newPath.push(segment);
     }
     return newPath;
+}
+
+function garbageCollect(room) {
+    var roadQueue = getMemory(room).roadQueue;
+    for (var id in roadQueue) {
+        if (roadQueue[id].isDone) {
+            delete roadQueue[id];
+        }
+    }
 }
 
 function getMemory(room) {
