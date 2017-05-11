@@ -133,7 +133,7 @@ function handleHarvesterSpawn(ownerRoom, operation) {
 }
 
 function handleTransporterSpawn(ownerRoom, operation) {
-	if (operation.transporterCreeps.length < 2) {
+	if (shouldSpawnTransporter(operation)) {
 		var name = Transporter.create(ownerRoom, Static.ROLE_CIV_TRANSPORTER, operation.containerId);     
 		if (name !== null) {
 			operation.transporterCreeps.push(name);
@@ -188,6 +188,14 @@ function checkHarvesterCreep(operation) {
 	    }		
 	}
 	return check;
+}
+
+function shouldSpawnTransporter(operation) {
+	if (operation.containerId !== null) {
+		var container = Game.getObjectById(operation.containerId);
+		return (container.store.energy > 1900);
+	}
+	return false;
 }
 
 function checkCreep(creepName) {
