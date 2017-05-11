@@ -44,7 +44,9 @@ var ControllerBase = {
 	    var container = Game.getObjectById(memory.controllerContainerId);
 	    if (container === null) {
 	        return false;
-		}
+	    } else if (room.controller.ticksToDowngrade < 2000) {
+	        return true;
+	    }
 		return (container.store.energy >= 1700);
 	}
 };

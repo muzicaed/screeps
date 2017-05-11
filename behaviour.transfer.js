@@ -23,20 +23,21 @@ var TransferBehaviour = {
             }
         
             var container = findBestBaseContainer(creep);
-            if (container !== null) {
+            if (container !== null && _.sum(container.store) < container.storeCapacity) {
                 creep.memory.transferTargetId = container.id;
                 return;
             } 
+            
+            console.log('Store: ' + _.sum(room.storage.store))
+            if (room.storage !== undefined && _.sum(room.storage.store) < 10000) {
+                creep.memory.transferTargetId = room.storage.id;
+                return;
+            }                
         }        
-       
-        if (room.storage !== undefined && _.sum(room.storage.store) < 10000) {
-            creep.memory.transferTargetId = room.storage.id;
-            return;
-        }      
 
         var containerId = ControllerBase.getControllerContainerId(room);
         var controllerContainer = Game.getObjectById(containerId);
-        if (controllerContainer !== null && _.sum(controllerContainer.store) < (controllerContainer.storeCapacity - 500)) {
+        if (controllerContainer !== null && _.sum(controllerContainer.store) < (controllerContainer.storeCapacity)) {
             creep.memory.transferTargetId = controllerContainer.id;
             return;
         }   

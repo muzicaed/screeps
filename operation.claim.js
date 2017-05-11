@@ -61,8 +61,8 @@ function checkCreep(creepName) {
 }
 
 function handleCreepSpawn(operation) {
-    if (Game.time % 10 == 0) {
-    	var ownerRoom = Game.rooms[operation.ownerRoom];
+	var ownerRoom = Game.rooms[operation.ownerRoom];
+    if (Game.time % 10 == 0 && !ownerRoom.memory.SYS.didSpawn) {    	
     	var targetRoom = Game.rooms[operation.targetRoom];
     	if (ownerRoom !== undefined && BaseHQ.currentBaseEnergy(ownerRoom) > 2000) {
     		if (operation.colonizerCreeps.length < 2 && targetRoom !== undefined && targetRoom.controller.my) {

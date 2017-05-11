@@ -94,8 +94,8 @@ function buildContainer(operation) {
 }
 
 function handleCreepSpawn(operation) {
-    if (Game.time % 10 == 0) {
-    	var ownerRoom = Game.rooms[operation.ownerRoom];
+	var ownerRoom = Game.rooms[operation.ownerRoom];
+    if (Game.time % 10 == 0 && !ownerRoom.memory.SYS.didSpawn) {    	
     	var targetRoom = Game.rooms[operation.targetRoom];
     	if (ownerRoom !== undefined && BaseHQ.currentBaseEnergy(ownerRoom) > 2000) {
     		if (!handleClaimSpawn(ownerRoom, targetRoom, operation)) {
@@ -130,16 +130,30 @@ function handleTransporterSpawn(ownerRoom, operation) {
 	if (operation.transporterCreeps.length < 2) {
 		var name = Transporter.create(ownerRoom, Static.ROLE_CIV_TRANSPORTER, operation.containerId);     
 		if (name !== null) {
-			operation.transporterCreeps.push(name);	
+			operation.transporterCreeps.push(name);
+			return true;
 		}
-	}	
+	}
+	return false;
 }
 
 function handleColonizerSpawn(ownerRoom, operation) {
 	var targetRoom = Game.rooms[operation.targetRoom];
-	if (operation.colonizerCreep === null && (operation.containerId === null || operation.transporterCreeps.length == 2)) {
-		operation.colonizerCreep = Colonizer.create(ownerRoom, operation.targetRoom)
+	if (shouldSpawnColonizer(ownerRoom, operation)) {
+		operation.colonizerCreep = Colonizer.create(ownerRoom, operation.targetRoom);
+		return true;
 	} 	
+	return false;
+}
+
+function shouldSpawnColonizer(ownerRoom, operation) {
+	if (operation.colonizerCreep !== null) {
+		return false;
+	}
+	return (
+		operation.containerId === null ||
+		(operation.transporterCreeps.length == 2 && RepairCentral.hasRepairNeed(ownerRoom))
+	);
 }
 
 function checkHarvesterCreep(operation) {

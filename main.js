@@ -56,7 +56,7 @@ function runRooms() {
                 Bases.run(room);
                 Society.run(room);                
                 ResourceCentral.run(room);
-                SpawnCentral.run(room);                                    
+                room.memory.SYS.didSpawn = SpawnCentral.run(room);                                    
                 
                 runTowers(room);
                 handleActiveRoom(room);

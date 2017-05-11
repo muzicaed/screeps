@@ -24,19 +24,21 @@ var SpawnCentral = {
             if (Game.time % 10 == 0) {
                 switch (Society.getLevel(room)) {                
                     case Static.SOCIETY_LEVEL_OUTPOST:
-                        handleOutpost(room);
+                        return handleOutpost(room);
                         break;
 
                     case Static.SOCIETY_LEVEL_CITY:
-                        handleCity(room);
+                        return handleCity(room);
                         break;
 
                     case Static.SOCIETY_LEVEL_CIVILIZATION:
-                        handleCivilization(room);
+                        return handleCivilization(room);
                         break;                                
                 }
             }
         }
+
+        return true;
     }             
 };
 
@@ -44,58 +46,85 @@ function handleOutpost(room) {
     
     if (room.name == 'sim' && Finder.countRole(room, Static.ROLE_SIMCREEP) < 1) {
         SimCreep.create(room);     
-        return;
+        return true;
     }    
     
     if (Finder.countRole(room, Static.ROLE_PIONEER) == 0) {
         Pioneer.panicCreate(room);
+        return true;
     } else if (ResourceCentral.needPioneer(room)) {
         Pioneer.create(room);
+        return true;
     } else if (hasCaretakerNeed(room, 1)) {
         Caretaker.create(room);
+        return true;
     } else if (ControllerBase.hasPumpNeed(room)) {
         Pump.create(room);
+        return true;
     } else if (IS_INVATION) {
         Defender.create(room);
+        return true;
     }
+    return false;
 }
 
 function handleCity(room) {
     if (Finder.countRole(room, Static.ROLE_HARVESTER) == 0 && Finder.countRole(room, Static.ROLE_TRANSPORTER) == 0 && Finder.countRole(room, Static.ROLE_PIONEER) < 2) {
         Pioneer.panicCreate(room);    
+        return true;
     } else if (ResourceCentral.needTransporter(room)) {
         Transporter.create(room, Static.ROLE_TRANSPORTER);
+        return true;
     } else if (ResourceCentral.needHarvester(room)) {
         Harvester.create(room, {}); 
+        return true;
     } else if (Finder.countRole(room, Static.ROLE_SPAWNKEEPER) < 1) {
         SpawnKeeper.create(room);        
+        return true;
     } else if (ControllerBase.hasPumpNeed(room)) {
         Pump.create(room);
+        return true;
     } else if (hasCaretakerNeed(room, 2)) {
         Caretaker.create(room);
+        return true;
     } else if (Game.time > (room.memory.lastScount + 5000)) {
         room.memory.lastScount = Game.time;
         Scout.create(room);
+        return true;
     }
+
+    return false;
 }
 
 function handleCivilization(room) {
-    if (ResourceCentral.needTransporter(room)) {
+    if (Finder.countRole(room, Static.ROLE_HARVESTER) == 0 && Finder.countRole(room, Static.ROLE_TRANSPORTER) == 0 && Finder.countRole(room, Static.ROLE_PIONEER) < 2) {
+        Pioneer.panicCreate(room);  
+        return true;    
+    } else if (ResourceCentral.needTransporter(room)) {
         Transporter.create(room, Static.ROLE_CIV_TRANSPORTER);     
+        return true;
     } else if (ResourceCentral.needHarvester(room)) {
         Harvester.create(room, {}); 
+        return true;
     } else if (Finder.countRole(room, Static.ROLE_SPAWNKEEPER) < 1) {
         SpawnKeeper.create(room);
+        return true;
     } else if (ControllerBase.hasPumpNeed(room)) {
         Pump.create(room);
+        return true;
     } else if (hasCaretakerNeed(room, 1)) {
         Caretaker.create(room);
+        return true;
     } else if (IS_INVATION) {
         Defender.create(room);
+        return true;
     } else if (Game.time > (room.memory.lastScount + 2000)) {
         room.memory.lastScount = Game.time;
         Scout.create(room);
+        return true;
     }
+
+    return false;
 }
 
 function handleEnemies(room) {

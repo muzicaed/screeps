@@ -90,7 +90,10 @@ var ResourceCentral = {
     
     needTransporter: function(room) {
         if (ResourceCentral.requestTransportAssignment(room) === null) {
-            return false;
+            return (
+                Finder.countRole(room, Static.ROLE_TRANSPORTER) < 1 &&
+                Finder.countRole(room, Static.ROLE_CIV_TRANSPORTER) < 1 
+            );
         }
         return true;
     },     
