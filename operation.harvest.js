@@ -153,12 +153,13 @@ function shouldSpawnClaimer(ownerRoom, operation) {
 }
 
 function shouldSpawnColonizer(ownerRoom, operation) {
-	if (operation.colonizerCreep !== null) {
+	if (operation.colonizerCreep !== null && ownerRoom !== undefined) {
 		return false;
 	}
 	return (
 		operation.containerId === null ||
-		(operation.transporterCreeps.length == 2 && RepairCentral.hasRepairNeed(ownerRoom))
+		RepairCentral.hasRepairNeed(ownerRoom) || 
+		ConstructionCentral.hasConstructionOrders(ownerRoom)
 	);
 }
 
