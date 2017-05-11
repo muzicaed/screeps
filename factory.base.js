@@ -30,8 +30,8 @@ var BaseFactory = {
 	findBaseLocation: function(room, blueprint, closeTo) {
 	    var map = room.lookAtArea(0, 0, 49, 49);	    
 		var potentinalLocations = [];
-		for (var x = 0; x < (50 - blueprint.width); x++) {
-			for (var y = 0; y < (50 - blueprint.height); y++) {		
+		for (var x = 1; x < (49 - blueprint.width); x++) {
+			for (var y = 1; y < (49 - blueprint.height); y++) {		
 				if (isPotentialLocation(map, blueprint, x, y)) {
 					var location = createPotentinalLocation(room, blueprint, x, y, closeTo);
 					potentinalLocations.push(location);
