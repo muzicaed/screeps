@@ -117,7 +117,7 @@ function handleCreepSpawn(operation) {
 }
 
 function handleClaimSpawn(ownerRoom, targetRoom, operation) {	
-	if (shouldSpawnClaimer(ownerRoom, operation)) { 
+	if (shouldSpawnClaimer(targetRoom, operation)) { 
 		operation.claimCreep = Claimer.create(ownerRoom, operation.targetRoom, Static.ROLE_RESERVER);
 		return true;
 	} 
@@ -152,12 +152,12 @@ function handleColonizerSpawn(ownerRoom, operation) {
 	return false;
 }
 
-function shouldSpawnClaimer(ownerRoom, operation) {
-	if (ownerRoom !== undefined && ownerRoom.controller.reservation !== undefined) {
+function shouldSpawnClaimer(targetRoom, operation) {
+	if (targetRoom !== undefined && targetRoom.controller.reservation !== undefined) {
 		return (
 			operation.claimCreep === null && (
-				ownerRoom.controller.reservation.username !== 'muzicaed' || 
-				ownerRoom.controller.reservation.ticksToEnd < 1500 				
+				targetRoom.controller.reservation.username !== 'muzicaed' || 
+				targetRoom.controller.reservation.ticksToEnd < 1500 				
 			)
 		);
 	}
