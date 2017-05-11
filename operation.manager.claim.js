@@ -9,7 +9,10 @@ var ClaimOperationManager = {
 			processReport(id, reports[id]);
 		}
 		activateOperation();
-		removeCompleetedOperations();	
+		removeCompleetedOperations();
+		if (Game.time % 10 == 0) {
+			clearPossibleOperations();
+		}
 	},
 
 	run: function() {
@@ -48,6 +51,7 @@ function activateOperation() {
 		if ((noOfActiveOps + noOfActiveRooms) < Game.gcl.level) {
 			var spec = possibleOperations[roomName];
 			if (!hasActiveOperation(spec.ownerRoom)) {
+				console.log('Active claim operation: ' + spec.ownerRoom + ' -> ' + roomName);
 				activeOperations[roomName] = ClaimOperation.create(possibleOperations[roomName]);
 				delete possibleOperations[roomName];		
 			}
@@ -86,6 +90,11 @@ function isNewClaimTarget(roomName, report) {
 		report.exporeState != Static.EXPLORE_ENEMY_CONTROL &&
 		report.exporeState != Static.EXPLORE_ENEMY_OPERATION
 	);
+}
+
+function clearPossibleOperations() {
+	console.log('Clear claim');
+	Memory.operations.possibleOperations.claim = {};
 }
 
 function getPossibleOperationsMemory() {

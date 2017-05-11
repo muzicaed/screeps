@@ -10,6 +10,9 @@ var HarvestOperationManager = {
 		}
 		activateOperation();
 		removeCompleetedOperations();	
+		if (Game.time % 10 == 0) {
+			clearPossibleOperations();
+		}
 	},
 
 	run: function() {
@@ -84,6 +87,10 @@ function isNewHarvestTarget(roomName, report) {
 		report.exporeState != Static.EXPLORE_ENEMY_CONTROL &&
 		report.exporeState != Static.EXPLORE_ENEMY_OPERATION
 	);
+}
+
+function clearPossibleOperations() {
+	Memory.operations.possibleOperations.claim = {};
 }
 
 function getPossibleOperationsMemory() {

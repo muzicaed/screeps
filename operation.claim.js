@@ -35,7 +35,7 @@ var ClaimOperation = {
 };
 
 function updateOperation(operation) {
-	if(Game.time % 20 == 0) {
+	if (Game.time % 20 == 0) {
 		operation.claimCreep = checkCreep(operation.claimCreep);
 		var i = operation.colonizerCreeps.length;
 		while (i--) {
