@@ -126,7 +126,7 @@ function findEnemyTowers(room) {
 }
 
 function checkRoomState(room, report) {
-    var myCreeps = room.find(FIND_MY_CREEPS{
+    var myCreeps = room.find(FIND_MY_CREEPS, {
         filter: function(obj) {
             obj.memory.role != Static.ROLE_SCOUT
         }
