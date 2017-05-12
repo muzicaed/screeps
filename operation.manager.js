@@ -53,6 +53,7 @@ var OperationManager = {
 
         // Sort
         reports = Object.keys(reports).sort().reduce((r, k) => (r[k] = reports[k], r), {});
+        placeScoutFlag(room);
     },
 
     needReport: function(room) {
@@ -152,6 +153,12 @@ function checkRoomState(room, report) {
         return Static.EXPLORE_MY_OPERATION;
     }
     return Static.EXPLORE_NEUTRAL;
+}
+
+function placeScoutFlag(room) {
+    var flagName = room.createFlag(new RoomPosition(25, 25, room.name), room.name + '-scout-report');
+    delete Game.flags[flagName];
+    Game.flags[flagName].memory.scoutReport = reports[room.name];     
 }
 
 function getOperationsMemory() {
