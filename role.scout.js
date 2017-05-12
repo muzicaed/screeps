@@ -82,12 +82,12 @@ function doFindScoutTarget(creep) {
         if (roomName != creep.memory.lastRoomName) {
             switch (OperationManager.getRoomExploreState(roomName)) {
                 case Static.EXPLORE_UNKNOWN:
-                    creep.memory.targetRoomName = roomName;                                        
+                    creep.memory.targetRoomName = roomName;  
+                    creep.memory.state = 'SCOUT';
                     return;
                     break;
                 case Static.EXPLORE_MY_CONTROL:
                 case Static.EXPLORE_MY_OPERATION:
-                    myRooms.push(roomName);
                     myRooms.push({
                         name: roomName,
                         timeStamp: OperationManager.getRoomExploreTimeStamp(roomName)
@@ -104,7 +104,6 @@ function doFindScoutTarget(creep) {
             }
         }
     }
-
     pickBestTargetRoom(creep, otherRooms, myRooms);    
     creep.memory.state = 'SCOUT';
 }
