@@ -92,7 +92,7 @@ function doSuck(creep) {
    var target = Game.getObjectById(creep.memory.controllerContainerId);
     if (target !== null) {
         if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-            MoveBehaviour.movePath(target, source);
+            MoveBehaviour.movePath(creep, target);
         }           
         return;
     }
