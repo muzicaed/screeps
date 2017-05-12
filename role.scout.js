@@ -31,7 +31,7 @@ var RoleScout = {
     },
     
     create: function(room) {
-        var newCreep = CreepFactory.create(room, Static.ROLE_SCOUT, 'FIND_SCOUT_TARGET');
+        var newCreep = CreepFactory.create(room, Static.ROLE_SCOUT, 'REPORT');
         if (newCreep !== null) {
             MoveBehaviour.setup(newCreep);
             newCreep.memory.lastRoomName = null;
