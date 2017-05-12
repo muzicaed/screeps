@@ -52,7 +52,7 @@ function isPotentialLocation(map, blueprint, x, y) {
             var tiles = map[j][i];
             for (var k = 0; k < tiles.length; k++) {
             	var tile = tiles[k];
-	    		if ((tile.type == 'structure' && tile.structureType != STRUCTURE_ROAD) || (tile.type == 'terrain' && tile.terrain == 'wall') || tile.type == 'flag') {
+	    		if ((tile.type == 'structure' && tile.structure.structureType != STRUCTURE_ROAD) || (tile.type == 'terrain' && tile.terrain == 'wall') || tile.type == 'flag') {
 	    			return false;
 	    		}               	
             }         
