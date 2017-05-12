@@ -20,7 +20,7 @@ var IS_INVATION = false;
 var SpawnCentral = {
     
     run: function(room) {
-        if (!handleEnemies(room)) {                            
+        if (!handleEnemies(room)) {     
             if (Game.time % 10 == 0) {
                 switch (Society.getLevel(room)) {                
                     case Static.SOCIETY_LEVEL_OUTPOST:
@@ -89,7 +89,9 @@ function handleCity(room) {
         return true;
     } else if (Game.time > (room.memory.lastScount + 5000)) {
         room.memory.lastScount = Game.time;
-        Scout.create(room);
+        if (Scout.create(room)) {
+            room.memory.lastScount = Game.time;        
+        }
         return true;
     }
 
