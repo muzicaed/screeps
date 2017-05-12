@@ -158,8 +158,10 @@ function checkRoomState(room, report) {
 function placeScoutFlag(room, reports) {
     var flagName = room.name + '-scout-report';
     delete Game.flags[flagName];
-    room.createFlag(new RoomPosition(25, 25, room.name), flagName);
-    Game.flags[flagName].memory.scoutReport = reports[room.name];     
+    var res = room.createFlag(new RoomPosition(25, 25, room.name), flagName);
+    if (res !== ERR_NAME_EXISTS && res !== ERR_INVALID_ARGS) {
+        Game.flags[flagName].memory.scoutReport = reports[room.name];     
+    }
 }
 
 function getOperationsMemory() {

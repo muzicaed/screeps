@@ -13,7 +13,7 @@ var ControllerBase = {
        	    var pos = BaseFactory.orderConstruction(room, blueprint, room.controller.pos);
        		
             room.memory.SYS[MEMORY] = {
-				controllerContainerId: Finder.findContainerId(room.controller.pos, 2),
+				controllerContainerId: Finder.findContainerId(room.controller.pos, 3),
 				roadConnections: prepareRoadConnections(room, pos),
 				pos: pos
             };
@@ -26,7 +26,7 @@ var ControllerBase = {
 		if (memory.pos === null) {
 			memory.pos = BaseFactory.orderConstruction(room, blueprint, room.controller.pos);
 		}
-		memory.controllerContainerId = Finder.findContainerId(room.controller.pos, 2);
+		memory.controllerContainerId = Finder.findContainerId(room.controller.pos, 3);
 	},
 
     getControllerContainerId: function(room) {

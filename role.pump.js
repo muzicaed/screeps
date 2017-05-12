@@ -91,7 +91,9 @@ function findTargetPos(creep) {
 function doSuck(creep) {
    var target = Game.getObjectById(creep.memory.controllerContainerId);
     if (target !== null) {
-        creep.withdraw(target, RESOURCE_ENERGY);
+        if (creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            MoveBehaviour.movePath(target, source);
+        }           
         return;
     }
     creep.memory.state = 'IDLE';
