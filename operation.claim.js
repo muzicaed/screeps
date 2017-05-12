@@ -71,7 +71,7 @@ function handleCreepSpawn(operation) {
     				operation.colonizerCreeps.push(name);	
     			}	
     		} else if (operation.claimCreep === null && (targetRoom === undefined || !targetRoom.controller.my)) {
-    			operation.claimCreep = Claimer.create(ownerRoom, operation.targetRoom, Static.ROLE_CLAIMER);
+    			operation.claimCreep = Claimer.create(ownerRoom, operation.targetRoom, STATIC.ROLE_CLAIMER);
     		}
     	}
     }
