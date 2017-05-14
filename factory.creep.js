@@ -175,10 +175,10 @@ recipies[Static.ROLE_SIMCREEP] = {
     ] 
 };
 recipies[Static.ROLE_DEFENDER] = { 
-    optimalEnergy: 5000, 
+    optimalEnergy: 2000, 
     protoParts: [        
-        { type: TOUGH,  use: 'fact', factor: 0.20 },
-        { type: ATTACK, use: 'fact', factor: 0.80 },
+        { type: TOUGH,  use: 'fact', factor: 0.05 },
+        { type: ATTACK, use: 'fact', factor: 0.95 },
         { type: MOVE,  use: 'match' }  
     ] 
 };

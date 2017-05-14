@@ -20,7 +20,8 @@ var IS_INVATION = false;
 var SpawnCentral = {
     
     run: function(room) {
-        if (!handleEnemies(room)) {     
+        if (!handleEnemies(room)) { 
+            //Scout.create(room)
             if (Game.time % 10 == 0) {
                 switch (Society.getLevel(room)) {                
                     case Static.SOCIETY_LEVEL_OUTPOST:

@@ -45,8 +45,9 @@ function think(creep) {
 
 function checkStateChange(creep) {
     var enemies = creep.room.find(FIND_HOSTILE_CREEPS);
+    var enemyStructures = creep.room.find(FIND_HOSTILE_STRUCTURES);
     var flag = Game.flags['INVATION'];
-    if (enemies.length > 0) {
+    if (enemies.length > 0 || enemyStructures.length > 0) {
         return 'ATTACK';
     } else if (flag !== undefined) {
         return 'FLAG_MOVE';
@@ -64,24 +65,17 @@ function applyNewState(creep, newState) {
 }
 
 function applyAttack(creep) {
-    var enemies = creep.room.find(FIND_HOSTILE_CREEPS);
-    var weakestEnemy = null;
-    var bestRatio = 2.00;
-
-    for(var i = 0; i < enemies.length; i++) {
-        var enemy = enemies[i];
-        if ((enemy.hits / enemy.hitsMax) < bestRatio) {
-            bestRatio = (enemy.hits / enemy.hitsMax);
-            weakestEnemy = enemy;
-        }
-    }
-
+    var enemy = creep.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
     if (enemy !== null) {
         creep.memory.enemyTargetId = enemy.id;
         return;
     }
 
-    var enemyStructure = creep.room.findClosestByPath(FIND_HOSTILE_STRUCTURES);
+    var enemyStructure = creep.pos.findClosestByRange(FIND_HOSTILE_STRUCTURES, {
+        filter: function(obj) {
+            return (obj.structureType != STRUCTURE_CONTROLLER);
+        }
+    });
     if (enemyStructure !== null) {
         creep.memory.enemyTargetId = enemyStructure.id;
     }
@@ -93,11 +87,11 @@ function doAttack(creep) {
     var target = Game.getObjectById(creep.memory.enemyTargetId);
     if (target !== null) {
         if (creep.attack(target) == ERR_NOT_IN_RANGE) {
-            MoveBehaviour.movePath(creep, target);
+            creep.moveTo(target);
         }    
-    } else {
-        creep.memory.state = 'FLAG_MOVE'; 
+        return;
     }
+    creep.memory.state = 'IDLE';
 }
 
 function doFlagMove(creep) {

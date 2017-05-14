@@ -18,20 +18,17 @@ var TransferBehaviour = {
         if (room.controller.ticksToDowngrade > 2000) {
             var spawn = findDeliverySpawnStructure(creep);
             if (spawn !== null) {
-                console.log('Transfer to spawn');
                 creep.memory.transferTargetId = spawn.id;
                 return;
             }
         
             var container = findBestBaseContainer(creep);
             if (container !== null && _.sum(container.store) < container.storeCapacity) {
-                console.log('Transfer to container');
                 creep.memory.transferTargetId = container.id;
                 return;
             } 
             
             if (room.storage !== undefined && _.sum(room.storage.store) < 10000) {
-                console.log('Transfer to storage (10000)');
                 creep.memory.transferTargetId = room.storage.id;
                 return;
             }                

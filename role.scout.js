@@ -10,6 +10,7 @@ var OperationManager = require('operation.manager');
 var RoleScout = {
     run: function(creep) {
         var action = think(creep);
+        console.log(creep.name + ' in ' + creep.room.name + ' action ' + action);
         switch(action) {
             case 'FIND_SCOUT_TARGET':
                 if (creep.memory.roomCount < 10 && creep.memory.targetRoomName !== null && creep.memory.targetRoomName !== undefined) { 
@@ -28,6 +29,7 @@ var RoleScout = {
                 creep.memory.roomCount = 0;
                 break;                 
         }  
+        console.log('------------');
     },
     
     create: function(room) {

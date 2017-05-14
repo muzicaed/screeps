@@ -59,7 +59,7 @@ var OperationManager = {
     needReport: function(room) {
         var reports = getScoutReportsMemory();
         if (reports[room.name] !== undefined) {
-            return (Game.time > reports[room.name].timeStamp + 3000);
+            return (Game.time > reports[room.name].timeStamp + 1000);
         }
         return true;
     },
@@ -157,7 +157,9 @@ function checkRoomState(room, report) {
 
 function placeScoutFlag(room, reports) {
     var flagName = room.name + '-scout-report';
-    delete Game.flags[flagName];
+    if (Game.flags[flagName] !== undefined) {
+        Game.flags[flagName].remove();
+    }
     var res = room.createFlag(new RoomPosition(25, 25, room.name), flagName);
     if (res !== ERR_NAME_EXISTS && res !== ERR_INVALID_ARGS) {
         Game.flags[flagName].memory.scoutReport = reports[room.name];     
