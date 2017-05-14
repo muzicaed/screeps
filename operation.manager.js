@@ -39,7 +39,8 @@ var OperationManager = {
         memory.count++;        
     },
 
-    processScoutReport(room) {    
+    processScoutReport: function(room) {    
+        console.log('Report: ' + room.name);
         var reports = getScoutReportsMemory();
         reports[room.name] = {
             'type': checkRoomType(room),
@@ -51,16 +52,21 @@ var OperationManager = {
         };
         reports[room.name].exporeState = checkRoomState(room, reports[room.name]);    
 
-        // Sort
-        reports = Object.keys(reports).sort().reduce((r, k) => (r[k] = reports[k], r), {});
+        reports = Utils.orderKeys(reports);
         placeScoutFlag(room, reports);
     },
 
     needReport: function(room) {
         var reports = getScoutReportsMemory();
         if (reports[room.name] !== undefined) {
-            return (Game.time > reports[room.name].timeStamp + 1000);
+            if (Game.time > reports[room.name].timeStamp + 0) {
+                console.log('Need report');
+                return true;    
+            }
+            
+            return false;
         }
+        console.log('Need report');
         return true;
     },
 
@@ -155,15 +161,14 @@ function checkRoomState(room, report) {
     return Static.EXPLORE_NEUTRAL;
 }
 
-function placeScoutFlag(room, reports) {
+function placeScoutFlag(room, reports) {    
     var flagName = room.name + '-scout-report';
-    if (Game.flags[flagName] !== undefined) {
-        Game.flags[flagName].remove();
+    console.log('Flag: ' + flagName);
+    if (Game.flags[flagName] === undefined) {
+        var res = room.createFlag(25, 25, flagName);        
+        console.log('Create: ' + res);
     }
-    var res = room.createFlag(new RoomPosition(25, 25, room.name), flagName);
-    if (res !== ERR_NAME_EXISTS && res !== ERR_INVALID_ARGS) {
-        Game.flags[flagName].memory.scoutReport = reports[room.name];     
-    }
+    //Game.flags[flagName].memory.scoutReport = reports[room.name];     
 }
 
 function getOperationsMemory() {

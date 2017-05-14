@@ -31,6 +31,7 @@ module.exports.loop = function () {
   //  profiler.wrap(function() {        
         // Disable log
         //console.log = function() {}; 
+        Game.flags = {};
         garbageCollect();        
         runRooms();
         runCreeps();     
