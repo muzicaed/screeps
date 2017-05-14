@@ -162,13 +162,13 @@ function checkRoomState(room, report) {
 }
 
 function placeScoutFlag(room, reports) {    
-    console.log(JSON.stringify(Game.flags));
     var flagName = room.name + '-scout-report';
     console.log('Flag: ' + flagName);
     if (Game.flags[flagName] === undefined) {
         var res = room.createFlag(25, 25, flagName);        
         console.log('Create: ' + res);
     }
+    console.log('Update data');
     Game.flags[flagName].memory.scoutReport = reports[room.name];     
 }
 
