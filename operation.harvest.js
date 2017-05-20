@@ -208,7 +208,7 @@ function shouldSpawnTransporter(operation) {
 function checkCreep(creepName) {
 	if (Game.creeps[creepName] === undefined) {
 		return null;
-	}
+	} 
 	return creepName;
 }
 
