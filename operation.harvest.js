@@ -216,7 +216,7 @@ function checkAttack(operation) {
 	var targetRoom = Game.rooms[operation.targetRoom];
 	if (targetRoom !== undefined) {
 		var enemies = targetRoom.find(FIND_HOSTILE_CREEPS);
-		if (enemies.count > 0) {
+		if (enemies.length > 0) {
 			operation.underAttackTicks = enemies[0].ticksToLive;
 		} else {
 			operation.underAttackTicks = 0;
