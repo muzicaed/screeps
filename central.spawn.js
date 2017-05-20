@@ -143,10 +143,14 @@ function handleEnemies(room) {
 }
 
 function hasCaretakerNeed(room, max) {
-    return (
-        (ConstructionCentral.getCurrentOrder(room) !== null || RepairCentral.hasRepairNeed(room)) &&
-        Finder.countRole(room, Static.ROLE_CARETAKER) < max
-    );
+    if (Society.getLevel(room) < 3) {
+        return (
+            (ConstructionCentral.getCurrentOrder(room) !== null || RepairCentral.hasRepairNeed(room)) &&
+            Finder.countRole(room, Static.ROLE_CARETAKER) < max
+        );
+    }
+    
+    return (ConstructionCentral.getCurrentOrder(room) !== null && Finder.countRole(room, Static.ROLE_CARETAKER) < max)
 }
 
 module.exports = SpawnCentral;

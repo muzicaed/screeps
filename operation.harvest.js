@@ -12,6 +12,7 @@ var RepairCentral = require('central.repair');
 var HarvestOperation = {
 
 	run: function(operation) {
+	    checkAttack(operation);
 		updateOperation(operation);	
 		if (operation.constructionSiteId === null && operation.containerId === null) {
 			buildContainer(operation);
@@ -33,7 +34,8 @@ var HarvestOperation = {
 			'claimCreep': null,
 			'harvesterCreep': null,
 			'colonizerCreep': null,
-			'transporterCreeps': []
+			'transporterCreeps': [],
+			'underAttackTicks': 0
 		};
 	},
 
@@ -104,16 +106,18 @@ function rebuildRoads(operation) {
 }
 
 function handleCreepSpawn(operation) {
-	var ownerRoom = Game.rooms[operation.ownerRoom];
-    if (Game.time % 10 == 0 && !ownerRoom.memory.SYS.didSpawn) {    	
-    	var targetRoom = Game.rooms[operation.targetRoom];
-    	if (ownerRoom !== undefined && BaseHQ.currentBaseEnergy(ownerRoom) > 2000) {
-    		if (handleClaimSpawn(ownerRoom, targetRoom, operation)) { return; }
-    		if (handleHarvesterSpawn(ownerRoom, operation)) { return; }
-    		if (handleTransporterSpawn(ownerRoom, operation)) { return; } 
-    		if (handleColonizerSpawn(ownerRoom, operation)) { return; } 
-    	}
-    }
+	if (operation.underAttackTicks == 0) {
+		var ownerRoom = Game.rooms[operation.ownerRoom];
+	    if (Game.time % 10 == 0 && !ownerRoom.memory.SYS.didSpawn) {    	
+	    	var targetRoom = Game.rooms[operation.targetRoom];
+	    	if (ownerRoom !== undefined && BaseHQ.currentBaseEnergy(ownerRoom) > 2000) {
+	    		if (handleClaimSpawn(ownerRoom, targetRoom, operation)) { return; }
+	    		if (handleHarvesterSpawn(ownerRoom, operation)) { return; }
+	    		if (handleTransporterSpawn(ownerRoom, operation)) { return; } 
+	    		if (handleColonizerSpawn(ownerRoom, operation)) { return; } 
+	    	}
+	    }
+	}
 }
 
 function handleClaimSpawn(ownerRoom, targetRoom, operation) {	
@@ -161,7 +165,7 @@ function shouldSpawnClaimer(targetRoom, operation) {
 			)
 		);
 	}
-	return true;
+	return (operation.claimCreep === null);
 }
 
 function shouldSpawnColonizer(ownerRoom, operation) {
@@ -193,7 +197,10 @@ function checkHarvesterCreep(operation) {
 function shouldSpawnTransporter(operation) {
 	if (operation.containerId !== null) {
 		var container = Game.getObjectById(operation.containerId);
-		return (container.store.energy > 1900);
+		if (container !== null) {
+			return (container.store.energy > 1900);
+		}
+		return false;
 	}
 	return false;
 }
@@ -203,6 +210,22 @@ function checkCreep(creepName) {
 		return null;
 	}
 	return creepName;
+}
+
+function checkAttack(operation) {
+	var targetRoom = Game.rooms[operation.targetRoom];
+	if (targetRoom !== undefined) {
+		var enemies = targetRoom.find(FIND_HOSTILE_CREEPS);
+		if (enemies.count > 0) {
+			operation.underAttackTicks = enemies[0].ticksToLive;
+		} else {
+			operation.underAttackTicks = 0;
+		}
+	}
+
+	if (operation.underAttackTicks > 0) {
+		operation.underAttackTicks--;
+	}
 }
 
 module.exports = HarvestOperation;

@@ -59,7 +59,7 @@ var OperationManager = {
     needReport: function(room) {
         var reports = getScoutReportsMemory();
         if (reports[room.name] !== undefined) {
-            if (Game.time > reports[room.name].timeStamp + 1000) {
+            if (Game.time > reports[room.name].timeStamp + 0) {
                 console.log('Need report');
                 return true;    
             }
