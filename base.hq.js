@@ -25,10 +25,8 @@ var BaseHQ = {
         var memory = getMemory(room);
         memory.baseContainers = scanBaseContainers(room);
         handleNeighbourRoads(room);
-        if (room.controller.level >= 5 && memory.level == 1) {
-            BaseFactory.placeConstructionOrders(room, blueprint2, memory.pos);
-            memory.level = 2;
-        }
+        handleBaseLevel2(room);
+        handleRebuild(room);
 	},
 
     getAllBaseContainers: function(room) {
@@ -107,6 +105,26 @@ function buildNeighbourRoad(room, targetRoomName) {
     var otherRoom = Game.rooms[targetRoomName];
     if (otherRoom !== undefined) {        
         RoadsCentral.placeOrder(room, memory.pos, otherRoom.firstSpawn().pos);    
+    }
+}
+
+function handleBaseLevel2(room) {
+    var memory = getMemory(room);
+    if (room.controller.level >= 5 && memory.level == 1) {
+        BaseFactory.placeConstructionOrders(room, blueprint2, memory.pos);
+        memory.level = 2;
+    }    
+}
+
+function handleRebuild(room) {
+    var memory = getMemory(room);
+    if (Game.time % 100 == 0) {
+        console.log('Rebuild!');
+        BaseFactory.placeConstructionOrders(room, blueprint, memory.pos);
+        if (memory.level > 1) {
+            console.log('Rebuild 2');
+            BaseFactory.placeConstructionOrders(room, blueprint2, memory.pos);
+        }
     }
 }
 

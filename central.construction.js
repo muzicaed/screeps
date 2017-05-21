@@ -52,12 +52,14 @@ var ConstructionCentral = {
     
     order: function(room, type, pos) {
         var memory = getMemory(room);
-        if (!isStructure(room, pos, type)) {
+        if (!isStructure(room, pos, type) && !inQueue(room, pos, type)) {
             var order = createOrder(room, type, pos);
             memory.constructionQueue.push(order);
             memory.constructionQueue.sort( function(a, b) { return a.prio - b.prio } );
+            console.log('DO order');
             return true;
         }
+        console.log('No order');
         return false;
     }
 };
@@ -69,10 +71,11 @@ function createOrder(room, type, pos) {
     }
 
     var color = getFlagColor(type);
-    var flagId = type + '-' + pos.x + '-' + pos.y + '-' + room.name;
-    delete Game.flags[flagId];
+    var orderId = createOrderId(type, pos, room.name);
+    delete Game.flags[orderId];
     return {
-        flag: room.createFlag(pos, flagId, color, color),
+        orderId: orderId,
+        flag: room.createFlag(pos, orderId, color, color),
         type: type,
         prio: prioList().indexOf(type),
         id: null,
@@ -81,6 +84,10 @@ function createOrder(room, type, pos) {
             y: pos.y
         }
     };
+}
+
+function createOrderId(type, pos, roomName) {
+    return type + '-' + pos.x + '-' + pos.y + '-' + roomName;
 }
 
 function getFlagColor(type) {
@@ -132,6 +139,18 @@ function isStructure(room, pos, type) {
     var structures = room.lookForAt(LOOK_STRUCTURES, pos.x, pos.y);
     if (structures.length != 0) {        
         return handleBlocking(room, structures[0], type);
+    }
+    return false;
+}
+
+function inQueue(room, pos, type) {
+    var memory = getMemory(room);
+    var orderId = createOrderId(type, pos, room.name);
+    for (var i = 0; i < memory.constructionQueue.length; i++) {
+        if (memory.constructionQueue[i].orderId == orderId) {
+            console.log('IN QUEUE');
+            return true;
+        }
     }
     return false;
 }
