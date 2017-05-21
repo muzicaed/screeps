@@ -58,14 +58,6 @@ function orderRoads(room) {
 		memory.roadConnections,
 		BaseHQ.getRoadConnections(room)
 	);
-	if (connectionPair !== null) {		
-		RoadsCentral.placeOrder(room, connectionPair.fromPos, connectionPair.toPos);
-		var sources = room.find(FIND_SOURCES);
-		for (var i = 0; i < sources.length; i++) {
-			var source = sources[i];
-			RoadsCentral.placeOrder(room, memory.pos, source.pos);
-		}	
-	}
 }
 
 function prepareRoadConnections(room, centerPos) {

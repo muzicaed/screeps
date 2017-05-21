@@ -70,7 +70,27 @@ function refreshRoadsStatus(room) {
         if (road.path.length == 0) {
             var fromPos = new RoomPosition(road.fromPos.x, road.fromPos.y, road.fromPos.roomName);
             var toPos = new RoomPosition(road.toPos.x, road.toPos.y, road.toPos.roomName);
-            var path = PathFinder.search(fromPos, toPos, { swampCost: 1 }).path;
+            var path = PathFinder.search(fromPos, toPos, { 
+                swampCost: 1,
+                roomCallback: function(roomName) {
+                    let room = Game.rooms[roomName];
+                    if (!room) return;
+                    let costs = new PathFinder.CostMatrix;
+                    room.find(FIND_STRUCTURES).forEach(function(struct) {
+                      if (struct.structureType === STRUCTURE_ROAD) {
+                        costs.set(struct.pos.x, struct.pos.y, 1);
+                      } else if (struct.structureType !== STRUCTURE_CONTAINER &&
+                                 (struct.structureType !== STRUCTURE_RAMPART ||
+                                  !struct.my)) {
+                        costs.set(struct.pos.x, struct.pos.y, 0xff);
+                      }
+                    });
+                    room.find(FIND_CREEPS).forEach(function(creep) {
+                      costs.set(creep.pos.x, creep.pos.y, 0);
+                    });
+                    return costs;
+                },                
+            }).path;
             road.path = convertPath(path);
         }        
         road.isDone = true;

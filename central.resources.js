@@ -121,8 +121,8 @@ function updateSources(room) {
         sourceObj.isHarvesting = isHarvesting(room, sourceId);
         sourceObj.containerId = Finder.findContainerId(source.pos, 1);
        if (sourceObj.containerId === null && !sourceObj.isContainerConstructed) {
-            var pos = orderContainer(room, source.pos, 1);
-            orderRoads(room, pos); 
+            sourceObj.containerPos = orderContainer(room, source.pos, 1);
+            orderRoads(room, sourceObj.containerPos); 
             sourceObj.isContainerConstructed = true;
         }        
     }
@@ -139,6 +139,7 @@ function scanSources(room) {
             assignments: 0, 
             isHarvesting: false,
             containerId: null,
+            containerPos: null,
             isContainerConstructed: false,
             distance: source.pos.findPathTo(room.firstSpawn()).length
         }; 
@@ -146,11 +147,11 @@ function scanSources(room) {
     return sourceObjs;
 }
 
-function orderRoads(room, sourcePos) {
+function orderRoads(room, containerPos) {
     var hqConnectionPair = RoadsCentral.findBestRoadConnections (
         room,
         BaseHQ.getRoadConnections(room),
-        [sourcePos]
+        [containerPos]
     );
     if (hqConnectionPair !== null) {
         RoadsCentral.placeOrder(room, hqConnectionPair.fromPos, hqConnectionPair.toPos);
@@ -159,7 +160,7 @@ function orderRoads(room, sourcePos) {
     var ctrlConnectionPair = RoadsCentral.findBestRoadConnections (
         room,     
         ControllerBase.getRoadConnections(room),
-        [sourcePos]
+        [containerPos]
     );
     if (ctrlConnectionPair !== null) {
         RoadsCentral.placeOrder(room, ctrlConnectionPair.fromPos, ctrlConnectionPair.toPos);      
