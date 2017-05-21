@@ -24,9 +24,6 @@ var RoleCaretaker = {
                 break;
             case 'BUILD':
                 doBuild(creep);
-                break;                
-            case 'RELOAD_TOWER':
-                doReloadTower(creep);
                 break;
             case 'TRANSFER':
                 TransferBehaviour.do(creep);
@@ -64,8 +61,6 @@ function think(creep) {
 function checkStateChange(creep) {
     if (creep.carry.energy == 0) {
         return 'WITHDRAW';    
-    } else if (findReloadWork(creep) !== null) {
-        return 'RELOAD_TOWER';
     } else if (creep.carry.energy == creep.carryCapacity && RepairCentral.hasRepairNeed(creep.room)) {
         return 'REPAIR';
     } else if (creep.carry.energy == creep.carryCapacity && ConstructionCentral.hasConstructionOrders(creep.room)) {
@@ -81,9 +76,6 @@ function checkStateChange(creep) {
 function applyNewState(creep, newState) {
     creep.memory.state = newState;
     switch(newState) {
-        case 'RELOAD_TOWER':
-            applyReloadTower(creep);
-            break;
         case 'WITHDRAW':
             WithdrawBehaviour.apply(creep, true);
             break;   
@@ -104,7 +96,7 @@ function assignRepairWork(creep) {
     if (repairTarget !== null) {
         creep.memory.repairTargetId = repairTarget.id;
         return;
-    }
+    } 
     creep.memory.state = 'IDLE';
 }
 
@@ -112,15 +104,6 @@ function assignConstructionWork(creep) {
     var constructionTarget = ConstructionCentral.getCurrentOrder(creep.room);
     if (constructionTarget !== null) {
         creep.memory.constructionTargetId = constructionTarget.id;
-        return;
-    }
-    creep.memory.state = 'IDLE';
-}
-
-function applyReloadTower(creep) {
-    var target = findReloadWork(creep);
-    if (target !== null) {
-        creep.memory.reloadId = target.id;
         return;
     }
     creep.memory.state = 'IDLE';
@@ -146,28 +129,6 @@ function doBuild(creep) {
         return;
     }
     creep.memory.state = 'IDLE';
-}
-
-function findReloadWork(creep) {
-    var memory = Memory.towerManager[creep.room.name];
-    for (i = 0; i < memory.towers.length; i++) {
-        var tower = Game.getObjectById(memory.towers[i]);
-        if (tower.energy < tower.energyCapacity) {
-            return tower;
-        }
-    }
-    return null;
-}
-
-function doReloadTower(creep) {
-   var tower = Game.getObjectById(creep.memory.reloadId);
-    if (tower !== null && tower.energy < tower.energyCapacity) {
-        if (creep.transfer(tower, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-            MoveBehaviour.movePath(creep, tower);
-        }  
-        return;
-    }
-    creep.memory.state = 'IDLE';    
 }
 
 module.exports = RoleCaretaker;

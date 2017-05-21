@@ -142,9 +142,8 @@ function handleEnemies(room) {
 
 }
 
-// TODO: UPDATE THIS WHEN TOWERS RELOAD AGAIN
 function hasCaretakerNeed(room, max) {
-    if (Society.getLevel(room) < 5) {
+    if (Society.getLevel(room) < 3) {
         return (
             (ConstructionCentral.getCurrentOrder(room) !== null || RepairCentral.hasRepairNeed(room)) &&
             Finder.countRole(room, Static.ROLE_CARETAKER) < max
