@@ -121,7 +121,8 @@ function updateSources(room) {
         sourceObj.isHarvesting = isHarvesting(room, sourceId);
         sourceObj.containerId = Finder.findContainerId(source.pos, 1);
        if (sourceObj.containerId === null && !sourceObj.isContainerConstructed) {
-            orderContainer(room, source.pos, 1);
+            var pos = orderContainer(room, source.pos, 1);
+            orderRoads(room, pos); 
             sourceObj.isContainerConstructed = true;
         }        
     }
@@ -141,7 +142,6 @@ function scanSources(room) {
             isContainerConstructed: false,
             distance: source.pos.findPathTo(room.firstSpawn()).length
         }; 
-        orderRoads(room, source.pos);       
     }
     return sourceObjs;
 }
@@ -267,7 +267,8 @@ function orderContainer(room, targetPos, dist) {
         }
     } 
     var bestPos = room.firstSpawn().pos.findClosestByPath(potentialTiles);
-    ConstructionCentral.order(room, STRUCTURE_CONTAINER, bestPos);       
+    ConstructionCentral.order(room, STRUCTURE_CONTAINER, bestPos);
+    return bestPos;
 }
 
 function getMemory(room) {
