@@ -4,6 +4,7 @@ var BaseHQ = require('base.hq');
 var ControllerBase = require('base.controller');
 var Utils = require('system.utils');
 var MoveBehaviour = require('behaviour.move');
+var Society = require('central.society');
 
 var TransferBehaviour = {
     
@@ -27,6 +28,11 @@ var TransferBehaviour = {
                 creep.memory.transferTargetId = container.id;
                 return;
             } 
+
+            if (room.storage !== undefined && _.sum(room.storage.store) < 50000 && Society.getLevel(room) > 2) {
+                creep.memory.transferTargetId = room.storage.id;
+                return;
+            }    
             
             if (room.storage !== undefined && _.sum(room.storage.store) < 10000) {
                 creep.memory.transferTargetId = room.storage.id;
