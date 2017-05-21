@@ -65,13 +65,12 @@ var ConstructionCentral = {
 };
 
 function createOrder(room, type, pos) {    
-    var flagName = type + '-' + pos.x + '-' + pos.y;
-    if (Game.flags['flagName'] !== undefined) {
-        Game.flags['flagName'].remove();
+    var orderId = createOrderId(type, pos, room.name);
+    if (Game.flags[orderId] !== undefined) {
+        Game.flags[orderId].remove();
     }
 
     var color = getFlagColor(type);
-    var orderId = createOrderId(type, pos, room.name);
     delete Game.flags[orderId];
     return {
         orderId: orderId,
@@ -171,7 +170,8 @@ function unflag(room) {
     var memory = getMemory(room);
     if (memory.currentConstruction !== null) {
         if (isConstructionSite(room, memory.currentConstruction.pos)) {
-            var flag = Game.flags[memory.currentConstruction.flag];
+            var orderId = createOrderId(memory.currentConstruction.type, memory.currentConstruction.pos, room.name);
+            var flag = Game.flags[orderId];
             if (flag !== undefined && flag !== null) {
                 flag.remove();
             }
