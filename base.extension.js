@@ -22,7 +22,7 @@ var BaseExtension = {
 	},
 
 	run: function(room, idx) {
-		// TODO:
+		handleRebuild(room, idx);
 	} 
 };
 
@@ -45,6 +45,13 @@ function orderRoads(room, idx) {
 	if (connectionPair !== null) {
 		RoadsCentral.placeOrder(room, connectionPair.fromPos, connectionPair.toPos);	
 	}
+}
+
+function handleRebuild(room, idx) {
+    var memory = getMemory(room, idx);
+    if (Game.time % 30 == 0) {
+        var pos = BaseFactory.placeConstructionOrders(room, blueprint, memory.pos);
+    }
 }
 
 function getMemory(room, idx) {

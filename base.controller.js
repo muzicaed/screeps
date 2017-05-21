@@ -27,6 +27,7 @@ var ControllerBase = {
 			memory.pos = BaseFactory.orderConstruction(room, blueprint, room.controller.pos);
 		}
 		memory.controllerContainerId = Finder.findContainerId(room.controller.pos, 3);
+		handleRebuild(room);
 	},
 
     getControllerContainerId: function(room) {
@@ -67,6 +68,13 @@ function prepareRoadConnections(room, centerPos) {
     connections.push(room.getPositionAt(centerPos.x - 1, centerPos.y));
     connections.push(room.getPositionAt(centerPos.x + 1, centerPos.y));
     return connections;
+}
+
+function handleRebuild(room) {
+    var memory = getMemory(room);
+    if (Game.time % 30 == 0) {
+        var pos = BaseFactory.placeConstructionOrders(room, blueprint, memory.pos);
+    }
 }
 
 function getMemory(room) {

@@ -118,7 +118,7 @@ function handleBaseLevel2(room) {
 
 function handleRebuild(room) {
     var memory = getMemory(room);
-    if (Game.time % 100 == 0) {
+    if (Game.time % 30 == 0) {
         BaseFactory.placeConstructionOrders(room, blueprint, memory.pos);
         if (memory.level > 1) {
             BaseFactory.placeConstructionOrders(room, blueprint2, memory.pos);
