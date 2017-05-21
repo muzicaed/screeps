@@ -72,7 +72,7 @@ function refreshRoadsStatus(room) {
             var toPos = new RoomPosition(road.toPos.x, road.toPos.y, road.toPos.roomName);
             var path = fromPos.findPathTo(toPos, { 
                 ignoreCreeps: true, ignoreDestructibleStructures: false, 
-                ignoreRoads: false, heuristicWeight: 1000
+                ignoreRoads: false, heuristicWeight: 0
             });       
             road.path = convertPath(path);
         }        

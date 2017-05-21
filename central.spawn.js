@@ -21,7 +21,6 @@ var SpawnCentral = {
     
     run: function(room) {
         if (!handleEnemies(room)) { 
-            //Scout.create(room)
             if (Game.time % 10 == 0) {
                 switch (Society.getLevel(room)) {                
                     case Static.SOCIETY_LEVEL_OUTPOST:
@@ -79,7 +78,7 @@ function handleCity(room) {
     } else if (ResourceCentral.needHarvester(room)) {
         Harvester.create(room, {}); 
         return true;
-    } else if (Finder.countRole(room, Static.ROLE_SPAWNKEEPER) < 1) {
+    } else if (hasSpawnKeeperNeed(room)) {
         SpawnKeeper.create(room);        
         return true;
     } else if (ControllerBase.hasPumpNeed(room)) {
@@ -109,7 +108,7 @@ function handleCivilization(room) {
     } else if (ResourceCentral.needHarvester(room)) {
         Harvester.create(room, {}); 
         return true;
-    } else if (Finder.countRole(room, Static.ROLE_SPAWNKEEPER) < 1) {
+    } else if (hasSpawnKeeperNeed(room)) {
         SpawnKeeper.create(room);
         return true;
     } else if (ControllerBase.hasPumpNeed(room)) {
@@ -152,5 +151,11 @@ function hasCaretakerNeed(room, max) {
     
     return (ConstructionCentral.getCurrentOrder(room) !== null && Finder.countRole(room, Static.ROLE_CARETAKER) < max)
 }
+
+function hasSpawnKeeperNeed(room) {
+    
+    return (Finder.countRole(room, Static.ROLE_SPAWNKEEPER) < 1);
+}
+
 
 module.exports = SpawnCentral;
