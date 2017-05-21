@@ -7,13 +7,7 @@ var RoleClaimer = {
     run: function(creep) {      
         if (creep.room.name != creep.memory.targetRoomName) {
             MoveBehaviour.movePath(creep, new RoomPosition(25, 25, creep.memory.targetRoomName));  
-            creep.memory.roomCount = 0;
-        } else {
-            if (creep.memory.roomCount < 10) { 
-                MoveBehaviour.movePath(creep, new RoomPosition(25, 25, creep.memory.targetRoomName));                 
-                creep.memory.roomCount++;
-                return;
-            }            
+        } else {         
             doClaim(creep);                
         }                
     },
@@ -23,7 +17,6 @@ var RoleClaimer = {
         if (newCreep !== null) {
             MoveBehaviour.setup(newCreep);
             newCreep.memory.targetRoomName = targetRoomName;
-            newCreep.memory.roomCount = 0;
             return newCreep.name;
         }        
         return null;
@@ -40,7 +33,7 @@ function doClaim(creep) {
             res = creep.reserveController(target);    
         }
         if (res == ERR_NOT_IN_RANGE) {
-            MoveBehaviour.movePath(creep, target);
+            MoveBehaviour.movePath(creep, target, false);
         } 
     }
 }

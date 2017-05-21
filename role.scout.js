@@ -10,27 +10,16 @@ var OperationManager = require('operation.manager');
 var RoleScout = {
     run: function(creep) {
         var action = think(creep);
-        console.log(creep.name + ' in ' + creep.room.name + ' action ' + action);
-        switch(action) {
-            case 'FIND_SCOUT_TARGET':
-                if (creep.memory.roomCount < 4 && creep.memory.targetRoomName !== null && creep.memory.targetRoomName !== undefined) { 
-                    MoveBehaviour.movePath(creep, new RoomPosition(25, 25, creep.memory.targetRoomName));                 
-                    creep.memory.roomCount++;
-                    console.log('------------');
-                    return;
-                }              
-                doFindScoutTarget(creep);                  
-                break;                            
+        switch(action) {                          
             case 'SCOUT':
                 doScout(creep);
-                creep.memory.roomCount = 0;
                 break;              
             case 'REPORT': 
                 doReport(creep);
-                creep.memory.roomCount = 0;
+                doFindScoutTarget(creep); 
+                doScout(creep);
                 break;                 
         }  
-        console.log('------------');
     },
     
     create: function(room) {
@@ -39,7 +28,6 @@ var RoleScout = {
             MoveBehaviour.setup(newCreep);
             newCreep.memory.lastRoomName = null;
             newCreep.memory.targetRoomName = null;
-            newCreep.memory.roomCount = 0;
             return true;
         }
         return false;
@@ -57,8 +45,6 @@ function think(creep) {
 function checkStateChange(creep) {    
     if (creep.room.name != creep.memory.lastRoomName) {
         return 'REPORT';
-    } else if (creep.memory.state == 'REPORT') {
-        return 'FIND_SCOUT_TARGET';
     }
     return creep.memory.state;
 }
@@ -69,8 +55,6 @@ function applyNewState(creep, newState) {
         case 'SCOUT':
             break;   
         case 'REPORT':
-            break; 
-        case 'FIND_SCOUT_TARGET':
             break;                
     }
 }
@@ -119,7 +103,7 @@ function doScout(creep) {
             return;      
         }
     }
-    creep.memory.state = 'FIND_SCOUT_TARGET';
+    creep.memory.state = 'REPORT';
 }
 
 function doReport(creep) {
@@ -127,26 +111,19 @@ function doReport(creep) {
     if (OperationManager.needReport(room)) {   
         OperationManager.processScoutReport(room);
     }
-    if (creep.memory.targetRoomName !== null) {
-        var roomPos = new RoomPosition(25, 25, creep.memory.targetRoomName);        
-        MoveBehaviour.movePath(creep, roomPos);    
-    }  
     creep.memory.lastRoomName = room.name;
 }
 
 function pickBestTargetRoom(creep, neutralRooms, myRooms) {
     if (neutralRooms.length > 0) {
-        console.log(creep.name + ' found neutral: ' + neutralRooms.length);
         neutralRooms.sort( function(a, b) { return a.timeStamp - b.timeStamp } );
         creep.memory.targetRoomName = neutralRooms[0].name;
         return;
     } else if (myRooms.length > 0) {
-        console.log(creep.name + ' found my rooms: ' + myRooms.length);
         myRooms.sort( function(a, b) { return a.timeStamp - b.timeStamp } );
         creep.memory.targetRoomName = myRooms[0].name;        
         return;
     }
-    console.log(creep.name +  ' last room...');
     creep.memory.targetRoomName = creep.memory.lastRoomName;
 }
 

@@ -50,9 +50,7 @@ function think(creep) {
 }
 
 function checkStateChange(creep) {   
-    if (creep.memory.state == 'IDLE') {
-        return 'UPGRADE_CONTROLLER';
-    } else if (shouldUpgradeController(creep)) {
+    if (creep.memory.state == 'IDLE' || shouldUpgradeController(creep)) {
         return 'UPGRADE_CONTROLLER';
     } else if (creep.carry.energy == 0) {
         return 'WITHDRAW';
@@ -108,7 +106,7 @@ function doRepair(creep) {
    var target = Game.getObjectById(creep.memory.repairTargetId);
     if (target !== null && target.hits < target.hitsMax) {
         if (creep.repair(target) == ERR_NOT_IN_RANGE) {
-            MoveBehaviour.movePath(creep, target);
+            MoveBehaviour.movePath(creep, target, false);
         }  
         return;
     }
@@ -130,7 +128,7 @@ function doBuild(creep) {
     var target = Game.getObjectById(creep.memory.constructionTargetId);
     if (target !== null) {
         if (creep.build(target) == ERR_NOT_IN_RANGE) {
-            MoveBehaviour.movePath(creep, target);
+            MoveBehaviour.movePath(creep, target, false);
         }  
         return;
     }

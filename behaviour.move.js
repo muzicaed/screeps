@@ -13,12 +13,15 @@ var MoveBehaviour = {
 		}
 	},
 
-    movePath: function(creep, destination) {  
-		handlePath(creep, destination)
+    movePath: function(creep, destination, isAllowInterRoom) {  
+    	if (isAllowInterRoom === undefined) {
+    		isAllowInterRoom = true;
+    	}
+
+		handlePath(creep, destination, isAllowInterRoom)
 		if (creep.fatigue == 0) { 					
 			var res = creep.moveByPath(creep.memory.moveData.movePath);
 			switch(res) {
-
 				case OK:
 					creep.memory.moveData.lastFatigue = creep.fatigue;
 					creep.memory.moveData.lastPos = creep.pos;		
@@ -26,21 +29,21 @@ var MoveBehaviour = {
 					break;		
 
 				case ERR_NOT_FOUND:
-					creep.moveTo(destination);
+					var res = creep.moveTo(destination);
 					creep.memory.moveData.lastDestinationId = null;
-					return;
 					break;
 			}				
 		}
     }
 };
 
-function handlePath(creep, destination) {
+function handlePath(creep, destination, isAllowInterRoom) {
+	var maxRooms = (isAllowInterRoom) ? 16 : 1;
 	var lastPos = creep.memory.moveData.lastPos;
 	if (creep.memory.moveData.lastDestinationId !== generateDestinationId(destination)) {
-		creep.memory.moveData.movePath = creep.pos.findPathTo(destination, { ignoreCreeps: true });	
+		creep.memory.moveData.movePath = creep.pos.findPathTo(destination, { ignoreCreeps: true, maxRooms: maxRooms });	
 	} else if (creep.pos.x == lastPos.x && creep.pos.y == lastPos.y && creep.memory.moveData.lastFatigue == 0) {	
-		creep.memory.moveData.movePath = creep.pos.findPathTo(destination, { ignoreCreeps: false });	
+		creep.memory.moveData.movePath = creep.pos.findPathTo(destination, { ignoreCreeps: false, maxRooms: maxRooms });	
 	}
 }
 
