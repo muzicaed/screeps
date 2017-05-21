@@ -56,10 +56,8 @@ var ConstructionCentral = {
             var order = createOrder(room, type, pos);
             memory.constructionQueue.push(order);
             memory.constructionQueue.sort( function(a, b) { return a.prio - b.prio } );
-            console.log('DO order');
             return true;
         }
-        console.log('No order');
         return false;
     }
 };
