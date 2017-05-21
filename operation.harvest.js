@@ -97,7 +97,7 @@ function buildContainer(operation) {
 function rebuildRoads(operation) {
 	var targetRoom = Game.rooms[operation.targetRoom];
 	var ownerRoom = Game.rooms[operation.ownerRoom];	
-	if(Game.time % 5000 == 0 && targetRoom !== undefined && operation.containerId !== null) {
+	if (Game.time % 5000 == 0 && targetRoom !== undefined && operation.containerId !== null) {
 		var container = Game.getObjectById(operation.containerId);
 		RoadsCentral.placeOrder(targetRoom, container.pos, ownerRoom.firstSpawn().pos);
 		RoadsCentral.placeOrder(ownerRoom, ownerRoom.firstSpawn().pos, container.pos);	

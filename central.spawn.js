@@ -73,7 +73,8 @@ function handleCity(room) {
         Pioneer.panicCreate(room);    
         return true;
     } else if (ResourceCentral.needTransporter(room)) {
-        Transporter.create(room, Static.ROLE_TRANSPORTER);
+        var containerId = ResourceCentral.requestTransportAssignment(room);
+        Transporter.create(room, Static.ROLE_TRANSPORTER, containerId);
         return true;
     } else if (ResourceCentral.needHarvester(room)) {
         Harvester.create(room, {}); 
@@ -103,7 +104,8 @@ function handleCivilization(room) {
         Pioneer.panicCreate(room);  
         return true;    
     } else if (ResourceCentral.needTransporter(room)) {
-        Transporter.create(room, Static.ROLE_CIV_TRANSPORTER);     
+        var containerId = ResourceCentral.requestTransportAssignment(room);
+        Transporter.create(room, Static.ROLE_CIV_TRANSPORTER, containerId);     
         return true;
     } else if (ResourceCentral.needHarvester(room)) {
         Harvester.create(room, {}); 

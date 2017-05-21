@@ -78,37 +78,12 @@ function applyNewState(creep, newState) {
 
 function applyCollect(creep) {
     creep.memory.transferTargetId = null; 
-
     if (creep.memory.collectContainerId !== undefined && creep.memory.collectContainerId !== null) {
         creep.memory.transferCollectId = creep.memory.collectContainerId;
         return;
     }
-
-    var containerId = findContainer(creep);
-    if (containerId !== null) {
-        creep.memory.transferCollectId = containerId;
-        return;
-    }
     creep.move(Math.floor(Math.random() * 6) + 8);    
     creep.memory.state = 'IDLE';
-}
-
-function findContainer(creep) {
-    var bestContainerId = null;
-    var maxEnergy = 0;
-    var sources = ResourceCentral.getAllSources(creep.room);
-    for (var i in sources) {
-        var source = sources[i];
-        if (source.containerId !== null) {
-            var container = Game.getObjectById(source.containerId);
-            if (container.store.energy > maxEnergy) {
-                maxEnergy = container.store.energy;
-                bestContainerId = source.containerId;
-            }            
-        }
-    }
-    
-   return bestContainerId;
 }
 
 function doCollect(creep) {    
