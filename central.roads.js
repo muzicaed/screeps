@@ -71,7 +71,8 @@ function refreshRoadsStatus(room) {
             var fromPos = new RoomPosition(road.fromPos.x, road.fromPos.y, road.fromPos.roomName);
             var toPos = new RoomPosition(road.toPos.x, road.toPos.y, road.toPos.roomName);
             var path = PathFinder.search(fromPos, toPos, { 
-                swampCost: 1,
+                plainCost: 2,
+                swampCost: 2,
                 roomCallback: function(roomName) {
                     let room = Game.rooms[roomName];
                     if (!room) return;
@@ -82,7 +83,7 @@ function refreshRoadsStatus(room) {
                       } else if (struct.structureType !== STRUCTURE_CONTAINER &&
                                  (struct.structureType !== STRUCTURE_RAMPART ||
                                   !struct.my)) {
-                        costs.set(struct.pos.x, struct.pos.y, 0xff);
+                        costs.set(struct.pos.x, struct.pos.y, 255);
                       }
                     });
                     room.find(FIND_CREEPS).forEach(function(creep) {
@@ -91,7 +92,7 @@ function refreshRoadsStatus(room) {
                     return costs;
                 },                
             }).path;
-            road.path = convertPath(path);
+            road.path = convertPath(path, room.name);
         }        
         road.isDone = true;
         for(var j = 0; j < road.path.length; j++) {
@@ -152,7 +153,7 @@ function findCurrentRoad(room) {
 }
 
 function createRoadId(room, fromPos, toPos) {
-    return fromPos.roomName + '-' + fromPos.x + '-' + fromPos.y + '-' + fromPos.roomName + '-' + toPos.x + '-' + toPos.y;
+    return fromPos.roomName + '-' + fromPos.x + '-' + fromPos.y + '-' + fromPos.roomName + '-' + toPos.x + '-' + toPos.y + '-' + toPos.roomName;
 }
 
 function isRoadExists(room, fromPos, toPos) {
@@ -164,16 +165,18 @@ function isRoadExists(room, fromPos, toPos) {
     return true;
 }
 
-function convertPath(path) {
+function convertPath(path, roomName) {
     var newPath = [];
     for (i = 0; i < path.length - 1; i++) {
-        var segment = {
-            x: path[i].x,
-            y: path[i].y,
-            isPlaced: false,
-            isDone: false
-        };
-        newPath.push(segment);
+        if (path[i].roomName == roomName) {
+            var segment = {
+                x: path[i].x,
+                y: path[i].y,
+                isPlaced: false,
+                isDone: false
+            };
+            newPath.push(segment);
+        }
     }
     return newPath;
 }
