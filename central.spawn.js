@@ -81,6 +81,7 @@ function handleOutpost(room) {
 }
 
 function handleCity(room) {
+    var memory = getMemory(room);  
     if (Finder.countRole(room, Static.ROLE_HARVESTER) == 0 && Finder.countRole(room, Static.ROLE_TRANSPORTER) == 0 && Finder.countRole(room, Static.ROLE_PIONEER) < 2) {
         Pioneer.panicCreate(room);    
         return true;
@@ -101,7 +102,6 @@ function handleCity(room) {
         Caretaker.create(room);
         return true;
     } else if (Game.time > (memory.lastScount + 5000)) {
-        var memory = getMemory(room); 
         if (Scout.create(room)) {
             memory.lastScount = Game.time;        
         }
@@ -112,6 +112,7 @@ function handleCity(room) {
 }
 
 function handleCivilization(room) {
+    var memory = getMemory(room);  
     if (Finder.countRole(room, Static.ROLE_HARVESTER) == 0 && Finder.countRole(room, Static.ROLE_TRANSPORTER) == 0 && Finder.countRole(room, Static.ROLE_PIONEER) < 2) {
         Pioneer.panicCreate(room);  
         return true;    
@@ -134,8 +135,7 @@ function handleCivilization(room) {
     } else if (IS_INVATION) {
         Defender.create(room);
         return true;
-    } else if (Game.time > (memory.lastScount + 2000)) {
-        var memory = getMemory(room);        
+    } else if (Game.time > (memory.lastScount + 2000)) {            
         if (Scout.create(room)) {
             memory.lastScount = Game.time;        
         }
