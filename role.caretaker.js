@@ -6,7 +6,6 @@ var Static = require('system.static');
 var CreepFactory = require('factory.creep');
 var WithdrawBehaviour = require('behaviour.withdraw');
 var MoveBehaviour = require('behaviour.move');
-var TransferBehaviour = require('behaviour.transfer');
 var ConstructionCentral = require('central.construction');
 var RepairCentral = require('central.repair');
 
@@ -24,10 +23,7 @@ var RoleCaretaker = {
                 break;
             case 'BUILD':
                 doBuild(creep);
-                break;
-            case 'TRANSFER':
-                TransferBehaviour.do(creep);
-                break;                       
+                break;                   
             case 'IDLE':
                 creep.move(Math.floor(Math.random() * 8) + 1);  
                 break;
@@ -67,8 +63,6 @@ function checkStateChange(creep) {
         return 'BUILD';        
     } else if (creep.memory.state == 'IDLE' && creep.carry.energy == 0) {
         return 'WITHDRAW';
-    } else if (creep.memory.state == 'IDLE' && creep.carry.energy > 0) {
-        return 'TRANSFER';
     }
     return creep.memory.state;
 }
@@ -84,10 +78,7 @@ function applyNewState(creep, newState) {
             break;   
         case 'BUILD':
             assignConstructionWork(creep);
-            break;              
-        case 'TRANSFER':
-            TransferBehaviour.apply(creep);
-            break;              
+            break;                          
     }
 }
 

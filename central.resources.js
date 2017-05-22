@@ -65,7 +65,7 @@ var ResourceCentral = {
         for (var sourceId in memory.sources) {
             var sourceObj = memory.sources[sourceId];
             var container = Game.getObjectById(sourceObj.containerId);
-            if (container.store.energy > 1900) {
+            if (container.store.energy > 1200) {
                 console.log('Need transporter!');
                 return container.id;
             }

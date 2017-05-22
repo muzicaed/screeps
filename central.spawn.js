@@ -1,3 +1,4 @@
+var MEMORY = 'CentralSpawn';
 var Pioneer = require('role.pioneer');
 var Harvester = require('role.harvester');
 var Transporter = require('role.transporter');
@@ -19,7 +20,18 @@ var IS_INVATION = false;
 
 var SpawnCentral = {
     
+    init: function(room) {
+        if (room.memory.SYS[MEMORY] === undefined) {            
+            room.memory.SYS[MEMORY] = {
+                lastScount: 0,                
+                transporterCooldown: 0,
+                pumpCooldown: 0
+            };
+        }
+    },
+
     run: function(room) {
+        SpawnCentral.init(room);
         if (!handleEnemies(room)) { 
             if (Game.time % 10 == 0) {
                 switch (Society.getLevel(room)) {                
@@ -58,7 +70,7 @@ function handleOutpost(room) {
     } else if (hasCaretakerNeed(room, 1)) {
         Caretaker.create(room);
         return true;
-    } else if (ControllerBase.hasPumpNeed(room)) {
+    } else if (hasPumpNeed(room)) {
         Pump.create(room);
         return true;
     } else if (IS_INVATION) {
@@ -72,7 +84,7 @@ function handleCity(room) {
     if (Finder.countRole(room, Static.ROLE_HARVESTER) == 0 && Finder.countRole(room, Static.ROLE_TRANSPORTER) == 0 && Finder.countRole(room, Static.ROLE_PIONEER) < 2) {
         Pioneer.panicCreate(room);    
         return true;
-    } else if (ResourceCentral.needTransporter(room)) {
+    } else if (hasTransporterNeed(room)) {
         var containerId = ResourceCentral.requestTransportAssignment(room);
         Transporter.create(room, Static.ROLE_TRANSPORTER, containerId);
         return true;
@@ -82,16 +94,16 @@ function handleCity(room) {
     } else if (hasSpawnKeeperNeed(room)) {
         SpawnKeeper.create(room);        
         return true;
-    } else if (ControllerBase.hasPumpNeed(room)) {
+    } else if (hasPumpNeed(room)) {
         Pump.create(room);
         return true;
     } else if (hasCaretakerNeed(room, 2)) {
         Caretaker.create(room);
         return true;
-    } else if (Game.time > (room.memory.lastScount + 5000)) {
-        room.memory.lastScount = Game.time;
+    } else if (Game.time > (memory.lastScount + 5000)) {
+        var memory = getMemory(room); 
         if (Scout.create(room)) {
-            room.memory.lastScount = Game.time;        
+            memory.lastScount = Game.time;        
         }
         return true;
     }
@@ -103,7 +115,7 @@ function handleCivilization(room) {
     if (Finder.countRole(room, Static.ROLE_HARVESTER) == 0 && Finder.countRole(room, Static.ROLE_TRANSPORTER) == 0 && Finder.countRole(room, Static.ROLE_PIONEER) < 2) {
         Pioneer.panicCreate(room);  
         return true;    
-    } else if (ResourceCentral.needTransporter(room)) {
+    } else if (hasTransporterNeed(room)) {
         var containerId = ResourceCentral.requestTransportAssignment(room);
         Transporter.create(room, Static.ROLE_CIV_TRANSPORTER, containerId);     
         return true;
@@ -113,7 +125,7 @@ function handleCivilization(room) {
     } else if (hasSpawnKeeperNeed(room)) {
         SpawnKeeper.create(room);
         return true;
-    } else if (ControllerBase.hasPumpNeed(room)) {
+    } else if (hasPumpNeed(room)) {
         Pump.create(room);
         return true;
     } else if (hasCaretakerNeed(room, 1)) {
@@ -122,9 +134,10 @@ function handleCivilization(room) {
     } else if (IS_INVATION) {
         Defender.create(room);
         return true;
-    } else if (Game.time > (room.memory.lastScount + 2000)) {        
+    } else if (Game.time > (memory.lastScount + 2000)) {
+        var memory = getMemory(room);        
         if (Scout.create(room)) {
-            room.memory.lastScount = Game.time;        
+            memory.lastScount = Game.time;        
         }
         return true;
     }
@@ -154,10 +167,32 @@ function hasCaretakerNeed(room, max) {
     return (ConstructionCentral.getCurrentOrder(room) !== null && Finder.countRole(room, Static.ROLE_CARETAKER) < max)
 }
 
-function hasSpawnKeeperNeed(room) {
-    
+function hasSpawnKeeperNeed(room) {    
     return (Finder.countRole(room, Static.ROLE_SPAWNKEEPER) < 1);
 }
 
+function hasTransporterNeed(room) {
+    var memory = getMemory(room);
+    if (ResourceCentral.needTransporter(room) && memory.transporterCooldown <= 0) {
+        memory.transporterCooldown = 10;
+        return true;
+    }
+    memory.transporterCooldown--;
+    return false;   
+}
+
+function hasPumpNeed(room) {
+    var memory = getMemory(room);
+    if (ControllerBase.hasPumpNeed(room) && memory.pumpCooldown <= 0) {
+        memory.pumpCooldown = 20;
+        return true;
+    }
+    memory.pumpCooldown--;
+    return false;   
+}
+
+function getMemory(room) {
+    return room.memory.SYS[MEMORY];
+}
 
 module.exports = SpawnCentral;
