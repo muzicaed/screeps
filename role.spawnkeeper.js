@@ -44,11 +44,11 @@ function think(creep) {
 }
 
 function checkStateChange(creep) {
-    if (creep.carry.energy == 0 && creep.room.energyAvailable != creep.room.energyCapacityAvailable) {
+    if (creep.carry.energy == 0) {
         return 'WITHDRAW';
     } else if (findReloadWork(creep) !== null) {
         return 'RELOAD_TOWER';                
-    } else if (creep.carry.energy > 0) {
+    } else if (creep.carry.energy > 0 && creep.room.energyAvailable != creep.room.energyCapacityAvailable) {
         return 'TRANSFER';
     }
 
