@@ -56,13 +56,11 @@ function think(creep) {
 function checkStateChange(creep) {
     if (creep.carry.energy == 0) {
         return 'WITHDRAW';    
-    } else if (creep.carry.energy == creep.carryCapacity && RepairCentral.hasRepairNeed(creep.room)) {
+    } else if (creep.carry.energy > 0 && RepairCentral.hasRepairNeed(creep.room)) {
         return 'REPAIR';
-    } else if (creep.carry.energy == creep.carryCapacity && ConstructionCentral.hasConstructionOrders(creep.room)) {
+    } else if (creep.carry.energy > 0 && ConstructionCentral.hasConstructionOrders(creep.room)) {
         return 'BUILD';        
-    } else if (creep.memory.state == 'IDLE' && creep.carry.energy == 0) {
-        return 'WITHDRAW';
-    }
+    } 
     return creep.memory.state;
 }
 
