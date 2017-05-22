@@ -65,7 +65,7 @@ function handleCreepSpawn(operation) {
     if (Game.time % 10 == 0 && !ownerRoom.memory.SYS.didSpawn) {    	
     	var targetRoom = Game.rooms[operation.targetRoom];
     	if (ownerRoom !== undefined && BaseHQ.currentBaseEnergy(ownerRoom) > 2000) {
-    		if (operation.colonizerCreeps.length < 2 && targetRoom !== undefined && targetRoom.controller.my) {
+    		if (operation.colonizerCreeps.length < 3 && targetRoom !== undefined && targetRoom.controller.my) {
     			var name = Colonizer.create(ownerRoom, operation.targetRoom)
     			if (name !== null) {
     				operation.colonizerCreeps.push(name);	
