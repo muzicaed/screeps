@@ -174,7 +174,7 @@ function hasSpawnKeeperNeed(room) {
 function hasTransporterNeed(room) {
     var memory = getMemory(room);
     if (ResourceCentral.needTransporter(room) && memory.transporterCooldown <= 0) {
-        memory.transporterCooldown = 10;
+        memory.transporterCooldown = 15;
         return true;
     }
     memory.transporterCooldown--;
