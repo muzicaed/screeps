@@ -35,7 +35,6 @@ var RoleCaretaker = {
         if (newCreep !== null) {
             MoveBehaviour.setup(newCreep);
             WithdrawBehaviour.setup(newCreep);
-            TransferBehaviour.setup(newCreep);
             newCreep.memory.constructionTargetId = null;
             newCreep.memory.repairTargetId = null;
             newCreep.memory.reloadId = null;

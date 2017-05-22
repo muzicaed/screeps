@@ -44,7 +44,7 @@ function think(creep) {
 }
 
 function checkStateChange(creep) {
-    if (creep.carry.energy == 0) {
+    if (creep.carry.energy == 0 && creep.room.energyAvailable != creep.room.energyCapacityAvailable) {
         return 'WITHDRAW';
     } else if (findReloadWork(creep) !== null) {
         return 'RELOAD_TOWER';                
