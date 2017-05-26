@@ -81,10 +81,12 @@ function applyReloadTower(creep) {
 
 function findReloadWork(creep) {
     var memory = Memory.towerManager[creep.room.name];
-    for (i = 0; i < memory.towers.length; i++) {
-        var tower = Game.getObjectById(memory.towers[i]);
-        if (tower.energy < tower.energyCapacity) {
-            return tower;
+    if (memory !== undefined) {
+        for (i = 0; i < memory.towers.length; i++) {
+            var tower = Game.getObjectById(memory.towers[i]);
+            if (tower.energy < tower.energyCapacity) {
+                return tower;
+            }
         }
     }
     return null;

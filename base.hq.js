@@ -14,7 +14,6 @@ var BaseHQ = {
 				baseContainers: scanBaseContainers(room),
                 roadConnections: prepareRoadConnections(room, spawn.pos),
 				pos: spawn.pos,
-				neighbourRoads: prepareNeighbourRoads(room),
 				level: 1
             };
             BaseFactory.placeConstructionOrders(room, blueprint, spawn.pos);
@@ -24,7 +23,6 @@ var BaseHQ = {
 	run: function(room) {
         var memory = getMemory(room);
         memory.baseContainers = scanBaseContainers(room);
-        handleNeighbourRoads(room);
         handleBaseLevel2(room);
         handleRebuild(room);
 	},
@@ -79,33 +77,6 @@ function prepareRoadConnections(room, centerPos) {
     connections.push(room.getPositionAt(centerPos.x - 3, centerPos.y + 3));
     connections.push(room.getPositionAt(centerPos.x + 3, centerPos.y + 3));
     return connections;
-}
-
-function prepareNeighbourRoads(room) {
-    var neighbourRoads = {};
-    var exits = Game.map.describeExits(room.name);
-    for (var i in exits) {
-        neighbourRoads[exits[i]] = false;
-    }
-    return neighbourRoads;
-}
-
-function handleNeighbourRoads(room) {    
-    var neighbourRoads = getMemory(room).neighbourRoads;
-    for (var name in neighbourRoads) {
-        if (!neighbourRoads[name] && Memory.myActiveRooms[name] !== undefined) {
-            buildNeighbourRoad(room, name);
-            neighbourRoads[name] = true;
-        }
-    }
-}
-
-function buildNeighbourRoad(room, targetRoomName) {
-    var memory = getMemory(room);
-    var otherRoom = Game.rooms[targetRoomName];
-    if (otherRoom !== undefined) {        
-        RoadsCentral.placeOrder(room, memory.pos, otherRoom.firstSpawn().pos);    
-    }
 }
 
 function handleBaseLevel2(room) {

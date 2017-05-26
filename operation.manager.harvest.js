@@ -35,7 +35,7 @@ function processReport(roomName, report) {
 					ownerRoom: closestRoomName,
 					targetRoom: roomName,
 					controllerId: report.controllerId,
-					sourceId: report.sources[0],
+					sourceIds: report.sources,
 					distance: path.length
 				};		
 	    	}
@@ -83,7 +83,7 @@ function isNewHarvestTarget(roomName, report) {
 		activeOperations[roomName] === undefined &&
 		Memory.myActiveRooms[roomName] === undefined &&		
 		(report.type == Static.EXPLORE_TYPE_SOURCE_ONLY || report.type == Static.EXPLORE_TYPE_CONTROLLER_SOURCE) &&
-		report.sources.length == 1 &&
+		report.sources.length > 0 &&
 		report.exporeState != Static.EXPLORE_ENEMY_CONTROL &&
 		report.exporeState != Static.EXPLORE_ENEMY_OPERATION
 	);

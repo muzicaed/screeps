@@ -145,7 +145,6 @@ function inQueue(room, pos, type) {
     var orderId = createOrderId(type, pos, room.name);
     for (var i = 0; i < memory.constructionQueue.length; i++) {
         if (memory.constructionQueue[i].orderId == orderId) {
-            console.log('IN QUEUE');
             return true;
         }
     }
