@@ -14,16 +14,18 @@ var WithdrawBehaviour = {
 
     apply: function(creep, isSpawnWithdraw) {
         var room = Game.rooms[creep.memory.withdrawRoomName];
-        if (room.storage !== undefined && room.storage.store.energy > 0) {
-            creep.memory.withdrawTargetId = room.storage.id;
-            return;
+        if (BaseHQ.currentBaseEnergy(room) > 3000) {
+            if (room.storage !== undefined && room.storage.store.energy > 0) {
+                creep.memory.withdrawTargetId = room.storage.id;
+                return;
+            }
+    
+            var container = findBestBaseContainer(room);
+            if (container !== null) {
+                creep.memory.withdrawTargetId = container.id;
+                return;
+            } 
         }
-
-        var container = findBestBaseContainer(room);
-        if (container !== null) {
-            creep.memory.withdrawTargetId = container.id;
-            return;
-        } 
 
         if (isSettlementWithdrawAllowed(room) && isSpawnWithdraw) {
             var spawn = Finder.findWithdrawSpawnStructure(room);

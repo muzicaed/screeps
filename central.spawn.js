@@ -16,7 +16,7 @@ var ControllerBase = require('base.controller');
 var Static = require('system.static');
 var Finder = require('system.finder');
 
-var IS_INVATION = false;
+var IS_INVASION = false;
 
 var SpawnCentral = {
     
@@ -73,7 +73,8 @@ function handleOutpost(room) {
     } else if (hasPumpNeed(room)) {
         Pump.create(room);
         return true;
-    } else if (IS_INVATION) {
+    } else if (IS_INVASION) {
+        console.log('Spawn defender!');
         Defender.create(room);
         return true;
     }
@@ -132,7 +133,7 @@ function handleCivilization(room) {
     } else if (hasCaretakerNeed(room, 1)) {
         Caretaker.create(room);
         return true;
-    } else if (IS_INVATION) {
+    } else if (IS_INVASION) {
         Defender.create(room);
         return true;
     } else if (Game.time > (memory.lastScount + 2000)) {            
