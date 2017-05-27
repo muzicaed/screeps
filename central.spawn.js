@@ -73,6 +73,9 @@ function handleOutpost(room) {
     } else if (hasPumpNeed(room)) {
         Pump.create(room);
         return true;
+    } else if (hasSpawnKeeperNeed(room)) {
+        SpawnKeeper.create(room);        
+        return true;        
     } else if (IS_INVASION) {
         console.log('Spawn defender!');
         Defender.create(room);

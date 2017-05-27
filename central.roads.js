@@ -168,7 +168,7 @@ function isRoadExists(room, fromPos, toPos) {
 function convertPath(path, roomName) {
     var newPath = [];
     for (i = 0; i < path.length - 1; i++) {
-        if (path[i].roomName == roomName) {
+        if (validPos(path[i], roomName)) {
             var segment = {
                 x: path[i].x,
                 y: path[i].y,
@@ -179,6 +179,14 @@ function convertPath(path, roomName) {
         }
     }
     return newPath;
+}
+
+function validPos(pos, roomName) {
+    return (
+        pos.roomName == roomName &&
+        pos.x > 0 && pos.x < 49 &&
+        pos.y > 0 && pos.y < 49
+    );   
 }
 
 function garbageCollect(room) {

@@ -8,6 +8,7 @@ var WithdrawBehaviour = require('behaviour.withdraw');
 var MoveBehaviour = require('behaviour.move');
 var ConstructionCentral = require('central.construction');
 var RepairCentral = require('central.repair');
+var BaseHQ = require('base.hq');
 
 
 var RoleCaretaker = {
@@ -68,7 +69,7 @@ function applyNewState(creep, newState) {
     creep.memory.state = newState;
     switch(newState) {
         case 'WITHDRAW':
-            WithdrawBehaviour.apply(creep, true);
+            WithdrawBehaviour.apply(creep, true, false);
             break;   
         case 'REPAIR':
             assignRepairWork(creep);

@@ -59,7 +59,7 @@ function applyNewState(creep, newState) {
     creep.memory.state = newState;
     switch(newState) {
         case 'WITHDRAW':
-            WithdrawBehaviour.apply(creep, false);
+            WithdrawBehaviour.apply(creep, false, true);
             break;   
         case 'TRANSFER':
             TransferBehaviour.apply(creep);

@@ -83,7 +83,7 @@ function applyNewState(creep, newState) {
             assignConstructionWork(creep);
             break;                          
         case 'WITHDRAW':
-            WithdrawBehaviour.apply(creep, true);
+            WithdrawBehaviour.apply(creep, true, false);
             break;   
         case 'UPGRADE_CONTROLLER':
             break;   
