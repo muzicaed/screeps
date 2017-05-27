@@ -60,10 +60,6 @@ function runRooms() {
                 
                 runTowers(room);
                 handleActiveRoom(room);
-                // TODO: Make this a lot better...
-                if (room.controller && room.controller.safeModeAvailable > 0) {
-                    room.controller.activateSafeMode();
-                }         
             }
         }     
     }

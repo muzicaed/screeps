@@ -120,9 +120,7 @@ function updateSources(room) {
         sourceObj.isHarvesting = isHarvesting(room, sourceId);
         sourceObj.containerId = Finder.findContainerId(source.pos, 1);
         var hasContainerConstructionSite = checkContainerConstruction(source.pos);
-        console.log('Run');
         if (sourceObj.containerId === null && !hasContainerConstructionSite) {
-            console.log('Order new source containers');
             sourceObj.containerPos = orderContainer(room, source.pos, 1);
             orderRoads(room, sourceObj.containerPos); 
         }        
