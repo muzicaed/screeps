@@ -119,12 +119,21 @@ function updateSources(room) {
         sourceObj.assignments = countPioneerAssignments(room, sourceId);
         sourceObj.isHarvesting = isHarvesting(room, sourceId);
         sourceObj.containerId = Finder.findContainerId(source.pos, 1);
-       if (sourceObj.containerId === null && !sourceObj.isContainerConstructed) {
+        var hasContainerConstructionSite = checkContainerConstruction(source.pos);
+        console.log('Run');
+        if (sourceObj.containerId === null && !hasContainerConstructionSite) {
+            console.log('Order new source containers');
             sourceObj.containerPos = orderContainer(room, source.pos, 1);
             orderRoads(room, sourceObj.containerPos); 
-            sourceObj.isContainerConstructed = true;
         }        
     }
+}
+
+function checkContainerConstruction(pos) {
+    var sites = pos.findInRange(FIND_CONSTRUCTION_SITES, 1, {
+        filter: function(obj) { return (obj.structureType == STRUCTURE_CONTAINER) }
+    });
+    return (sites.length > 0);
 }
 
 function scanSources(room) {
@@ -139,7 +148,6 @@ function scanSources(room) {
             isHarvesting: false,
             containerId: null,
             containerPos: null,
-            isContainerConstructed: false,
             distance: source.pos.findPathTo(room.firstSpawn()).length
         }; 
     }
