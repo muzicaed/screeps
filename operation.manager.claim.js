@@ -29,7 +29,7 @@ function processReport(roomName, report) {
     	var closestRoomName = OperationHelper.closestRoom(roomName, Static.SOCIETY_LEVEL_CIVILIZATION);
     	if (closestRoomName !== null) {
 	    	var path = Game.map.findRoute(roomName, closestRoomName);
-	    	if (path.length == 3) {
+	    	if (path.length >= 2) {
 				console.log('New claim operation added: ' + closestRoomName + ' -> ' + roomName);
 				possibleOperationsMemory[roomName] = {
 					ownerRoom: closestRoomName,
