@@ -120,6 +120,7 @@ function generateEnemyReport(room) {
         'controllerLevel': (room.controller !== undefined) ? room.controller.level : null,
         'enemyTowers': findEnemyTowers(room),
         'enemySpawns': room.find(FIND_HOSTILE_SPAWNS).length,
+        'enemyCreeps': room.find(FIND_HOSTILE_CREEPS).length,
         'enemyNukes': room.find(FIND_NUKES).length
     };
 }
