@@ -199,7 +199,7 @@ recipies[Static.ROLE_RESERVER] = {
     optimalEnergy: 1300, 
     protoParts: [        
         { type: CLAIM,  use: 'static', no: 2 },
-        { type: MOVE,  use: 'static', no: 1 },
+        { type: MOVE,  use: 'static', no: 2 },
     ] 
 };
 recipies[Static.ROLE_COLONIZER] = { 
