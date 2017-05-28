@@ -23,7 +23,7 @@ var SpawnCentral = {
     init: function(room) {
         if (room.memory.SYS[MEMORY] === undefined) {            
             room.memory.SYS[MEMORY] = {
-                lastScount: 0,                
+                lastScout: 0,                
                 transporterCooldown: 0,
                 pumpCooldown: 0
             };
@@ -105,9 +105,9 @@ function handleCity(room) {
     } else if (hasCaretakerNeed(room, 2)) {
         Caretaker.create(room);
         return true;
-    } else if (Game.time > (memory.lastScount + 5000)) {
+    } else if (Game.time > (memory.lastScout + 5000)) {
         if (Scout.create(room)) {
-            memory.lastScount = Game.time;        
+            memory.lastScout = Game.time;        
         }
         return true;
     }
@@ -139,9 +139,9 @@ function handleCivilization(room) {
     } else if (IS_INVASION) {
         Defender.create(room);
         return true;
-    } else if (Game.time > (memory.lastScount + 2000)) {            
+    } else if (Game.time > (memory.lastScout + 2000)) {            
         if (Scout.create(room)) {
-            memory.lastScount = Game.time;        
+            memory.lastScout = Game.time;        
         }
         return true;
     }
