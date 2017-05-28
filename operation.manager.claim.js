@@ -29,7 +29,7 @@ function processReport(roomName, report) {
     	var closestRoomName = OperationHelper.closestRoom(roomName, Static.SOCIETY_LEVEL_CIVILIZATION);
     	if (closestRoomName !== null) {
 	    	var path = Game.map.findRoute(roomName, closestRoomName);
-	    	if (path.length == 2 || path.length == 3) {
+	    	if (isValidRoomPath(path) && (path.length == 2 || path.length == 3)) {
 				console.log('New claim operation added: ' + closestRoomName + ' -> ' + roomName);
 				possibleOperationsMemory[roomName] = {
 					ownerRoom: closestRoomName,
@@ -40,6 +40,19 @@ function processReport(roomName, report) {
 	    	}
     	}
     }    
+}
+
+function isValidRoomPath(path) {
+    var reports = getScoutReportsMemory();
+    for (var i = 0; i < path.length; i++) {
+        var report = reports[path[i].room];
+        if (report === undefined || report.enemyReport.enemyCreeps === undefined || report.enemyReport.enemyCreeps > 0) {
+            console.log(path[i].room + ' not valid path for claim operation.');
+            return false;
+        }
+    }
+    
+    return true;
 }
 
 function activateOperation() {
@@ -93,7 +106,6 @@ function isNewClaimTarget(roomName, report) {
 }
 
 function clearPossibleOperations() {
-	console.log('Clear claim');
 	Memory.operations.possibleOperations.claim = {};
 }
 
@@ -103,6 +115,10 @@ function getPossibleOperationsMemory() {
 
 function getActiveOperationsMemory() {
     return Memory.operations.activeOperations.claim;    
+}
+
+function getScoutReportsMemory() {
+    return Memory.scoutReports;    
 }
 
 
