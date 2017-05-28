@@ -16,7 +16,7 @@ var TransferBehaviour = {
     // TODO: Refactor this function.
     apply: function(creep) { 
     var room = Game.rooms[creep.memory.transferRoomName];       
-        if (room.controller.ticksToDowngrade > 2000) {
+        if (room.controller.ticksToDowngrade > 3000) {
             var spawn = findDeliverySpawnStructure(creep);
             if (spawn !== null) {
                 creep.memory.transferTargetId = spawn.id;

@@ -105,7 +105,7 @@ function handleCity(room) {
     } else if (hasCaretakerNeed(room, 2)) {
         Caretaker.create(room);
         return true;
-    } else if (Game.time > (memory.lastScout + 5000)) {
+    } else if (Game.time > (memory.lastScout + 2000)) {
         if (Scout.create(room)) {
             memory.lastScout = Game.time;        
         }
@@ -139,7 +139,7 @@ function handleCivilization(room) {
     } else if (IS_INVASION) {
         Defender.create(room);
         return true;
-    } else if (Game.time > (memory.lastScout + 2000)) {            
+    } else if (Game.time > (memory.lastScout + 500)) {            
         if (Scout.create(room)) {
             memory.lastScout = Game.time;        
         }
