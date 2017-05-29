@@ -32,7 +32,17 @@ var RoleSpawnKeeper = {
             WithdrawBehaviour.setup(newCreep);
             newCreep.memory.reloadId = null;
         }        
-    }
+    },
+    
+    panicCreate: function(room) {
+        var newCreep = CreepFactory.create(room, Static.ROLE_SPAWNKEEPER, 'WITHDRAW', 300);
+        if (newCreep !== null) {
+            MoveBehaviour.setup(newCreep);
+            TransferBehaviour.setup(newCreep);
+            WithdrawBehaviour.setup(newCreep);
+            newCreep.memory.reloadId = null;
+        }          
+    }        
 };
 
 function think(creep) {

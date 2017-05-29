@@ -63,7 +63,7 @@ function findBestBaseContainer(room) {
     var bestEnergy = 0;
     var containers = Utils.createGameObjArr(BaseHQ.getAllBaseContainers(room));
     for (var i = 0; i < containers.length; i++) {
-        if (containers[i].store.energy > bestEnergy) {
+        if (containers[i] !== null && containers[i].store.energy > bestEnergy) {
             bestEnergy = containers[i].store.energy;
             best = containers[i];
         }

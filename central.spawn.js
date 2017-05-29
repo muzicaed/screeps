@@ -73,9 +73,6 @@ function handleOutpost(room) {
     } else if (hasPumpNeed(room)) {
         Pump.create(room);
         return true;
-    } else if (hasSpawnKeeperNeed(room)) {
-        SpawnKeeper.create(room);        
-        return true;        
     } else if (IS_INVASION) {
         console.log('Spawn defender!');
         Defender.create(room);
@@ -86,8 +83,8 @@ function handleOutpost(room) {
 
 function handleCity(room) {
     var memory = getMemory(room);  
-    if (Finder.countRole(room, Static.ROLE_HARVESTER) == 0 && Finder.countRole(room, Static.ROLE_TRANSPORTER) == 0 && Finder.countRole(room, Static.ROLE_PIONEER) < 2) {
-        Pioneer.panicCreate(room);    
+    if (Finder.countRole(room, Static.ROLE_HARVESTER) == 0 && Finder.countRole(room, Static.ROLE_TRANSPORTER) == 0) {
+        SpawnKeeper.panicCreate(room);    
         return true;
     } else if (hasTransporterNeed(room)) {
         var containerId = ResourceCentral.requestTransportAssignment(room);
@@ -102,7 +99,7 @@ function handleCity(room) {
     } else if (hasPumpNeed(room)) {
         Pump.create(room);
         return true;
-    } else if (hasCaretakerNeed(room, 2)) {
+    } else if (hasCaretakerNeed(room, 1)) {
         Caretaker.create(room);
         return true;
     } else if (Game.time > (memory.lastScout + 2000)) {
@@ -117,8 +114,8 @@ function handleCity(room) {
 
 function handleCivilization(room) {
     var memory = getMemory(room);  
-    if (Finder.countRole(room, Static.ROLE_HARVESTER) == 0 && Finder.countRole(room, Static.ROLE_TRANSPORTER) == 0 && Finder.countRole(room, Static.ROLE_PIONEER) < 2) {
-        Pioneer.panicCreate(room);  
+    if (Finder.countRole(room, Static.ROLE_HARVESTER) == 0 && Finder.countRole(room, Static.ROLE_TRANSPORTER) == 0) {
+        SpawnKeeper.panicCreate(room);  
         return true;    
     } else if (hasTransporterNeed(room)) {
         var containerId = ResourceCentral.requestTransportAssignment(room);

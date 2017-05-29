@@ -204,10 +204,10 @@ function getMemory(room) {
 function prioList() {
     return [
         STRUCTURE_SPAWN,
+        STRUCTURE_TOWER,    
+        STRUCTURE_ROAD, 
         STRUCTURE_EXTENSION,
         STRUCTURE_CONTAINER,
-        STRUCTURE_TOWER,
-        STRUCTURE_ROAD,        
         STRUCTURE_STORAGE,
         STRUCTURE_WALL,
         STRUCTURE_RAMPART,
