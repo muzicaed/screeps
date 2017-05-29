@@ -26,7 +26,7 @@ var ClaimOperationManager = {
 function processReport(roomName, report) {
 	var possibleOperationsMemory = getPossibleOperationsMemory();
     if (isNewClaimTarget(roomName, report)) {    	
-    	var closestRoomName = OperationHelper.closestRoom(roomName, Static.SOCIETY_LEVEL_CIVILIZATION);
+    	var closestRoomName = OperationHelper.closestRoom(roomName, Static.SOCIETY_LEVEL_SUPER_POWER);
     	if (closestRoomName !== null) {
 	    	var path = Game.map.findRoute(roomName, closestRoomName);
 	    	if (isValidRoomPath(path) && (path.length == 2 || path.length == 3)) {

@@ -4,6 +4,7 @@ var Finder = require('system.finder');
 var BaseHQ = require('base.hq');
 var ControllerBase = require('base.controller');
 var ResourceCentral = require('central.resources');
+var Static = require('system.static');
 
 var Society = {
     
@@ -41,18 +42,23 @@ var Society = {
     
     isSettlement: function(room) {
         var memory = getMemory(room);
-        return (memory.current.level == 1);
+        return (memory.current.level == Static.SOCIETY_LEVEL_OUTPOST);
     },
     
     isCity: function(room) {
         var memory = getMemory(room);
-        return (memory.current.level == 2);
+        return (memory.current.level == Static.SOCIETY_LEVEL_CITY);
     },
     
     isCivilization: function(room) {
         var memory = getMemory(room);
-        return (memory.current.level == 3);
-    }        
+        return (memory.current.level == SOCIETY_LEVEL_CIVILIZATION);
+    },
+    
+    isSuperPower: function(room) {
+        var memory = getMemory(room);
+        return (memory.current.level == SOCIETY_LEVEL_SUPER_POWER);
+    }     
 };
 
 function calculateCurrentSociety(room) {
@@ -60,6 +66,7 @@ function calculateCurrentSociety(room) {
         storage: (room.storage !== null ? 1 : 0), 
         baseContainers: BaseHQ.getAllBaseContainers(room).length,
         sourceContainer: scanSourceContainer(room),
+        towers: (Memory.towerManager[room.name] !== undefined ? Memory.towerManager[room.name].towers.length : 0),
         controllerContainer: (ControllerBase.getControllerContainerId(room) !== null ? 1 : 0),
         spawnEnergy: room.energyCapacityAvailable
     };
@@ -99,9 +106,10 @@ function getMemory(room) {
 }
 
 var levels = {
-    1: { storage: 0, baseContainers: 0, sourceContainer: 0, controllerContainer: 0, spawnEnergy: 100 },
-    2: { storage: 0, baseContainers: 1, sourceContainer: 1, controllerContainer: 0, spawnEnergy: 500 },
-    3: { storage: 1, baseContainers: 2, sourceContainer: 1, controllerContainer: 1, spawnEnergy: 1750 }
+    1: { storage: 0, baseContainers: 0, sourceContainer: 0, controllerContainer: 0, spawnEnergy: 100, towers: 0 },
+    2: { storage: 0, baseContainers: 1, sourceContainer: 1, controllerContainer: 0, spawnEnergy: 500, towers: 0 },
+    3: { storage: 1, baseContainers: 2, sourceContainer: 1, controllerContainer: 1, spawnEnergy: 1750, towers: 1 },
+    4: { storage: 1, baseContainers: 2, sourceContainer: 1, controllerContainer: 1, spawnEnergy: 2300, towers: 2 }
 };
 
 module.exports = Society;

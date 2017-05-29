@@ -30,7 +30,7 @@ var ClaimOperation = {
 		return (
 			room !== undefined && 
 			room.firstSpawn() !== null &&
-			Society.getLevel(room) >= Static.SOCIETY_LEVEL_CITY  
+			Society.getLevel(room) >= Static.SOCIETY_LEVEL_CIVILIZATION  
 		);
 	}
 };

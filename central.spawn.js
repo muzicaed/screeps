@@ -44,6 +44,7 @@ var SpawnCentral = {
                         break;
 
                     case Static.SOCIETY_LEVEL_CIVILIZATION:
+                    case Static.SOCIETY_LEVEL_SUPER_POWER:
                         return handleCivilization(room);
                         break;                                
                 }
