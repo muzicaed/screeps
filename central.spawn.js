@@ -84,8 +84,8 @@ function handleOutpost(room) {
 
 function handleCity(room) {
     var memory = getMemory(room);  
-    if (Finder.countRole(room, Static.ROLE_HARVESTER) == 0 && Finder.countRole(room, Static.ROLE_TRANSPORTER) == 0) {
-        SpawnKeeper.panicCreate(room);    
+    if (Finder.countRole(room, Static.ROLE_HARVESTER) == 0 && Finder.countRole(room, Static.ROLE_TRANSPORTER) == 0 && Finder.countRole(room, Static.ROLE_PIONEER) < 3) {
+        Pioneer.panicCreate(room);    
         return true;
     } else if (hasTransporterNeed(room)) {
         var containerId = ResourceCentral.requestTransportAssignment(room);
