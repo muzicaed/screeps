@@ -189,17 +189,17 @@ recipies[Static.ROLE_SCOUT] = {
     ] 
 };
 recipies[Static.ROLE_CLAIMER] = { 
-    optimalEnergy: 800, 
+    optimalEnergy: 850, 
     protoParts: [        
         { type: CLAIM,  use: 'static', no: 1 },
-        { type: MOVE,  use: 'static', no: 1 },
+        { type: MOVE,  use: 'static', no: 5 },
     ] 
 };
 recipies[Static.ROLE_RESERVER] = { 
-    optimalEnergy: 1300, 
+    optimalEnergy: 1500, 
     protoParts: [        
         { type: CLAIM,  use: 'static', no: 2 },
-        { type: MOVE,  use: 'static', no: 2 },
+        { type: MOVE,  use: 'static', no: 5 },
     ] 
 };
 recipies[Static.ROLE_COLONIZER] = { 
