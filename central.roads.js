@@ -71,8 +71,8 @@ function refreshRoadsStatus(room) {
             var fromPos = new RoomPosition(road.fromPos.x, road.fromPos.y, road.fromPos.roomName);
             var toPos = new RoomPosition(road.toPos.x, road.toPos.y, road.toPos.roomName);
             var path = PathFinder.search(fromPos, toPos, { 
-                plainCost: 3,
-                swampCost: 3,
+                plainCost: 1.2,
+                swampCost: 1.2,
                 roomCallback: function(roomName) {
                     let room = Game.rooms[roomName];
                     if (!room) return;

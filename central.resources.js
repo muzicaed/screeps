@@ -119,12 +119,18 @@ function updateSources(room) {
         sourceObj.assignments = countPioneerAssignments(room, sourceId);
         sourceObj.isHarvesting = isHarvesting(room, sourceId);
         sourceObj.containerId = Finder.findContainerId(source.pos, 1);
-        var hasContainerConstructionSite = checkContainerConstruction(source.pos);
-        if (sourceObj.containerId === null && !hasContainerConstructionSite) {
-            sourceObj.containerPos = orderContainer(room, source.pos, 1);
-            orderRoads(room, sourceObj.containerPos); 
-        }        
+        updateConstruction(room, sourceObj);    
     }
+}
+
+function updateConstruction(room, sourceObj) {
+    var source = Game.getObjectById(sourceObj.id);
+    var hasContainerConstructionSite = checkContainerConstruction(source.pos);
+    var isInQueue = ConstructionCentral.checkOrder(room, sourceObj.containerPos, STRUCTURE_CONTAINER);
+    if (sourceObj.containerId === null && !hasContainerConstructionSite && !isInQueue) {
+        ConstructionCentral.order(room, STRUCTURE_CONTAINER, sourceObj.containerPos);
+        orderRoads(room, sourceObj.containerPos); 
+    }    
 }
 
 function checkContainerConstruction(pos) {
@@ -145,11 +151,26 @@ function scanSources(room) {
             assignments: 0, 
             isHarvesting: false,
             containerId: null,
-            containerPos: null,
+            containerPos: scanContainerPos(room, source),
             distance: source.pos.findPathTo(room.firstSpawn()).length
         }; 
     }
     return sourceObjs;
+}
+
+function scanContainerPos(room, source) {
+    var dist = 1;
+    var targetPos = source.pos;
+    var potentialTiles = [];
+    var tiles = room.lookAtArea(targetPos.y - dist, targetPos.x - dist, targetPos.y + dist, targetPos.x + dist, true);
+    for (var j in tiles) {
+        var tileObj = tiles[j];
+        if (tileObj.type == 'terrain' && (tileObj.terrain == 'plain' || tileObj.terrain == 'swamp')) {
+            potentialTiles.push( room.getPositionAt(tileObj.x, tileObj.y) );
+        }
+    } 
+    var bestPos = room.firstSpawn().pos.findClosestByPath(potentialTiles);
+    return bestPos;        
 }
 
 function orderRoads(room, containerPos) {
@@ -259,22 +280,6 @@ function pickBestSource(creep, vacantSources) {
     vacantSources.sort( function(a, b) { return a.distance - b.distance } );
     vacantSources[0].assignments++;
     return vacantSources[0].id;
-}
-
-// CONSTRUCTION ////////////////////////////////////////////////////////////////
-
-function orderContainer(room, targetPos, dist) {
-    var potentialTiles = [];
-    var tiles = room.lookAtArea(targetPos.y - dist, targetPos.x - dist, targetPos.y + dist, targetPos.x + dist, true);
-    for (var j in tiles) {
-        var tileObj = tiles[j];
-        if (tileObj.type == 'terrain' && (tileObj.terrain == 'plain' || tileObj.terrain == 'swamp')) {
-            potentialTiles.push( room.getPositionAt(tileObj.x, tileObj.y) );
-        }
-    } 
-    var bestPos = room.firstSpawn().pos.findClosestByPath(potentialTiles);
-    ConstructionCentral.order(room, STRUCTURE_CONTAINER, bestPos);
-    return bestPos;
 }
 
 function getMemory(room) {

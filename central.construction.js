@@ -59,6 +59,10 @@ var ConstructionCentral = {
             return true;
         }
         return false;
+    },
+
+    checkOrder: function(room, pos, type) {
+        return inQueue(room, pos, type);
     }
 };
 
@@ -148,6 +152,11 @@ function inQueue(room, pos, type) {
             return true;
         }
     }
+    for (var i = 0; i < memory.rclWaitList.length; i++) {
+        if (memory.rclWaitList[i].orderId == orderId) {
+            return true;
+        }
+    }    
     return false;
 }
 
