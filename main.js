@@ -25,6 +25,7 @@ var Finder = require('system.finder');
 var BaseFactory = require('factory.base');
 var OperationManager = require('operation.manager');
 var Utils = require('system.utils');
+var Debug = require('system.debug');
 
 //profiler.enable();
 module.exports.loop = function () {    
@@ -61,6 +62,9 @@ function runRooms() {
                 runTowers(room);
                 handleActiveRoom(room);
             }
+
+            // DEBUG:
+            //Debug.paintConstructionQueue(room);
         }     
     }
 }

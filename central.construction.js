@@ -17,7 +17,6 @@ var ConstructionCentral = {
     run: function(room) {
         ConstructionCentral.init(room);
         var memory = getMemory(room);
-        unflag(room);
         if (memory.age > 15) { 
             handleRcl(room);    
             if (isConstructionAllowed(room) && checkConstructioSite(room)) {
@@ -73,15 +72,9 @@ var ConstructionCentral = {
 
 function createOrder(room, type, pos) {    
     var orderId = createOrderId(type, pos, room.name);
-    if (Game.flags[orderId] !== undefined) {
-        Game.flags[orderId].remove();
-    }
-
     var color = getFlagColor(type);
-    delete Game.flags[orderId];
     return {
         orderId: orderId,
-        flag: room.createFlag(pos, orderId, color, color),
         type: type,
         prio: prioList().indexOf(type),
         id: null,
@@ -176,19 +169,6 @@ function handleBlocking(room, structure, buildType) {
     console.log('Construction of ' + buildType + ': Bocking structure ' + structure.structureType);
     return true;
 } 
-
-function unflag(room) {
-    var memory = getMemory(room);
-    if (memory.currentConstruction !== null) {
-        if (isConstructionSite(room, memory.currentConstruction.pos)) {
-            var orderId = createOrderId(memory.currentConstruction.type, memory.currentConstruction.pos, room.name);
-            var flag = Game.flags[orderId];
-            if (flag !== undefined && flag !== null) {
-                flag.remove();
-            }
-        }
-    }
-}
 
 function handleRcl(room) {
     var memory = getMemory(room);
