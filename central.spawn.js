@@ -33,7 +33,7 @@ var SpawnCentral = {
     run: function(room) {
         SpawnCentral.init(room);
         if (!handleEnemies(room)) { 
-            if (Game.time % 10 == 0) {
+            if (Game.time % 10 == 0) {              
                 switch (Society.getLevel(room)) {                
                     case Static.SOCIETY_LEVEL_OUTPOST:
                         return handleOutpost(room);
@@ -72,7 +72,9 @@ function handleOutpost(room) {
         Caretaker.create(room);
         return true;
     } else if (hasPumpNeed(room)) {
-        Pump.create(room);
+        if (Pump.create(room) !== null) {
+            memory.pumpCooldown = 20;
+        }             
         return true;
     } else if (IS_INVASION) {
         console.log('Spawn defender!');
@@ -89,7 +91,9 @@ function handleCity(room) {
         return true;
     } else if (hasTransporterNeed(room)) {
         var containerId = ResourceCentral.requestTransportAssignment(room);
-        Transporter.create(room, Static.ROLE_TRANSPORTER, containerId);
+        if (Transporter.create(room, Static.ROLE_CIV_TRANSPORTER, containerId) !== null) {
+            memory.transporterCooldown = 15;
+        }     
         return true;
     } else if (ResourceCentral.needHarvester(room)) {
         Harvester.create(room, {}); 
@@ -98,7 +102,9 @@ function handleCity(room) {
         SpawnKeeper.create(room);        
         return true;
     } else if (hasPumpNeed(room)) {
-        Pump.create(room);
+        if (Pump.create(room) !== null) {
+            memory.pumpCooldown = 20;
+        }             
         return true;
     } else if (hasCaretakerNeed(room, 1)) {
         Caretaker.create(room);
@@ -120,7 +126,9 @@ function handleCivilization(room) {
         return true;    
     } else if (hasTransporterNeed(room)) {
         var containerId = ResourceCentral.requestTransportAssignment(room);
-        Transporter.create(room, Static.ROLE_CIV_TRANSPORTER, containerId);     
+        if (Transporter.create(room, Static.ROLE_CIV_TRANSPORTER, containerId) !== null) {
+            memory.transporterCooldown = 15;
+        }     
         return true;
     } else if (ResourceCentral.needHarvester(room)) {
         Harvester.create(room, {}); 
@@ -129,7 +137,9 @@ function handleCivilization(room) {
         SpawnKeeper.create(room);
         return true;
     } else if (hasPumpNeed(room)) {
-        Pump.create(room);
+        if (Pump.create(room) !== null) {
+            memory.pumpCooldown = 20;
+        }             
         return true;
     } else if (hasCaretakerNeed(room, 1)) {
         Caretaker.create(room);
@@ -175,18 +185,16 @@ function hasSpawnKeeperNeed(room) {
 
 function hasTransporterNeed(room) {
     var memory = getMemory(room);
-    if (ResourceCentral.needTransporter(room) && memory.transporterCooldown <= 0) {
-        memory.transporterCooldown = 20;
+    if (ResourceCentral.needTransporter(room) && memory.transporterCooldown <= 0) {        
         return true;
-    }
+    }    
     memory.transporterCooldown--;
     return false;   
 }
 
 function hasPumpNeed(room) {
     var memory = getMemory(room);
-    if (ControllerBase.hasPumpNeed(room) && memory.pumpCooldown <= 0) {
-        memory.pumpCooldown = 20;
+    if (ControllerBase.hasPumpNeed(room) && memory.pumpCooldown <= 0) {        
         return true;
     }
     memory.pumpCooldown--;

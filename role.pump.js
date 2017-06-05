@@ -34,10 +34,10 @@ var RolePump = {
                 newCreep.memory.controllerId = room.controller.id;
                 newCreep.memory.inPosition = false;
                 newCreep.memory.targetPos = { x: null, y: null};
-                return true;
+                return newCreep.name;
             }   
         }
-        return false;
+        return null;
     }
 };
 

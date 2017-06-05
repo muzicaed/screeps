@@ -63,6 +63,11 @@ var ConstructionCentral = {
 
     checkOrder: function(room, pos, type) {
         return inQueue(room, pos, type);
+    },
+
+    getAllOrders: function(room) {
+        var memory = getMemory(room);
+        return memory.constructionQueue.concat(memory.rclWaitList);
     }
 };
 
@@ -215,8 +220,8 @@ function prioList() {
         STRUCTURE_SPAWN,
         STRUCTURE_TOWER,    
         STRUCTURE_EXTENSION,
-        STRUCTURE_ROAD, 
         STRUCTURE_CONTAINER,
+        STRUCTURE_ROAD, 
         STRUCTURE_STORAGE,
         STRUCTURE_WALL,
         STRUCTURE_RAMPART,
