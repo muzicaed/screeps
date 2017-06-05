@@ -114,6 +114,8 @@ function buildContainers(operation) {
 			    	if (ConstructionCentral.order(targetRoom, STRUCTURE_CONTAINER, pos)) {  
 			    		RoadsCentral.placeOrder(targetRoom, pos, ownerRoom.firstSpawn().pos);
 			    		RoadsCentral.placeOrder(ownerRoom, ownerRoom.firstSpawn().pos, pos);
+			    		RoadsCentral.placeOrder(targetRoom, targetRoom.controller.pos, ownerRoom.firstSpawn().pos);
+			    		RoadsCentral.placeOrder(ownerRoom, ownerRoom.firstSpawn().pos, targetRoom.controller.pos);			    		
 			    	} 
 			    	break;           
 		        }
@@ -132,6 +134,8 @@ function rebuildRoads(operation) {
 			var container = Game.getObjectById(sourceObj.containerId);
 			RoadsCentral.placeOrder(targetRoom, container.pos, ownerRoom.firstSpawn().pos);
 			RoadsCentral.placeOrder(ownerRoom, ownerRoom.firstSpawn().pos, container.pos);	
+    		RoadsCentral.placeOrder(targetRoom, targetRoom.controller.pos, ownerRoom.firstSpawn().pos);
+    		RoadsCentral.placeOrder(ownerRoom, ownerRoom.firstSpawn().pos, targetRoom.controller.pos);			    					
 		}
 	}
 }
