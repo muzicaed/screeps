@@ -126,12 +126,12 @@ function rebuildRoads(operation) {
 	var targetRoom = Game.rooms[operation.targetRoom];
 	var ownerRoom = Game.rooms[operation.ownerRoom];
 	for(var sourceId in operation.sources) {
-		var source = Game.getObjectById(sourceId);		
-		if (Game.time % 5000 == 0 && targetRoom !== undefined && source.containerId !== null) {
-			var container = Game.getObjectById(source.containerId);
+	    var sourceObj = operation.sources[sourceId];
+		var source = Game.getObjectById(sourceId);	
+		if (Game.time % 5000 == 0 && targetRoom !== undefined && sourceObj.containerId !== null) {
+			var container = Game.getObjectById(sourceObj.containerId);
 			RoadsCentral.placeOrder(targetRoom, container.pos, ownerRoom.firstSpawn().pos);
 			RoadsCentral.placeOrder(ownerRoom, ownerRoom.firstSpawn().pos, container.pos);	
-			console.log('Rebuild roads');	
 		}
 	}
 }
