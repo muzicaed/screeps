@@ -89,12 +89,25 @@ function applyCollect(creep) {
 function doCollect(creep) {    
     var container = Game.getObjectById(creep.memory.transferCollectId);
     if (container !== null) {
-        if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+        if (creep.pos.getRangeTo(container) <= 1) {            
+            if (!pickupResources(creep, container)) {
+                creep.withdraw(container, RESOURCE_ENERGY);    
+            }
+        } else {
             MoveBehaviour.movePath(creep, container);
-        }    
+        }   
     } else {
         creep.memory.state = 'IDLE'; 
     }
+}
+
+function pickupResources(creep, container) {
+    var resources = container.pos.lookFor(LOOK_RESOURCES);
+    if (resources.length > 0) {        
+        creep.pickup(resources[0]);
+        return true;
+    }
+    return false;
 }
 
 module.exports = RoleTransporter;

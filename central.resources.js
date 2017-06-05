@@ -65,7 +65,7 @@ var ResourceCentral = {
         for (var sourceId in memory.sources) {
             var sourceObj = memory.sources[sourceId];
             var container = Game.getObjectById(sourceObj.containerId);
-            if (container.store.energy > 1200) {
+            if (container.store.energy >= 2000) {
                 return container.id;
             }
         }        
@@ -249,18 +249,17 @@ function countPioneerAssignments(room, sourceId) {
 function isHarvesting(room, sourceId) {
     var harvesters = room.find(FIND_MY_CREEPS, {
         filter: function(obj) {
-            return (obj.memory.role == Static.ROLE_HARVESTER);
+            return (
+                obj.memory.role == Static.ROLE_HARVESTER &&
+                obj.memory.assignedToSourceId == sourceId
+            );
         }
     });
     
-    for (var i in harvesters) {
-        var harvester = harvesters[i];
-        if (harvester.memory.assignedToSourceId == sourceId) {
-            return true
-        }
+    if (harvesters.length > 1) {
+        harvesters[0].suicide();
     }
-
-    return false;
+    return (harvesters.length > 0);
 }
 
 function pickRandomSource(room) {
