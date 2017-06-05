@@ -214,8 +214,8 @@ function prioList() {
     return [
         STRUCTURE_SPAWN,
         STRUCTURE_TOWER,    
-        STRUCTURE_ROAD, 
         STRUCTURE_EXTENSION,
+        STRUCTURE_ROAD, 
         STRUCTURE_CONTAINER,
         STRUCTURE_STORAGE,
         STRUCTURE_WALL,
