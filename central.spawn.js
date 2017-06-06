@@ -92,7 +92,7 @@ function handleCity(room) {
     } else if (hasTransporterNeed(room)) {
         var containerId = ResourceCentral.requestTransportAssignment(room);
         if (Transporter.create(room, Static.ROLE_CIV_TRANSPORTER, containerId) !== null) {
-            memory.transporterCooldown = 15;
+            memory.transporterCooldown = 20;
         }     
         return true;
     } else if (ResourceCentral.needHarvester(room)) {
@@ -127,7 +127,7 @@ function handleCivilization(room) {
     } else if (hasTransporterNeed(room)) {
         var containerId = ResourceCentral.requestTransportAssignment(room);
         if (Transporter.create(room, Static.ROLE_CIV_TRANSPORTER, containerId) !== null) {
-            memory.transporterCooldown = 15;
+            memory.transporterCooldown = 20;
         }     
         return true;
     } else if (ResourceCentral.needHarvester(room)) {
