@@ -64,7 +64,7 @@ function runRooms() {
             }
 
             // DEBUG:
-            //Debug.paintConstructionQueue(room);
+            Debug.paintConstructionQueue(room);
         }     
     }
 }
