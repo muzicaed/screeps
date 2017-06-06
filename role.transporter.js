@@ -103,7 +103,7 @@ function doCollect(creep) {
 
 function pickupResources(creep, container) {
     var resources = container.pos.lookFor(LOOK_RESOURCES);
-    if (resources.length > 0) {        
+    if (resources.length > 0 && resources[0].amount > 10) {        
         creep.pickup(resources[0]);
         return true;
     }
