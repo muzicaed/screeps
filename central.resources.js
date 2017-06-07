@@ -65,7 +65,7 @@ var ResourceCentral = {
         for (var sourceId in memory.sources) {
             var sourceObj = memory.sources[sourceId];
             var container = Game.getObjectById(sourceObj.containerId);
-            if (container.store.energy >= 1950) {
+            if (container.store.energy >= 1300) {
                 return container.id;
             }
         }        

@@ -239,7 +239,7 @@ function shouldSpawnTransporter(source) {
 	if (source.containerId !== null) {
 		var container = Game.getObjectById(source.containerId);
 		if (container !== null) {
-			return (container.store.energy > 1900);
+			return (container.store.energy > 1300);
 		}
 	}
 	return false;
