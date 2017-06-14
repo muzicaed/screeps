@@ -57,13 +57,14 @@ function think(creep) {
 function checkStateChange(creep) {
     if (creep.carry.energy == 0) {
         return 'WITHDRAW';    
-    } else if (creep.carry.energy > 0 && RepairCentral.hasRepairNeed(creep.room)) {
-        return 'REPAIR';
     } else if (creep.carry.energy > 0 && ConstructionCentral.hasConstructionOrders(creep.room)) {
         return 'BUILD';        
-    } 
+    } else if (creep.carry.energy > 0 && RepairCentral.hasRepairNeed(creep.room)) {
+        return 'REPAIR';    
+    }
     return creep.memory.state;
 }
+    
 
 function applyNewState(creep, newState) {
     creep.memory.state = newState;

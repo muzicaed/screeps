@@ -40,7 +40,7 @@ function paintOrder(room, order) {
 
 
 		default:
-			console.log('Missing: ' + order.type);
+			//console.log('Missing: ' + order.type);
 
 	}
 }
