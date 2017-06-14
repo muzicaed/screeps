@@ -127,7 +127,7 @@ function handleCivilization(room) {
     } else if (hasTransporterNeed(room)) {
         var containerId = ResourceCentral.requestTransportAssignment(room);
         if (Transporter.create(room, Static.ROLE_CIV_TRANSPORTER, containerId) !== null) {
-            memory.transporterCooldown = 20;
+            memory.transporterCooldown = 40;
         }     
         return true;
     } else if (ResourceCentral.needHarvester(room)) {
@@ -147,7 +147,7 @@ function handleCivilization(room) {
     } else if (IS_INVASION) {
         Defender.create(room);
         return true;
-    } else if (Game.time > (memory.lastScout + 500)) {            
+    } else if (Game.time > (memory.lastScout + 100)) {            
         if (Scout.create(room)) {
             memory.lastScout = Game.time;        
         }
