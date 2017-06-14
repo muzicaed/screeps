@@ -123,14 +123,14 @@ recipies[Static.ROLE_HARVESTER] = {
     ] 
 };
 recipies[Static.ROLE_TRANSPORTER] = { 
-    optimalEnergy: 800, 
+    optimalEnergy: 4000, 
     protoParts: [
         { type: CARRY, use: 'fact', factor: 0.50 },
         { type: MOVE,  use: 'fact', factor: 0.50 } 
     ] 
 };
 recipies[Static.ROLE_CIV_TRANSPORTER] = { 
-    optimalEnergy: 1100, 
+    optimalEnergy: 3245, 
     protoParts: [
         { type: CARRY, use: 'fact', factor: 0.62 },
         { type: MOVE,  use: 'fact', factor: 0.38 } 
