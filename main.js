@@ -95,10 +95,16 @@ function runTowers(room) {
         var towers = Finder.findAllStructures(room, STRUCTURE_TOWER, true);
         memory.towers = Utils.createIdArray(towers);
     }
-
-    for (i = 0; i < memory.towers.length; i++) {
-        var tower = Game.getObjectById(memory.towers[i]);
-        TowerStandard.run(tower);
+    
+    if (memory.towers.length > 0) {
+        for (i = 0; i < memory.towers.length; i++) {
+            var tower = Game.getObjectById(memory.towers[i]);
+            TowerStandard.run(tower);
+        }
+    } else {
+        if (room.controller && room.controller.safeModeAvailable > 0) {
+            room.controller.activateSafeMode();
+        }           
     }
     memory.count++;
 }

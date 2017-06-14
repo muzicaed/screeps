@@ -17,10 +17,6 @@ var TowerStandard = {
             tower.repair(repairTarget);
         }
         
-        if (creep !== null && tower.energy == 0 && tower.room.controller) {
-            console.log('ACTIVE SAFE MODE!');
-        }          
-        
         if (creep !== null && tower.energy == 0 && tower.room.controller && tower.room.controller.safeModeAvailable > 0) {
             tower.room.controller.activateSafeMode();
         }            
